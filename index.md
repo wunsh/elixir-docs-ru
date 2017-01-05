@@ -1,4 +1,4 @@
-#Главная
+# Главная
 
 Elixir - это динамический функциональный язык, спроектированный для создания масштабируемых и легко поддерживаемых приложений.
 
@@ -6,9 +6,9 @@ Elixir использует виртуальную машину Erlang, изве
 
 Чтобы узнать больше об Elixir, обратите внимание на руководство для новичков. Или продолжите чтение, чтобы получить представление о платформе, языке и инструментах
 
-#Особенности платформы
+# Особенности платформы
 
-##Масштабируемость
+## Масштабируемость
 
 Весь код на Elixir запускается внутри легковесных потоков выполнения (называемых процессами), которые изолированы и обмениваются информацией через сообщения:
 
@@ -30,7 +30,7 @@ end
 
 Процессы также могут взаимодействовать с другими процессами, запущенными на других машинах в одной сети. Это обеспечивает основу для распределения, позволяющего разработчикам согласовать работу между несколькими узлами (горизотальное масштабирование).
 
-##Отказоустойчивость
+## Отказоустойчивость
 
 Неизбежная правда о ПО, запущенном в продакшне, заключается в том, что ошибки обязательно случаются. Тем более, когда мы начинаем использовать сеть, файловые системы и другие сторонние ресурсы.
 
@@ -47,9 +47,9 @@ children = [
 Supervisor.start_link(children, strategy: :one_for_one)
 ```
 
-#Особенности языка
+# Особенности языка
 
-##Функциональное программирование
+## Функциональное программирование
 
 Функциональное программирование диктует стиль кодирования, который помогает разрабочтикам писать короткий, быстрый и поддерживаемый код. Например, сравнение c шаблоном (pattern matching) позволяет разработчикам легко дестуктурировать данные и получить доступ к их содержимому:
 
@@ -71,7 +71,7 @@ serve_drinks User.get("John Doe")
 
 Elixir опирается на эти особенности, чтобы обеспечить работу вашего ПО в рамках ожидаемых ограничений. И, если что-то всё равно пойдёт нет так, не беспокойтесь, спервизоры вернут всё назад!
 
-##Расширяемость и DSL
+## Расширяемость и DSL
 
 Elixir - расширяемый язык. Он позволяет разработчикам расширять язык для конкретных областей, чтобы повысить продуктивность работы.
 
@@ -87,13 +87,13 @@ defmodule MathTest do
 end
 ```
 
-The async: true option allows tests to run in parallel, using as many CPU cores as possible, while the assert functionality can introspect your code, providing great reports in case of failures. Those features are built using Elixir macros, making it possible to add new constructs as if they were part of the language itself.
+Параметр `async: true` позволяет запускать тесты параллельно, используя все доступные ядра процессора, в то время как фунциональность команды `assert` заключается в анализе вашего кода, предоставляя подробные отчёты в случае ошибки. Эти возможности реализованы с помощью макросов Elixir’а, которые позволяют добавлять новые конструкции, как если бы они изначально были частью языка.
 
-#Tooling features
+# Инструментарий
 
-##A growing ecosystem
+## Развивающаяся экосистема
 
-Elixir ships with a great set of tools to ease development. Mix is a build tool that allows you to easily create projects, manage tasks, run tests and more:
+Elixir поставляется с отличным набором инструментов, который облегчает разработку. Mix - инструмент для сборки, позволяющий вам легче создавать проекты, управлять задачами, запускать тесты и многое другое:
 
 ```
 $ mix new my_app
@@ -105,11 +105,11 @@ Finished in 0.04 seconds (0.04s on load, 0.00s on tests)
 1 tests, 0 failures
 ```
 
-Mix is also able to manage dependencies and integrates nicely with the Hex package manager, which provides dependency resolution and the ability to remotely fetch packages.
+Mix также может управлять зависимостями и без проблем интегрируется с пакетным менеджером Hex, который может разрешить зависимости и предоставляет возможность удалённо загружать пакеты. 
 
-##Interactive development
+## Интерактивная разработка
 
-Tools like IEx (Elixir’s interactive shell) are able to leverage many aspects of the language and platform to provide auto-complete, debugging tools, code reloading, as well as nicely formatted documentation:
+Инструменты, вроде IEx (Elixir’s interactive shell, интерактивная оболока Elixir’а), способны использовать многие аспекты языка и платформы, для поддержки автодополнения, средств отладки, перезагрузки изменённого кода, а также хорошо оформленной документации.
 
 ```
 $ iex
@@ -120,13 +120,13 @@ iex> h IEx.pry             # Выводит документацию для IEx 
 iex> i "Hello, World"      # Выводит информацию об указанном типе данных
 ```
 
-##Erlang compatible
+## Совместимость с Erlang
 
-Elixir runs on the Erlang VM giving developers complete access to Erlang’s ecosystem, used by companies like Heroku, WhatsApp, Klarna, Basho and many more to build distributed, fault-tolerant applications. An Elixir programmer can invoke any Erlang function with no runtime cost:
+Elixir работает на виртуальной машине Erlang, что даёт разработчикам полный доступ к экосистеме Erlang’а, используемого такими компаниями, как Heroku, WhatsApp, Klarna, Basho и многими другими, для создания распределённых, отказоустойчивых приложений. Elixir-программист может вызывать любую функцию Erlang’а без накладных расходов времени выполнения:
 
 ```
 iex> :crypto.hash(:md5, "Using crypto from Erlang OTP")
 <<192, 223, 75, 115, ...>>
 ```
 
-To learn more about Elixir, check our getting started guide. We also have online documentation available and a Crash Course for Erlang developers.
+Для того, чтобы узнать больше об Elixir, обратитесь к руководству для начинающих. Также есть онлайн документация и быстрый старт для Erlang разработчиков
