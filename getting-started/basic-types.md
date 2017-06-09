@@ -1,6 +1,6 @@
 # Базовые типы
 
-В этой главе мы узнаем больше о базовых типах Elixir: целых числах (integers), числах с плавающей запятой (floats), логических или булевых значениях (booleans), атомах (atoms), строках (strings), списках (lists) и туплах (tubles). Вот некоторые базовые типы:
+В этой главе мы узнаем больше о базовых типах Elixir: целых числах (integers), числах с плавающей запятой (floats), логических или булевых значениях (booleans), атомах (atoms), строках (strings), списках (lists) и кортежах (tuples). Вот некоторые базовые типы:
 
 ```iex
 iex> 1          # integer
@@ -100,7 +100,7 @@ false
 
 ## Атомы
 
-Atoms are constants where their name is their own value. Some other languages call these symbols:
+Атомы - это константы, имя которых является также и их значением. Некоторые другие языки называют их символами (symbols):
 
 ```iex
 iex> :hello
@@ -109,7 +109,7 @@ iex> :hello == :world
 false
 ```
 
-The booleans `true` and `false` are, in fact, atoms:
+Булевы значения `true` и `false`, фактически, являются атомами:
 
 ```iex
 iex> true == :true
@@ -120,25 +120,25 @@ iex> is_boolean(:false)
 true
 ```
 
-## Strings
+## Строки
 
-Strings in Elixir are inserted between double quotes, and they are encoded in UTF-8:
+Строки в Elixir располагаются внутри двойных кавычек, и они представлены в кодировке UTF-8:
 
 ```iex
 iex> "hellö"
 "hellö"
 ```
 
-> Note: if you are running on Windows, there is a chance your terminal does not use UTF-8 by default. You can change the encoding of your current session by running `chcp 65001` before entering IEx.
+> Обратите внимание: если вы работаете под Windows, ваш терминал может использовать отличную от UTF-8 кодировку по умолчанию. Вы можете сменить кодировку текущей сессии командой `chcp 65001` перед запуском IEx.
 
-Elixir also supports string interpolation:
+Elixir также поддерживает интерполяцию строк:
 
 ```iex
 iex> "hellö #{:world}"
 "hellö world"
 ```
 
-Strings can have line breaks in them. You can introduce them using escape sequences:
+Строки могут содержать разрывы. Вы можете ввести их, используя escape sequences:
 
 ```iex
 iex> "hello
@@ -148,7 +148,7 @@ iex> "hello\nworld"
 "hello\nworld"
 ```
 
-You can print a string using the `IO.puts/1` function from the `IO` module:
+Вы можете вывести строку, используя функцию `IO.puts/1` из модуля `IO`:
 
 ```iex
 iex> IO.puts "hello\nworld"
@@ -157,30 +157,30 @@ world
 :ok
 ```
 
-Notice the `IO.puts/1` function returns the atom `:ok` as result after printing.
+Помните, что функция `IO.puts/1` возвращает атом `:ok` в качестве результата после вывода.
 
-Strings in Elixir are represented internally by binaries which are sequences of bytes:
+Строки в Elixir представлены внутри двоичными данными (binaries), которые являются последовательностями байтов:
 
 ```iex
 iex> is_binary("hellö")
 true
 ```
 
-We can also get the number of bytes in a string:
+Мы также можем получить количество байт в строке:
 
 ```iex
 iex> byte_size("hellö")
 6
 ```
 
-Notice the number of bytes in that string is 6, even though it has 5 characters. That's because the character "ö" takes 2 bytes to be represented in UTF-8. We can get the actual length of the string, based on the number of characters, by using the `String.length/1` function:
+Обратите внимание, что количество байт в данной строке равно 6, хотя в ней 5 символов. Дело в том, что символ "ö" занимает 2 байта, чтобы быть представленным в UTF-8. Мы можем получить реальную длину строки, основанную на количестве символов, использовав функцию `String.length/1`:
 
 ```iex
 iex> String.length("hellö")
 5
 ```
 
-The [String module](https://hexdocs.pm/elixir/String.html) contains a bunch of functions that operate on strings as defined in the Unicode standard:
+[Модуль String](https://hexdocs.pm/elixir/String.html) содержит набор функций для манипуляций со строками, удовлетворяющий стандарту Unicode:
 
 ```iex
 iex> String.upcase("hellö")
