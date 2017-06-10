@@ -232,9 +232,9 @@ iex> x
 42
 ```
 
-## (Linked) Lists
+## (Связные) Списки
 
-Elixir uses square brackets to specify a list of values. Values can be of any type:
+Elixir использует квадратные скобки, чтобы задать список значений. Значения могут быть любого типа:
 
 ```iex
 iex> [1, 2, true, 3]
@@ -243,7 +243,7 @@ iex> length [1, 2, 3]
 3
 ```
 
-Two lists can be concatenated or subtracted using the `++/2` and `--/2` operators:
+Два списка могут быть сложены, используя оператор `++/2`, и один может быть вычтен из другого с помощью `--/2`:
 
 ```iex
 iex> [1, 2, 3] ++ [4, 5, 6]
@@ -252,7 +252,7 @@ iex> [1, true, 2, false, 3, true] -- [true, false]
 [1, 2, 3, true]
 ```
 
-Throughout the tutorial, we will talk a lot about the head and tail of a list. The head is the first element of a list and the tail is the remainder of the list. They can be retrieved with the functions `hd/1` and `tl/1`. Let's assign a list to a variable and retrieve its head and tail:
+В этом руководстве мы будем много говорить о голове и хвосте списка. Головой называют первый элемент списка, а хвостом - его оставшуюся часть. Они могут быть получены функциями `hd/1` и `tl/1`. Давайте создадим список и получим его голову и хвост:
 
 ```iex
 iex> list = [1, 2, 3]
@@ -262,14 +262,14 @@ iex> tl(list)
 [2, 3]
 ```
 
-Getting the head or the tail of an empty list throws an error:
+Попытка получить голову или хвост пустого списка выбросит ошибку:
 
 ```iex
 iex> hd []
 ** (ArgumentError) argument error
 ```
 
-Sometimes you will create a list and it will return a value in single quotes. For example:
+Иногда вы будете создавать список и он будет возвращать значение в одинарных кавычках. Например:
 
 ```iex
 iex> [11, 12, 13]
@@ -278,7 +278,7 @@ iex> [104, 101, 108, 108, 111]
 'hello'
 ```
 
-When Elixir sees a list of printable ASCII numbers, Elixir will print that as a char list (literally a list of characters). Char lists are quite common when interfacing with existing Erlang code. Whenever you see a value in IEx and you are not quite sure what it is, you can use the `i/1` to retrieve information about it:
+Когда Elixir видит список корректных ASCII кодов, которые может напечатать, он выводит список символов (в буквальном смысле). Списки символов часто используются для взаимодействия с существующим кодом на Erlang. Если вы видете значение в IEx, и вы не уверены, что это такое, вы можете использовать `i/1` для получения информации:
 
 ```iex
 iex> i 'hello'
@@ -294,14 +294,14 @@ Reference modules
   List
 ```
 
-Keep in mind single-quoted and double-quoted representations are not equivalent in Elixir as they are represented by different types:
+Помните, что значения в одинарных и двойных кавычках не эквивалентны в Elixir, они принадлежат разным типам:
 
 ```iex
 iex> 'hello' == "hello"
 false
 ```
 
-Single quotes are char lists, double quotes are strings. We will talk more about them in the ["Binaries, strings and char lists"](/getting-started/binaries-strings-and-char-lists.html) chapter.
+Внутри одиночных кавычек списки символов (char lists), внутри двойных - строки. Мы поговорим обы этом больше в главе ["Бинарные данные, строки и списки символов"](/getting-started/binaries-strings-and-char-lists.html)
 
 ## Tuples
 
