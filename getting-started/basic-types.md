@@ -187,9 +187,9 @@ iex> String.upcase("hellö")
 "HELLÖ"
 ```
 
-## Anonymous functions
+## Анонимные функции
 
-Anonymous functions can be created inline and are delimited by the keywords `fn` and `end`:
+Анонимные функции могут быть созданы в одну строку, они заключаются между ключевых слов `fn` и `end`:
 
 ```iex
 iex> add = fn a, b -> a + b end
@@ -204,11 +204,13 @@ iex> is_function(add, 1) # check if add is a function that expects exactly 1 arg
 false
 ```
 
-Functions are "first class citizens" in Elixir meaning they can be passed as arguments to other functions in the same way as integers and strings. In the example, we have passed the function in the variable `add` to the `is_function/1` function which correctly returned `true`. We can also check the arity of the function by calling `is_function/2`.
+Функции в Elixir являются объектами первого класса, то есть они могут быть переданы в качестве аргумента другой функции, так же, как целые числа и строки. В примере мы передали функции `is_function/1` переменную `add` и она вернула `true`. Мы можем также проверить арность функции вызовом `is_function/2`.
 
 Note a dot (`.`) between the variable and parentheses is required to invoke an anonymous function. The dot ensures there is no ambiguity between calling an anonymous function named `add` and a named function `add/2`. In this sense, Elixir makes a clear distinction between anonymous functions and named functions. We will explore those differences in [Chapter 8](/getting-started/modules-and-functions.html).
 
-Anonymous functions are closures and as such they can access variables that are in scope when the function is defined. Let's define a new anonymous function that uses the `add` anonymous function we have previously defined:
+Обратите внимание, что точка (`.`) между переменной и скобками обязательна для вызова анонимной функции. Эта точка нужна, чтобы избавиться от неоднозначности между анонимной функцией `add` и именованной `add/2`. В этом смысле в Elixir явно различаются анонимные и именованные функции. Мы поговорим об этой разнице в [Главе 8](/getting-started/modules-and-functions.html).
+
+Анонимные функции являются замыканиями и по существу они могут иметь доступ к переменным из области видимости (scope), когда функция объявлена. Давайте объявим новую анонимную функцию, которая использует анонимную функцию `add`, которую мы объявили ранее:
 
 ```iex
 iex> double = fn a -> add.(a, a) end
@@ -218,6 +220,8 @@ iex> double.(2)
 ```
 
 Keep in mind a variable assigned inside a function does not affect its surrounding environment:
+
+Помните, что присвоения значений внутри функции никак не изменяют её окружение:
 
 ```iex
 iex> x = 42
