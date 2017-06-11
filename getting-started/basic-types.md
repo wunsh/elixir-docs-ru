@@ -303,9 +303,9 @@ false
 
 Внутри одиночных кавычек списки символов (char lists), внутри двойных - строки. Мы поговорим обы этом больше в главе ["Бинарные данные, строки и списки символов"](/getting-started/binaries-strings-and-char-lists.html)
 
-## Tuples
+## Кортежи
 
-Elixir uses curly brackets to define tuples. Like lists, tuples can hold any value:
+Elixir использует фигурные скобки для объявления кортежей. Как и списки, кортежи могут хранить любые значения:
 
 ```iex
 iex> {:ok, "hello"}
@@ -314,7 +314,7 @@ iex> tuple_size {:ok, "hello"}
 2
 ```
 
-Tuples store elements contiguously in memory. This means accessing a tuple element by index or getting the tuple size is a fast operation. Indexes start from zero:
+Кортежи хранят элементы в памяти последовательно. Это значит, что доступ к элементу кортежа по индексу или получение размера кортежа - быстрые операции. Индексы начинаются с нуля:
 
 ```iex
 iex> tuple = {:ok, "hello"}
@@ -325,7 +325,7 @@ iex> tuple_size(tuple)
 2
 ```
 
-It is also possible to put an element at a particular index in a tuple with `put_elem/3`:
+Также можно добавить элемент на определённое место в кортеже с помощью `put_elem/3`:
 
 ```iex
 iex> tuple = {:ok, "hello"}
@@ -336,7 +336,7 @@ iex> tuple
 {:ok, "hello"}
 ```
 
-Notice that `put_elem/3` returned a new tuple. The original tuple stored in the `tuple` variable was not modified because Elixir data types are immutable. By being immutable, Elixir code is easier to reason about as you never need to worry that any code might be mutating your data structure in place.
+Обратите внимание, что `put_elem/3` вернёт новый кортеж. Исходный кортеж, который хранится в переменной `tuple`, не изменяется, потому что данные в Elixir иммутабельны (immutable, неизменяемый). Благодаря этому, вам не придётся беспокоиться, что какой-то код может изменить ваши структуры данных.
 
 ## Lists or tuples?
 
