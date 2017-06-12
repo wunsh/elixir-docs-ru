@@ -338,27 +338,27 @@ iex> tuple
 
 Обратите внимание, что `put_elem/3` вернёт новый кортеж. Исходный кортеж, который хранится в переменной `tuple`, не изменяется, потому что данные в Elixir иммутабельны (immutable, неизменяемый). Благодаря этому, вам не придётся беспокоиться, что какой-то код может изменить ваши структуры данных.
 
-## Lists or tuples?
+## Списки или кортежи?
 
-What is the difference between lists and tuples?
+Какая разница между списками и кортежами?
 
-Lists are stored in memory as linked lists, meaning that each element in a list holds its value and points to the following element until the end of the list is reached. We call each pair of value and pointer a **cons cell**:
+Списки хранятся в памяти, как связные списки, это значит, что каждый элемент списка хранит своё значение и указывает на следующий элемент, пока не будет достигнут конец списка. Мы называем каждую пару значения и указателя **cons cell** (? ячейка):
 
 ```iex
 iex> list = [1 | [2 | [3 | []]]]
 [1, 2, 3]
 ```
 
-This means accessing the length of a list is a linear operation: we need to traverse the whole list in order to figure out its size. Updating a list is fast as long as we are prepending elements:
+Это значит, что получение длины списка - линейная операция: нам нужно пройти через весь список последовательно, чтобы узнать его размер. Обновление списка - быстрая операция, также как добавление элементов в начало:
 
 ```iex
 iex> [0 | list]
 [0, 1, 2, 3]
 ```
 
-Tuples, on the other hand, are stored contiguously in memory. This means getting the tuple size or accessing an element by index is fast. However, updating or adding elements to tuples is expensive because it requires copying the whole tuple in memory.
+Кортежи, с другой стороны, хранятся в памяти последовательно. Это значит, что получение размера кортежа или доступ к элементу по индексу работают быстро. Однако, обновление или добавление элементов в кортеж - дорогие операции, потому что включают в себя копирование всего кортежа в памяти.
 
-Those performance characteristics dictate the usage of those data structures. One very common use case for tuples is to use them to return extra information from a function. For example, `File.read/1` is a function that can be used to read file contents. It returns tuples:
+Использование той или иной структуры данных продиктовано особенностями их производительности. Наиболее часто используемый случай использования кортежей - возврат дополнительной информации из функции. Например, `File.read/1` - функция, которая используется для чтения содержимого файлов. Она возвращает кортежи:
 
 ```iex
 iex> File.read("path/to/existing/file")
@@ -367,9 +367,9 @@ iex> File.read("path/to/unknown/file")
 {:error, :enoent}
 ```
 
-If the path given to `File.read/1` exists, it returns a tuple with the atom `:ok` as the first element and the file contents as the second. Otherwise, it returns a tuple with `:error` and the error description.
+Если путь, переданный в `File.read/1`, существует, она возвращает кортеж с атомом `:ok` в качестве первого элемента и содержимым файла в качестве второго. Иначе, она возвращает кортеж с `:error` и описанием ошибки.
 
-Most of the time, Elixir is going to guide you to do the right thing. For example, there is an `elem/2` function to access a tuple item but there is no built-in equivalent for lists:
+Большую часть времени Elixir пытается направить вас поступать правильно. Например, есть функция `elem/2` для доступа к элементу кортежа, но нет встроенного эквивалента этой функции для списков:
 
 ```iex
 iex> tuple = {:ok, "hello"}
@@ -378,8 +378,8 @@ iex> elem(tuple, 1)
 "hello"
 ```
 
-When counting the elements in a data structure, Elixir also abides by a simple rule: the function is named `size` if the operation is in constant time (i.e. the value is pre-calculated) or `length` if the operation is linear (i.e. calculating the length gets slower as the input grows). As a mnemonic, both "length" and "linear" start with "l".
+При подсчёте элементов в структурах данных, Elixir также придерживается простого правила: используйте функцию `size`, если опрация выполнится за константное время (значение предварительно посчитано), или `length`, если операция линейна (linear) (подсчёт длины тем дольше, чем больше переданное значение). Удобно запомнить, что "length" и "linear" оба начинаются с "l".
 
-For example, we have used 4 counting functions so far: `byte_size/1` (for the number of bytes in a string), `tuple_size/1` (for tuple size), `length/1` (for list length) and `String.length/1` (for the number of graphemes in a string). We use `byte_size` to get the number of bytes in a string -- a cheap operation. Retrieving the number of unicode characters, on the other hand, uses `String.length`, and may be expensive as it relies on a traversal of the entire string.
+Например, мы уже использовали 4 функции подсчёта: `byte_size/1` (количество байт, занимаемых строкой), `tuple_size/1` (размер кортежа), `length/1` (длина списка), `String.length/1` (количество графем в строке). Мы использовали `byte_size` для получения количества байт, которые занимает строка - это дешёвая оберация. Для получения количества символов юникода, с другой стороны, используется `String.length`, что может быть дорого, т.к. для этого нужен обход всей строки.
 
-Elixir also provides `Port`, `Reference`, and `PID` as data types (usually used in process communication), and we will take a quick look at them when talking about processes. For now, let's take a look at some of the basic operators that go with our basic types.
+Elixir также предоставляет `Port`, `Reference`, и `PID` как типы данных (обычно используются при общении процессов), и мы уделим им немного внимания, когда будем говорить о процессах. Теперь давайте познакомимся с базовыми операторам, которые используются с нашими базовыми типами.
