@@ -93,7 +93,7 @@ iex> f2 = fn
 
 ## `cond`
 
-`case` is useful when you need to match against different values. However, in many circumstances, we want to check different conditions and find the first one that evaluates to true. In such cases, one may use `cond`:
+`case` полезен, когда вам нужно сопоставить различные значения. Однако, часто нам нужно проверить разные условия и найти первое, которое окажется правдой. В таком случае, можно использовать `cond`:
 
 ```iex
 iex> cond do
@@ -107,9 +107,9 @@ iex> cond do
 "But this will"
 ```
 
-This is equivalent to `else if` clauses in many imperative languages (although used way less frequently here).
+Это эквивалент условию `else if` во многих императивных языках (хотя тут используется не так часто).
 
-If none of the conditions return true, an error (`CondClauseError`) is raised. For this reason, it may be necessary to add a final condition, equal to `true`, which will always match:
+Если ни одно из условий не вернуло true, будет возникнет ошибка (`CondClauseError`). По этой причине может быть нужно добавить последнее условие, равное `true`, которое всегда будет подходить:
 
 ```iex
 iex> cond do
@@ -123,7 +123,7 @@ iex> cond do
 "This is always true (equivalent to else)"
 ```
 
-Finally, note `cond` considers any value besides `nil` and `false` to be true:
+Наконец, помните, что `cond` расценивает любые значения кроме `nil` и `false` как true:
 
 ```iex
 iex> cond do
@@ -133,9 +133,9 @@ iex> cond do
 "1 is considered as true"
 ```
 
-## `if` and `unless`
+## `if` и `unless`
 
-Besides `case` and `cond`, Elixir also provides the macros `if/2` and `unless/2` which are useful when you need to check for only one condition:
+Кроме `case` и `cond`, Elixir также предоставляет макросы `if/2` и `unless/2`, которые полезны, когда вам нужно проверить только одно условие:
 
 ```iex
 iex> if true do
@@ -148,9 +148,9 @@ iex> unless true do
 nil
 ```
 
-If the condition given to `if/2` returns `false` or `nil`, the body given between `do/end` is not executed and instead it returns `nil`. The opposite happens with `unless/2`.
+Если условие, переданное в `if/2`, возвращает `false` или `nil`, код между `do/end` не выполняется и возвращает `nil`. С точностью наоборот работает `unless/2`.
 
-They also support `else` blocks:
+Они также поддерживают блоки `else`:
 
 ```iex
 iex> if nil do
@@ -161,25 +161,25 @@ iex> if nil do
 "This will"
 ```
 
-> Note: An interesting note regarding `if/2` and `unless/2` is that they are implemented as macros in the language; they aren't special language constructs as they would be in many languages. You can check the documentation and the source of `if/2` in [the `Kernel` module docs](https://hexdocs.pm/elixir/Kernel.html). The `Kernel` module is also where operators like `+/2` and functions like `is_function/2` are defined, all automatically imported and available in your code by default.
+> Обратите внимание: интересная особенность `if/2` и `unless/2` состоит в том, что они реализованы как макросы. Это не специальные языковые конструкцию, какими они являются во многих языках. Вы можете посмотреть документацию и исходный код `if/2` в [документации модуля `Kernel`](https://hexdocs.pm/elixir/Kernel.html). Модуль `Kernel` также содержит определения операторов вроде `+/2` и функций типа `is_function/2`. Они автоматически импортируются и становятся доступны в вашем коде по умолчанию.
 
-## `do/end` blocks
+## Блоки `do/end`
 
-At this point, we have learned four control structures: `case`, `cond`, `if`, and `unless`, and they were all wrapped in `do/end` blocks. It happens we could also write `if` as follows:
+До этого момента мы изучили четыре управляющих конструкции: `case`, `cond`, `if` и `unless`, и они все обёрнуты в блоки `do/end`. Мы также могли бы написать `if` вот так:
 
 ```iex
 iex> if true, do: 1 + 2
 3
 ```
 
-Notice how the example above has a comma between `true` and `do:`, that's because it is using Elixir's regular syntax where each argument is separated by comma. We say this syntax is using *keyword lists*. We can pass `else` using keywords too:
+Обратите внимание, что в примере выше есть запятая между `true` и `do:`, это связано с тем, что здесь используется обычный синтаксис Elixir, в котором все аргументы перечислены через запятую. Можно сказать, что синтаксис использует *списки ключевых слов* (keyword lists). Мы можем также передать `else`: 
 
 ```iex
 iex> if false, do: :this, else: :that
 :that
 ```
 
-`do/end` blocks are a syntactic convenience built on top of the keywords one. That's why `do/end` blocks do not require a comma between the previous argument and the block. They are useful exactly because they remove the verbosity when writing blocks of code. These are equivalent:
+Блоки `do/end` - синтетическое удобство, построенное над ключевыми словами (syntactic convenience built on top of the keywords one). Поэтому блоки `do/end` не нуждаются в запятой между предыдущим аргументом и блоком. Они полезны, т.к. делают более чистой запись блоков кода. Следующие примеры эквивалентны:
 
 ```iex
 iex> if true do
@@ -194,7 +194,7 @@ iex> if true, do: (
 13
 ```
 
-One thing to keep in mind when using `do/end` blocks is they are always bound to the outermost function call. For example, the following expression:
+Одна вещь, которую следует помнить при использовании блоков `do/end`: они всегда связываются с самым удалённым вызовом функции. Например, следующее выражение:
 
 ```iex
 iex> is_number if true do
@@ -203,7 +203,7 @@ iex> is_number if true do
 ** (CompileError) undefined function: is_number/2
 ```
 
-Would be parsed as:
+Было бы распарсено как:
 
 ```iex
 iex> is_number(if true) do
@@ -214,7 +214,9 @@ iex> is_number(if true) do
 
 which leads to an undefined function error because that invocation passes two arguments, and `is_number/2` does not exist. The `if true` expression is invalid in itself because it needs the block, but since the arity of `is_number/2` does not match, Elixir does not even reach its evaluation.
 
-Adding explicit parentheses is enough to bind the block to `if`:
+что привео бы к ошибке, т.к. функции `is_number/2` не существует. Выражение `if true` не корректно само по себе, ему необходим блок, но ввиду того, что арность `is_number/2` не соответствует арности существующей функции, Elixir просто не дойдёт до этого выражения.
+
+Добавим недостающие скобки, чтобы привязать блок к `if`:
 
 ```iex
 iex> is_number(if true do
@@ -223,4 +225,4 @@ iex> is_number(if true do
 true
 ```
 
-Keyword lists play an important role in the language and are quite common in many functions and macros. We will explore them a bit more in a future chapter. Now it is time to talk about "Binaries, strings, and char lists".
+Списки ключевых слов играют важную роль в языке и часто используются во многих функция и макросах. Мы ознакомимся с ними подробнее в с будущих главах. Теперь самое время поговорить о "Двоичных данных, строках и списках символов".
