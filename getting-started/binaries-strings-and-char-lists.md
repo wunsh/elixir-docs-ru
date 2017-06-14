@@ -54,9 +54,9 @@ iex> String.codepoints("hełło")
 
 Однако, строки - это только часть истории. Раз строки являются бинарными, и мы использовали функцию `is_binary/1`, Elixir должен иметь более мощный тип, лежащий в основе строк. И он есть! Поговорим о бинарных данных.
 
-## Binaries (and bitstrings)
+## Бинарные данные (и битовые строки)
 
-In Elixir, you can define a binary using `<<>>`:
+В Elixir вы можете определить бинарную последовательность, используя `<<>>`:
 
 ```iex
 iex> <<0, 1, 2, 3>>
@@ -65,28 +65,28 @@ iex> byte_size(<<0, 1, 2, 3>>)
 4
 ```
 
-A binary is a sequence of bytes. Those bytes can be organized in any way, even in a sequence that does not make them a valid string:
+Бинарные данные (binary) - это последовательность байт. Эти байты могут быть записаны в любом порядке, даже если эта последовательность не будет корректной строкой:
 
 ```iex
 iex> String.valid?(<<239, 191, 191>>)
 false
 ```
 
-The string concatenation operation is actually a binary concatenation operator:
+Оператор конкатенации строк на самом деле оператор бинарной конкатенации:
 
 ```iex
 iex> <<0, 1>> <> <<2, 3>>
 <<0, 1, 2, 3>>
 ```
 
-A common trick in Elixir is to concatenate the null byte `<<0>>` to a string to see its inner binary representation:
+Часто используемы трюк в Elixir - конкатенация нулевого байта `<<0>>` к строке, чтобы увидеть её бинарное представление:
 
 ```iex
 iex> "hełło" <> <<0>>
 <<104, 101, 197, 130, 197, 130, 111, 0>>
 ```
 
-Each number given to a binary is meant to represent a byte and therefore must go up to 255. Binaries allow modifiers to be given to store numbers bigger than 255 or to convert a code point to its UTF-8 representation:
+Каждое число в бинарной последовательности должно помещаться в один байт, а значит, быть не больше 255. Существую модификаторы для хранения числе больше, чем 255 или конвертации кодовых обозначений в их UTF-8 представления:
 
 ```iex
 iex> <<255>>
@@ -101,7 +101,7 @@ iex> <<256 :: utf8, 0>>
 <<196, 128, 0>>
 ```
 
-If a byte has 8 bits, what happens if we pass a size of 1 bit?
+Если в байте 8 бит, что произойдёт, если мы укажем размер в 1 бит?
 
 ```iex
 iex> <<1 :: size(1)>>
@@ -116,7 +116,7 @@ iex> bit_size(<< 1 :: size(1)>>)
 1
 ```
 
-The value is no longer a binary, but a bitstring -- a bunch of bits! So a binary is a bitstring where the number of bits is divisible by 8.
+Значение больше не бинарное, но является битовой строкой -- набором битов! Таким образом бинарная последовательность - это битовая трока, количество бит в которой делится на 8.
 
 ```iex
 iex>  is_binary(<<1 :: size(16)>>)
@@ -125,7 +125,7 @@ iex>  is_binary(<<1 :: size(15)>>)
 false
 ```
 
-We can also pattern match on binaries / bitstrings:
+Мы можем также сравнивать по шаблону бинарные последовательности и битовые строки:
 
 ```iex
 iex> <<0, 1, x>> = <<0, 1, 2>>
@@ -136,7 +136,7 @@ iex> <<0, 1, x>> = <<0, 1, 2, 3>>
 ** (MatchError) no match of right hand side value: <<0, 1, 2, 3>>
 ```
 
-Note each entry in the binary pattern is expected to match exactly 8 bits. If we want to match on a binary of unknown size, it is possible by using the binary modifier at the end of the pattern:
+Обратите внимание, что каждая запись в бинарном шаблоне предусматривает размер 8 бит. Если мы хотим сравнить бинарную последовательность неизвестного размера, можно использовать модификатор binary в конце шаблона:
 
 ```iex
 iex> <<0, 1, x :: binary>> = <<0, 1, 2, 3>>
@@ -145,7 +145,7 @@ iex> x
 <<2, 3>>
 ```
 
-Similar results can be achieved with the string concatenation operator `<>`:
+Тот же результат может быть достигнут с помощью оператора конкатенации `<>`:
 
 ```iex
 iex> "he" <> rest = "hello"
@@ -154,7 +154,7 @@ iex> rest
 "llo"
 ```
 
-A complete reference about the binary / bitstring constructor `<<>>` can be found [in the Elixir documentation](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#%3C%3C%3E%3E/1). This concludes our tour of bitstrings, binaries and strings. A string is a UTF-8 encoded binary and a binary is a bitstring where the number of bits is divisible by 8. Although this shows the flexibility Elixir provides for working with bits and bytes, 99% of the time you will be working with binaries and using the `is_binary/1` and `byte_size/1` functions.
+Полную справку о конструкторе `<<>>` бинарных последовательностей / битовых строк можно найти [в документации по Elixir](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#%3C%3C%3E%3E/1). На этом мы закончим обзор битовых строк, бинарных последовательностей и строк. Строка - это бинарная последовательность в кодировке UTF-8, а бинарная последовательность - битовая строка, число бит в которой делится на 8. Хотя это показывает гибкость, которую даёт Elixir для работы с битами и байтами, 99% времени вы будете работать с бинарными последовательностями, используя функции `is_binary/1` and `byte_size/1`.
 
 ## Char lists
 
