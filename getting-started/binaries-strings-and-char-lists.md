@@ -156,9 +156,9 @@ iex> rest
 
 Полную справку о конструкторе `<<>>` бинарных последовательностей / битовых строк можно найти [в документации по Elixir](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#%3C%3C%3E%3E/1). На этом мы закончим обзор битовых строк, бинарных последовательностей и строк. Строка - это бинарная последовательность в кодировке UTF-8, а бинарная последовательность - битовая строка, число бит в которой делится на 8. Хотя это показывает гибкость, которую даёт Elixir для работы с битами и байтами, 99% времени вы будете работать с бинарными последовательностями, используя функции `is_binary/1` and `byte_size/1`.
 
-## Char lists
+## Списки символов (Char lists)
 
-A char list is nothing more than a list of code points. Char lists may be created with single-quoted literals:
+Списки символов - ни что иное как списки из кодовых обозначений. Списки символов можно создать с помощью литералов в одиночных кавычках:
 
 ```iex
 iex> 'hełło'
@@ -171,9 +171,9 @@ iex> List.first('hello')
 104
 ```
 
-You can see that, instead of containing bytes, a char list contains the code points of the characters between single-quotes (note that by default IEx will only output code points if any of the integers is outside the ASCII range). So while double-quotes represent a string (i.e. a binary), single-quotes represent a char list (i.e. a list).
+Вы можете увидеть, что список символов хранит не последовательность байт, а кодовые обозначения символов, указанных в одинарных кавычках (помните, что IEx по умолчанию будет выводить только коды, если хотя бы один из них не входит в диапазон ASCII). Таким образом двойные кавычки используются для строк (внутри это бинарная последовательность), одиночные - для списков символов (внутри список).
 
-In practice, char lists are used mostly when interfacing with Erlang, in particular old libraries that do not accept binaries as arguments. You can convert a char list to a string and back by using the `to_string/1` and `to_charlist/1` functions:
+На практике, списки символов чаще всего используются для взаимодействия с Erlang, в частности со старыми библиотеками, которые не принимают бинарные последовательнсти в качестве аргументов. Вы можете конвертировать список символов в строку и обратно, используя функции: `to_string/1` и `to_charlist/1`:
 
 ```iex
 iex> to_charlist "hełło"
@@ -186,6 +186,6 @@ iex> to_string 1
 "1"
 ```
 
-Note that those functions are polymorphic. They not only convert char lists to strings, but also integers to strings, atoms to strings, and so on.
+Обратите внимание, что эти функции полиморфичны. Они могут конвертировать в строки не только списки символов, но и числа, атомы и т.д.
 
-With binaries, strings, and char lists out of the way, it is time to talk about key-value data structures.
+На это всё с бинарными последовательностями, строками и списками символов. Самое время поговорить о структурах данных, основанных на парах ключ-значение.
