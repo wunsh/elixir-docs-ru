@@ -86,9 +86,9 @@ iex> [b: b, a: a] = [a: 1, b: 2]
 
 Для манипуляций со списками с ключевыми словами Elixir предоставляет [модуль `Keyword`](https://hexdocs.pm/elixir/Keyword.html). Помните, что списки с ключами - это просто списки, с такими же линейными характеристиками производительности. Чем длиннее список, тем дольше будет поиск по ключу, подсчёт количества элементов и т.д. По этой причине такие списки используются в Elixir главным образом для передачи дополнительных значений. Если вам нужно хранить много элементов или исключить дублирование ключей, вам следует использовать мэпы.
 
-## Maps
+## Мэпы
 
-Whenever you need a key-value store, maps are the "go to" data structure in Elixir. A map is created using the `%{}` syntax:
+Если вам нужно хранилище пар ключ-значение, мэпы - та структура, которую предлагает Elixir в первую очередь. Мэп создаётся используя `%{}` синтаксис:
 
 ```iex
 iex> map = %{:a => 1, 2 => :b}
@@ -101,12 +101,12 @@ iex> map[:c]
 nil
 ```
 
-Compared to keyword lists, we can already see two differences:
+Сравнивая со списками с ключевыми словами, мы уже можем увидеть два отличия:
 
-  * Maps allow any value as a key.
-  * Maps' keys do not follow any ordering.
+  * Мэпы допускают любое значение в качестве ключа.
+  * Ключи мэпов не следуют какому-то определённому порядку.
 
-In contrast to keyword lists, maps are very useful with pattern matching. When a map is used in a pattern, it will always match on a subset of the given value:
+В отличии от списков с ключами, мэпы очень удобны для сравнения по шаблону. Когда мэп используется в шаблоне, он всегда будет соответствовать подмножеству сравниваемых значений:
 
 ```iex
 iex> %{} = %{:a => 1, 2 => :b}
@@ -119,9 +119,9 @@ iex> %{:c => c} = %{:a => 1, 2 => :b}
 ** (MatchError) no match of right hand side value: %{2 => :b, :a => 1}
 ```
 
-As shown above, a map matches as long as the keys in the pattern exist in the given map. Therefore, an empty map matches all maps.
+Как показано выше, мэп соответствует до тех пор, пока ключи в шаблоне существуют и в мэпе справа. Также, пустой мэп будет соответствовать любому мэпу.
 
-Variables can be used when accessing, matching and adding map keys:
+Переменные могут быть использованы для доступа, сравнения и добавления ключей в мэпы:
 
 ```iex
 iex> n = 1
@@ -134,7 +134,7 @@ iex> %{^n => :one} = %{1 => :one, 2 => :two, 3 => :three}
 %{1 => :one, 2 => :two, 3 => :three}
 ```
 
-[The `Map` module](https://hexdocs.pm/elixir/Map.html) provides a very similar API to the `Keyword` module with convenience functions to manipulate maps:
+[Модуль `Map`](https://hexdocs.pm/elixir/Map.html) предоставляет API, очень похожее на модуль `Keyword`, с удобными функциями для манипуляции с мэпами:
 
 ```iex
 iex> Map.get(%{:a => 1, 2 => :b}, :a)
@@ -145,7 +145,7 @@ iex> Map.to_list(%{:a => 1, 2 => :b})
 [{2, :b}, {:a, 1}]
 ```
 
-Maps have the following syntax for updating a key's value:
+Мэпы имеют следующий синтаксис для обновления значения для ключа:
 
 ```iex
 iex> map = %{:a => 1, 2 => :b}
@@ -157,16 +157,16 @@ iex> %{map | :c => 3}
 ** (KeyError) key :c not found in: %{2 => :b, :a => 1}
 ```
 
-The syntax above requires the given key to exist. It cannot be used to add new keys. For example, using it with the `:c` key failed because there is no `:c` in the map.
+Синтаксис выше подразумевает, что ключ существует. Он не может быть использован для добавления новых сенсоров. Например, использование ключа `:c` вызвало ошибку, потому что такого ключа нет в мэпе.
 
-When all the keys in a map are atoms, you can use the keyword syntax for convenience:
+Когда все ключи в мэпе - это атомы, вы можете использовать синтаксис ключевых слов для удобства:
 
 ```iex
 iex> map = %{a: 1, b: 2}
 %{a: 1, b: 2}
 ```
 
-Another interesting property of maps is that they provide their own syntax for accessing atom keys:
+Другое интересное свойство мэпов: у них есть свой собственный синтаксис для доступа к ключам-атомам:
 
 ```iex
 iex> map = %{:a => 1, 2 => :b}
@@ -178,9 +178,9 @@ iex> map.c
 ** (KeyError) key :c not found in: %{2 => :b, :a => 1}
 ```
 
-Elixir developers typically prefer to use the `map.field` syntax and pattern matching instead of the functions in the `Map` module when working with maps because they lead to an assertive style of programming. [This blog post](http://blog.plataformatec.com.br/2014/09/writing-assertive-code-with-elixir/) provides insight and examples on how you get more concise and faster software by writing assertive code in Elixir.
+Elixir разработчики обычно предпочитают использовать синтаксис `map.field` и сравнение по шаблону, вместо функций из модуля `Map`, при работе с мэпами, потому что они предоставляют assertive (корректный перевод?) стиль программирования. [В этом посте](http://blog.plataformatec.com.br/2014/09/writing-assertive-code-with-elixir/) показаны преимущества и примеры, как получить более лаконичное и быстрое ПО при помощи написания assertive кода на Elixir.
 
-> Note: Maps were recently introduced into the Erlang <abbr title="Virtual Machine">VM</abbr> and only from Elixir v1.2 they are capable of holding millions of keys efficiently. Therefore, if you are working with previous Elixir versions (v1.0 or v1.1) and you need to support at least hundreds of keys, you may consider using [the `HashDict` module](https://hexdocs.pm/elixir/HashDict.html).
+> Обратите внимание: Мэпы недавно были представлени в Erlang <abbr title="Virtual Machine">VM</abbr> и только начиная с Elixir v1.2 они способны эффективно хранить миллионы ключей. Если же вы работаете с предыдущими версиями Elixir (v1.0 или v1.1) и вам нужна поддержка хотя бы сотен ключей, вам может подойти [модуль `HashDict`](https://hexdocs.pm/elixir/HashDict.html).
 
 ## Nested data structures
 
