@@ -1,21 +1,13 @@
----
-layout: getting-started
-title: Modules and Functions
-redirect_from: /getting-started/modules.html
----
+# Модули и функции
 
-# {{ page.title }}
-
-{% include toc.html %}
-
-In Elixir we group several functions into modules. We've already used many different modules in the previous chapters such as [the `String` module](https://hexdocs.pm/elixir/String.html):
+В Elixir мы объединяем некоторые функции в модули. Мы уже использовали много разных модулей в предыдущих главах, например [модуль `String`](https://hexdocs.pm/elixir/String.html):
 
 ```iex
 iex> String.length("hello")
 5
 ```
 
-In order to create our own modules in Elixir, we use the `defmodule` macro. We use the `def` macro to define functions in that module:
+Чтобы создать свой модуль в Elixir, мы используем макрос `defmodule`. Мы используем макрос `def` для объявления функций в этом модуле:
 
 ```iex
 iex> defmodule Math do
@@ -28,11 +20,11 @@ iex> Math.sum(1, 2)
 3
 ```
 
-In the following sections, our examples are going to get longer in size, and it can be tricky to type them all in the shell. It's about time for us to learn how to compile Elixir code and also how to run Elixir scripts.
+В следующих секциях наши примеры будут больше, и будет не очень удобно набирать их в консоли. Самое время научиться компилировать Elixir код и запусть скрипты на Elixir.
 
-## Compilation
+## Компиляция
 
-Most of the time it is convenient to write modules into files so they can be compiled and reused. Let's assume we have a file named `math.ex` with the following contents:
+Как правило, очень удобно писать модули в файлы, так их можно скомпилировать и использовать повторно. Допустим, у нас есть файл с именем `math.ex` со следующим содержимым:
 
 ```elixir
 defmodule Math do
@@ -42,26 +34,26 @@ defmodule Math do
 end
 ```
 
-This file can be compiled using `elixirc`:
+Этот файл может быть скомпилирован, используя `elixirc`:
 
 ```bash
 $ elixirc math.ex
 ```
 
-This will generate a file named `Elixir.Math.beam` containing the bytecode for the defined module. If we start `iex` again, our module definition will be available (provided that `iex` is started in the same directory the bytecode file is in):
+Это создаст файл `Elixir.Math.beam`, содержащий байткод описанного модуля. Если мы снова запустим `iex` снова, модуль будет доступен (`iex` должен быть запущен в той же директории, где лежит файл с байткодом):
 
 ```iex
 iex> Math.sum(1, 2)
 3
 ```
 
-Elixir projects are usually organized into three directories:
+Проекты на Elixir обычно организованы в три директории:
 
-* ebin - contains the compiled bytecode
-* lib - contains elixir code (usually `.ex` files)
-* test - contains tests (usually `.exs` files)
+* ebin - содержит скомпилированный байткод
+* lib - содержит elixir код (как правило файлы `.ex`)
+* test - содержит тесты (обычно файлы `.exs`)
 
-When working on actual projects, the build tool called `mix` will be responsible for compiling and setting up the proper paths for you. For learning purposes, Elixir also supports a scripted mode which is more flexible and does not generate any compiled artifacts.
+Во время работы над реальными проектам, инструмент сборки `mix` будет отвечать за компиляцию и настройки правильных путей вместо вас. Для образовательных целей, Elixir также поддерживает скриптовый режим, более гибкий и без генерации каких-либо скомпилированных артефактов (корректный перевод artifacts?).
 
 ## Scripted mode
 
