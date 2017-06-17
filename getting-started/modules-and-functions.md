@@ -79,9 +79,9 @@ $ elixir math.exs
 
 Файл скомпилируется в оперативную память и выполнится, напечатает результат "3". Файл байткода не будет создан. В следующих примерах мы рекомендуем вам писать ваш код в скриптовые файлы и выполнять их как показано выше.
 
-## Named functions
+## Именованные функции
 
-Inside a module, we can define functions with `def/2` and private functions with `defp/2`. A function defined with `def/2` can be invoked from other modules while a private function can only be invoked locally.
+Внутри модуля мы можем определить функцию при помощи `def/2` и приватную функцию, использовав `defp/2`. Функция, определённая через `def/2` может быть вызвана из другого модуля, а приватная функция может быть вызвана только локально.
 
 ```elixir
 defmodule Math do
@@ -98,7 +98,7 @@ IO.puts Math.sum(1, 2)    #=> 3
 IO.puts Math.do_sum(1, 2) #=> ** (UndefinedFunctionError)
 ```
 
-Function declarations also support guards and multiple clauses. If a function has several clauses, Elixir will try each clause until it finds one that matches. Here is an implementation of a function that checks if the given number is zero or not:
+Определения функция также поддерживают безопасные ограничения (guards) и множественные варианты аргументов. Elixir будет проверять каждый вариант, пока не найдёт подходящий. Вот реализация функции, которая проверяет, является ли переданное ей число нулём:
 
 ```elixir
 defmodule Math do
@@ -117,9 +117,9 @@ IO.puts Math.zero?([1, 2, 3]) #=> ** (FunctionClauseError)
 IO.puts Math.zero?(0.0)       #=> ** (FunctionClauseError)
 ```
 
-Giving an argument that does not match any of the clauses raises an error.
+Передача аргумента, который не подходит ни одному из вариантов, вызовет ошибку.
 
-Similar to constructs like `if`, named functions support both `do:` and `do`/`end` block syntax, as [we learned `do`/`end` is a convenient syntax for the keyword list format](/getting-started/case-cond-and-if.html#doend-blocks). For example, we can edit `math.exs` to look like this:
+Аналогично конструкциям, вроде `if`, именованные функции поддерживают как синтаксис блоков `do:`, так и `do`/`end`, который [мы изучили вместе со списками с ключевыми словами](/getting-started/case-cond-and-if.html#doend-blocks). Например, мы можем привести `math.exs` к следующему виду:
 
 ```elixir
 defmodule Math do
@@ -128,7 +128,7 @@ defmodule Math do
 end
 ```
 
-And it will provide the same behaviour. You may use `do:` for one-liners but always use `do`/`end` for functions spanning multiple lines.
+Такой вариант даст нам аналогичное поведение. Вы можете использовать `do:` для записи в одну строку, но для многострочного кода всегда нужны `do`/`end`.
 
 ## Function capturing
 
