@@ -182,11 +182,11 @@ Elixir разработчики обычно предпочитают испол
 
 > Обратите внимание: Мэпы недавно были представлени в Erlang <abbr title="Virtual Machine">VM</abbr> и только начиная с Elixir v1.2 они способны эффективно хранить миллионы ключей. Если же вы работаете с предыдущими версиями Elixir (v1.0 или v1.1) и вам нужна поддержка хотя бы сотен ключей, вам может подойти [модуль `HashDict`](https://hexdocs.pm/elixir/HashDict.html).
 
-## Nested data structures
+## Вложенные структуры данных
 
-Often we will have maps inside maps, or even keywords lists inside maps, and so forth. Elixir provides conveniences for manipulating nested data structures via the `put_in/2`, `update_in/2` and other macros giving the same conveniences you would find in imperative languages while keeping the immutable properties of the language.
+Мы часто будем встречаться с мэпами внутри мэпов, или даже со списками с ключевыми словами внутри мэпов и т.п. Elixir позаботился об удобстве манипуляций со вложенными структурами данных с помощью `put_in/2`, `update_in/2` и других макросов, которые дают такое же удобство, как в имеративных языках, сохраняя при этом иммутабельность.
 
-Imagine you have the following structure:
+Представьте, что у вас есть следующая структура:
 
 ```iex
 iex> users = [
@@ -197,14 +197,14 @@ iex> users = [
  mary: %{age: 29, languages: ["Elixir", "F#", "Clojure"], name: "Mary"}]
 ```
 
-We have a keyword list of users where each value is a map containing the name, age and a list of programming languages each user likes. If we wanted to access the age for john, we could write:
+У нас есть список с ключами, в котором каждое значение - мэп с именем, возрастом и списком предпочитаемых языков программирования пользователей. Если мы хотим получить доступ к возрасту пользователя john, мы можем написать:
 
 ```iex
 iex> users[:john].age
 27
 ```
 
-It happens we can also use this same syntax for updating the value:
+Аналогичный синтаксис можно использовать для обновления значения:
 
 ```iex
 iex> users = put_in users[:john].age, 31
@@ -212,7 +212,7 @@ iex> users = put_in users[:john].age, 31
  mary: %{age: 29, languages: ["Elixir", "F#", "Clojure"], name: "Mary"}]
 ```
 
-The `update_in/2` macro is similar but allows us to pass a function that controls how the value changes. For example, let's remove "Clojure" from Mary's list of languages:
+Макрос `update_in/2` похож, но позволяет нам передать функцию, которая будет управлять изменением значеня. Например, давайте уберём "Clojure" из списка языков Mary:
 
 ```iex
 iex> users = update_in users[:mary].languages, fn languages -> List.delete(languages, "Clojure") end
@@ -220,6 +220,6 @@ iex> users = update_in users[:mary].languages, fn languages -> List.delete(langu
  mary: %{age: 29, languages: ["Elixir", "F#"], name: "Mary"}]
 ```
 
-There is more to learn about `put_in/2` and `update_in/2`, including the `get_and_update_in/2` that allows us to extract a value and update the data structure at once. There are also `put_in/3`, `update_in/3` and `get_and_update_in/3` which allow dynamic access into the data structure. [Check their respective documentation in the `Kernel` module for more information](https://hexdocs.pm/elixir/Kernel.html).
+Это далеко не вся информация о `put_in/2` и `update_in/2`, также есть макрос `get_and_update_in/2`, который позволяет нам получить значение и одновременно с этим обновить структуру данных. Есть также `put_in/3`, `update_in/3` и `get_and_update_in/3`, которые получают доступ в структуру данных динамически. [Посмотрите их исчерпывающую документацию в модуле `Kernel`](https://hexdocs.pm/elixir/Kernel.html)
 
-This concludes our introduction to associative data structures in Elixir. You will find out that, given keyword lists and maps, you will always have the right tool to tackle problems that require associative data structures in Elixir.
+На этом мы закончим введение в ассоциативные структуры данных в Elixir. В последствии вы обнаружите, что имея списки с ключами и мэпы, у вас всегда будет подходящий инструмент для решения проблем, в которых требуются ассоциативные структуры данных.
