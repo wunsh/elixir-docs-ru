@@ -55,11 +55,11 @@ iex> Math.sum(1, 2)
 
 Во время работы над реальными проектам, инструмент сборки `mix` будет отвечать за компиляцию и настройки правильных путей вместо вас. Для образовательных целей, Elixir также поддерживает скриптовый режим, более гибкий и без генерации каких-либо скомпилированных артефактов (корректный перевод artifacts?).
 
-## Scripted mode
+## Скриптовый режим
 
-In addition to the Elixir file extension `.ex`, Elixir also supports `.exs` files for scripting. Elixir treats both files exactly the same way, the only difference is in intention. `.ex` files are meant to be compiled while `.exs` files are used for scripting. When executed, both extensions compile and load their modules into memory, although only `.ex` files write their bytecode to disk in the format of `.beam` files.
+В дополнение к расширению файлов `.ex`, в Elixir также поддерживаются `.exs` файлы для написания скриптов. C точки зрения Elixir такие файлы идентичны, разница лишь в их назначении. `.ex` файлы будут скомпилированы, в то время как `.exs` файлы используются для скриптов. При исполнении, оба расширения компилируются и загружаются свои модули в память, но только `.ex` файлы записывают свой байткод на диск в формате `.beam`.
 
-For instance, we can create a file called `math.exs`:
+Например, мы можем создать файл с названием `math.exs`:
 
 ```elixir
 defmodule Math do
@@ -71,13 +71,13 @@ end
 IO.puts Math.sum(1, 2)
 ```
 
-And execute it as:
+И выполнить его:
 
 ```bash
 $ elixir math.exs
 ```
 
-The file will be compiled in memory and executed, printing "3" as the result. No bytecode file will be created. In the following examples, we recommend you write your code into script files and execute them as shown above.
+Файл скомпилируется в оперативную память и выполнится, напечатает результат "3". Файл байткода не будет создан. В следующих примерах мы рекомендуем вам писать ваш код в скриптовые файлы и выполнять их как показано выше.
 
 ## Named functions
 
