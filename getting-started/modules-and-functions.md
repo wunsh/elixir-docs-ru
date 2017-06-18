@@ -130,9 +130,9 @@ end
 
 Такой вариант даст нам аналогичное поведение. Вы можете использовать `do:` для записи в одну строку, но для многострочного кода всегда нужны `do`/`end`.
 
-## Function capturing
+## Отлов функций
 
-Throughout this tutorial, we have been using the notation `name/arity` to refer to functions. It happens that this notation can actually be used to retrieve a named function as a function type. Start `iex`, running the `math.exs` file defined above:
+На протяжении этого руководства мы использовали нотацию `имя_функции/арность` для обозначений функций. Такая нотация также может быть использована для получения именованной функции в качестве типа "функция". Запустите `iex`, открыв описанный выше файл `math.exs`:
 
 ```bash
 $ iex math.exs
@@ -149,9 +149,9 @@ iex> fun.(0)
 true
 ```
 
-Remember Elixir makes a distinction between anonymous functions and named functions, where the former must be invoked with a dot (`.`) between the variable name and parentheses. The capture operator bridges this gap by allowing named functions to be assigned to variables and passed as arguments in the same way we assign, invoke and pass anonymous functions.
+Помните, что в Elixir есть разница между анонимными и именованными функциями. В первых для вызова должна быть указана точка (`.`) между именем переменной и скобками. Оператор захвата (`&`, capture operator) позволяет именованным функциям быть привязанным к переменным и переданным в качестве арументам так же, как мы привязываем, исполняем и передаём анонимные функции.
 
-Local or imported functions, like `is_function/1`, can be captured without the module:
+Локальные или импортированные функции, такие как `is_function/1`, могут быть использованы без модуля:
 
 ```iex
 iex> &is_function/1
@@ -160,7 +160,7 @@ iex> (&is_function/1).(fun)
 true
 ```
 
-Note the capture syntax can also be used as a shortcut for creating functions:
+Обратите внимание, что синтаксис захвата может быть также использован в качестве сокращения для создания функций:
 
 ```iex
 iex> fun = &(&1 + 1)
@@ -169,9 +169,9 @@ iex> fun.(1)
 2
 ```
 
-The `&1` represents the first argument passed into the function. `&(&1+1)` above is exactly the same as `fn x -> x + 1 end`. The syntax above is useful for short function definitions.
+`&1` воспринимается как первый аргумент, переданный в функцию. `&(&1+1)` выше, то же самое, что `fn x -> x + 1 end`. Синтаксис выше полезен для объявления коротких функций.
 
-If you want to capture a function from a module, you can do `&Module.function()`:
+Если вы хотите захватить функцию из модуля, вы можете использовать `&Module.function()`:
 
 ```iex
 iex> fun = &List.flatten(&1, &2)
@@ -180,7 +180,7 @@ iex> fun.([1, [[2], 3]], [4, 5])
 [1, 2, 3, 4, 5]
 ```
 
-`&List.flatten(&1, &2)` is the same as writing `fn(list, tail) -> List.flatten(list, tail) end` which in this case is equivalent to `&List.flatten/2`. You can read more about the capture operator `&` in [the `Kernel.SpecialForms` documentation](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#&/1).
+`&List.flatten(&1, &2)` аналогично `fn(list, tail) -> List.flatten(list, tail) end`, а это в данном случае равноценно `&List.flatten/2`. Вы можете получить больше информации об операторе `&` в [документации по `Kernel.SpecialForms`](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#&/1).
 
 ## Default arguments
 
