@@ -182,9 +182,9 @@ iex> fun.([1, [[2], 3]], [4, 5])
 
 `&List.flatten(&1, &2)` аналогично `fn(list, tail) -> List.flatten(list, tail) end`, а это в данном случае равноценно `&List.flatten/2`. Вы можете получить больше информации об операторе `&` в [документации по `Kernel.SpecialForms`](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#&/1).
 
-## Default arguments
+## Стандартные значения аргументов
 
-Named functions in Elixir also support default arguments:
+Именованные функции в Elixir также поддерживают стандартные значения аргументов:
 
 ```elixir
 defmodule Concat do
@@ -197,7 +197,7 @@ IO.puts Concat.join("Hello", "world")      #=> Hello world
 IO.puts Concat.join("Hello", "world", "_") #=> Hello_world
 ```
 
-Any expression is allowed to serve as a default value, but it won't be evaluated during the function definition. Every time the function is invoked and any of its default values have to be used, the expression for that default value will be evaluated:
+Любое выражение может быть принято в качестве стандартного значения, но при описании функции оно не будет оценено. При каждом вызове функции, когда нужно использовать стандартное значение, оно будет подставляться во время исполнения:
 
 ```elixir
 defmodule DefaultTest do
@@ -216,7 +216,7 @@ iex> DefaultTest.dowork
 "hello"
 ```
 
-If a function with default values has multiple clauses, it is required to create a function head (without an actual body) for declaring defaults:
+Если функция со стандартным значением имеет несколько вариантов исполнения, нужно сначала объявить функцию без её описания (название и список аргументов без тела функции), чтобы задать значения по умолчанию:
 
 ```elixir
 defmodule Concat do
@@ -236,7 +236,7 @@ IO.puts Concat.join("Hello", "world", "_") #=> Hello_world
 IO.puts Concat.join("Hello")               #=> Hello
 ```
 
-When using default values, one must be careful to avoid overlapping function definitions. Consider the following example:
+При использовании стандартных значений следует быть осторожным во избежание перекрытия описаний функции. Рассмотрите следующий пример:
 
 ```elixir
 defmodule Concat do
@@ -252,11 +252,11 @@ defmodule Concat do
 end
 ```
 
-If we save the code above in a file named "concat.ex" and compile it, Elixir will emit the following warning:
+Если мы сохраним код выше в файл с названием "concat.ex" и скомпилируем его, Elixir покажет следующее предупреждение:
 
     warning: this clause cannot match because a previous clause at line 2 always matches
 
-The compiler is telling us that invoking the `join` function with two arguments will always choose the first definition of `join` whereas the second one will only be invoked when three arguments are passed:
+Компилятор говорит нам, что вызов функции `join` с двумя аргументами всегда выберет первое определение, а второе будет выполнено только с тремя переданными аргументами:
 
 ```bash
 $ iex concat.exs
@@ -274,4 +274,4 @@ iex> Concat.join "Hello", "world", "_"
 "Hello_world"
 ```
 
-This finishes our short introduction to modules. In the next chapters, we will learn how to use named functions for recursion, explore Elixir lexical directives that can be used for importing functions from other modules and discuss module attributes.
+На этом мы закончим наше краткое введение в модули. В следующих главах мы изучим, как использовать именованные функции для рекурсии, рассмотрим лексические директивы Elixir, которые можно использовать для импорта функций из других модулей и поговорим об атрибутах модулей.
