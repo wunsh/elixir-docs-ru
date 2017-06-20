@@ -1,15 +1,8 @@
----
-layout: getting-started
-title: Recursion
----
+# Рекурсия
 
-# {{ page.title }}
+## Циклы через рекурсию
 
-{% include toc.html %}
-
-## Loops through recursion
-
-Due to immutability, loops in Elixir (as in any functional programming language) are written differently from imperative languages. For example, in an imperative language like C, one would write:
+Ввиду иммутабельности, циклы в Elixir (как и в других функциональных языках программирования) отличаются в написании от императивных языков. Например, в C-подобных языках они могут быть написаны так:
 
 ```c
 for(i = 0; i < sizeof(array); i++) {
@@ -17,7 +10,7 @@ for(i = 0; i < sizeof(array); i++) {
 }
 ```
 
-In the example above, we are mutating both the array and the variable `i`. Mutating is not possible in Elixir. Instead, functional languages rely on recursion: a function is called recursively until a condition is reached that stops the recursive action from continuing. No data is mutated in this process. Consider the example below that prints a string an arbitrary number of times:
+В примере выше мы изменяем и массив, и переменную `i`. Изменение невозможно в Elixir. Функциональные языки в противовес полагаются на рекурсию: функция вызывается рекурсивно, пока условие для остановки не будет достигнуто. Никакие данные в процессе не изменяются. Посмотрите на пример ниже, который печатает строку указанное количество раз:
 
 ```elixir
 defmodule Recursion do
@@ -37,18 +30,17 @@ Recursion.print_multiple_times("Hello!", 3)
 # Hello!
 ```
 
-Similar to `case`, a function may have many clauses. A particular clause is executed when the arguments passed to the function match the clause's argument patterns and its guard evaluates to `true`.
+Аналогично `case`, функция может иметь несколько вариантов вызова. Определённый вариант будет выполнен, когда переданные аргументы удовлетворяют шаблону аргументов и его ограничивающие условия возвращают `true`.
 
-When `print_multiple_times/2` is initially called in the example above, the argument `n` is equal to `3`.
+При вызове `print_multiple_times/2` в примере выше, аргумент `n` равен `3`.
 
-The first clause has a guard which says "use this definition if and only if `n` is less than or equal to `1`". Since this is not the case, Elixir proceeds to the next clause's definition.
+Первый вариант имеет ограничение, которое говорит "используй это определение тогда и только тогда, когда `n` меньше или равно `1`". Т.к. в начале этот вариант не подходит, используется следующее определение.
 
-The second definition matches the pattern and has no guard so it will be executed. It first prints our `msg` and then calls itself passing `n - 1` (`2`) as the second argument.
+Второе определение подходит шаблону и не имеет ограничений, таким образом оно будет выполнено. При этом будет напечатано наше `msg` и будет вызвана эта же функция с `n - 1` (`2`) в качестве второго аргумента.
 
-Our `msg` is printed and `print_multiple_times/2` is called again, this time with the second argument set to `1`.
-Because `n` is now set to `1`, the guard in our first definition of `print_multiple_times/2` evaluates to true, and we execute this particular definition. The `msg` is printed, and there is nothing left to execute.
+Наше `msg` напечатано и `print_multiple_times/2` вызывается снова, на этот раз со вторым аргументом `1`. Т.к. `n` теперь равно `1`, ограничение из первого определения вернёт true и выполнится соответствующий ему код. `msg` будет напечатано и больше ничего не останется для выполнения.
 
-We defined `print_multiple_times/2` so that, no matter what number is passed as the second argument, it either triggers our first definition (known as a _base case_) or it triggers our second definition, which will ensure that we get exactly one step closer to our base case.
+Мы определили `print_multiple_times/2` так, что неважно, какое число будет передано в качестве второго аргумента, будет или выполнено первое определение (его можно назвать базовым случаем) или второе, которое приблизит нас на шаг к базовому случаю.
 
 ## Reduce and map algorithms
 
