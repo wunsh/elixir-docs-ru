@@ -42,9 +42,9 @@ Recursion.print_multiple_times("Hello!", 3)
 
 Мы определили `print_multiple_times/2` так, что неважно, какое число будет передано в качестве второго аргумента, будет или выполнено первое определение (его можно назвать базовым случаем) или второе, которое приблизит нас на шаг к базовому случаю.
 
-## Reduce and map algorithms
+## Алгоритмы редукции и мэппинга
 
-Let's now see how we can use the power of recursion to sum a list of numbers:
+Давайте посмотрим, как мы можем использовать мощь рекурсии для подсчёта списка чисел:
 
 ```elixir
 defmodule Math do
@@ -60,9 +60,9 @@ end
 IO.puts Math.sum_list([1, 2, 3], 0) #=> 6
 ```
 
-We invoke `sum_list` with the list `[1, 2, 3]` and the initial value `0` as arguments. We will try each clause until we find one that matches according to the pattern matching rules. In this case, the list `[1, 2, 3]` matches against `[head | tail]` which binds `head` to `1` and `tail` to `[2, 3]`; `accumulator` is set to `0`.
+Мы вызвали `sum_list` со списком `[1, 2, 3]` и начальным значением `0` в качестве аргументов. Мы пробуем каждый вариант описания функции, пока не найдём подходящий по правилам сравнения с шаблоном. В данном случае, `[1, 2, 3]` соответствует `[head | tail]`, где `head` привязывается к `1`, а `tail` к `[2, 3]`; `accumulator` при этом равен `0`.
 
-Then, we add the head of the list to the accumulator `head + accumulator` and call `sum_list` again, recursively, passing the tail of the list as its first argument. The tail will once again match `[head | tail]` until the list is empty, as seen below:
+Затем мы добавляем голову списка к аккумулятору `head + accumulator` и вызываем `sum_list` снова, рекурсивно, передав туда конец списка первым аргументом. Конец списка снова подходит под шаблон `[head | tail]`, до тех пор, пока список не будет пуст, как показано ниже:
 
 ```elixir
 sum_list [1, 2, 3], 0
@@ -71,11 +71,11 @@ sum_list [3], 3
 sum_list [], 6
 ```
 
-When the list is empty, it will match the final clause which returns the final result of `6`.
+Когда список пуст, он будет подходить последнему варианту функции и результат будет равен `6`.
 
-The process of taking a list and _reducing_ it down to one value is known as a _reduce algorithm_ and is central to functional programming.
+Процесс взятия списка и его _редукции_ до единственного значения называется _алгоритмом редукции_ и является основным в функциональном программировании.
 
-What if we instead want to double all of the values in our list?
+Что, если мы напротив хотим удвоить все значения в нашем списке?
 
 ```elixir
 defmodule Math do
@@ -97,11 +97,11 @@ iex math.exs
 iex> Math.double_each([1, 2, 3]) #=> [2, 4, 6]
 ```
 
-Here we have used recursion to traverse a list, doubling each element and returning a new list. The process of taking a list and _mapping_ over it is known as a _map algorithm_.
+Тут мы использовали рекурсию для прохода по списку, удваивая каждый его элемент и возвращая новый список. Процесс _преображения_ списка известен как _алгоритм мэппинга_ (map algorith).
 
-Recursion and [tail call](https://en.wikipedia.org/wiki/Tail_call) optimization are an important part of Elixir and are commonly used to create loops. However, when programming in Elixir you will rarely use recursion as above to manipulate lists.
+Оптимизация через рекурсию и [вызов хвоста (tail call)](https://en.wikipedia.org/wiki/Tail_call) являются важной частью Elixir и часто используются для создания циклов. Однако, во время программирования на Elixir вы будете редко использовать рекурсию для работы со списками, как показано выше.
 
-The [`Enum` module](https://hexdocs.pm/elixir/Enum.html), which we're going to see in the next chapter, already provides many conveniences for working with lists. For instance, the examples above could be written as:
+[Модуль `Enum`](https://hexdocs.pm/elixir/Enum.html), который мы рассмотрим в следующей главе, уже предоставляет много удобных инструментов для работы со списками. Например, пример выше мог бы быть написан так:
 
 ```iex
 iex> Enum.reduce([1, 2, 3], 0, fn(x, acc) -> x + acc end)
@@ -110,7 +110,7 @@ iex> Enum.map([1, 2, 3], fn(x) -> x * 2 end)
 [2, 4, 6]
 ```
 
-Or, using the capture syntax:
+Или, используя синтаксис захвата (capture syntax, более корректный перевод?): 
 
 ```iex
 iex> Enum.reduce([1, 2, 3], 0, &+/2)
@@ -119,4 +119,4 @@ iex> Enum.map([1, 2, 3], &(&1 * 2))
 [2, 4, 6]
 ```
 
-Let's take a deeper look at `Enumerable`s and, while we're at it, their lazy counterpart, `Stream`s.
+Рассмотрим подробнее `Enumerable` и, по случаю, его ленивый аналог, `Stream`.
