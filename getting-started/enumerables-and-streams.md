@@ -3,13 +3,11 @@ layout: getting-started
 title: Enumerables and Streams
 ---
 
-# {{ page.title }}
+# Перечисления и потоки
 
-{% include toc.html %}
+## Перечисления (enumerables)
 
-## Enumerables
-
-Elixir provides the concept of enumerables and [the `Enum` module](https://hexdocs.pm/elixir/Enum.html) to work with them. We have already learned two enumerables: lists and maps.
+Elixir позволяет работать с перечислениями с помощью [модуля `Enum`](https://hexdocs.pm/elixir/Enum.html). Мы уже познакомились с двумя перечисляемыми типами: списки и мэпы. 
 
 ```iex
 iex> Enum.map([1, 2, 3], fn x -> x * 2 end)
@@ -18,9 +16,9 @@ iex> Enum.map(%{1 => 2, 3 => 4}, fn {k, v} -> k * v end)
 [2, 12]
 ```
 
-The `Enum` module provides a huge range of functions to transform, sort, group, filter and retrieve items from enumerables. It is one of the modules developers use frequently in their Elixir code.
+Модуль `Enum` предоставляет огромное множество функция для трансформации, сортировки, группировки, фильтрации и извлечения элементов из перечислений. Это один из наболее часто используемых в коде Elixir разработчиков модулей:
 
-Elixir also provides ranges:
+В Elixir также есть диапазоны:
 
 ```iex
 iex> Enum.map(1..3, fn x -> x * 2 end)
@@ -29,9 +27,9 @@ iex> Enum.reduce(1..3, 0, &+/2)
 6
 ```
 
-The functions in the Enum module are limited to, as the name says, enumerating values in data structures. For specific operations, like inserting and updating particular elements, you may need to reach for modules specific to the data type. For example, if you want to insert an element at a given position in a list, you should use the `List.insert_at/3` function from [the `List` module](https://hexdocs.pm/elixir/List.html), as it would make little sense to insert a value into, for example, a range.
+Функции в модуле Enum ограничены, как и говорит название, перечислением значений в структурах данных. Для специфических операций, вроде добавления или обновления элементов, вам, возможно, понадобится модуль соответствующей структуры данных. Например, если вы хотите добавить элемент на необходимую позицию в списке, вам нужна функция `List.insert_at/3` из [модуля `List`](https://hexdocs.pm/elixir/List.html), потому что было бы мало смысла во вставке значения, например, в диапазон.
 
-We say the functions in the `Enum` module are polymorphic because they can work with diverse data types. In particular, the functions in the `Enum` module can work with any data type that implements [the `Enumerable` protocol](https://hexdocs.pm/elixir/Enumerable.html). We are going to discuss Protocols in a later chapter; for now we are going to move on to a specific kind of enumerable called a stream.
+Можно сказать, что функции в модуле `Enum` полиморфны, потому что они могут работать с разными типами данных. В частности, функции из модуля `Enum` могут работать с любым типаом данных, который реализует [протокол `Enumerable`](https://hexdocs.pm/elixir/Enumerable.html). Мы поговорим о протоколах позднее; сейчас мы перейдём к особенному виду перечислений, называемых потоками.
 
 ## Eager vs Lazy
 
