@@ -31,9 +31,9 @@ iex> Enum.reduce(1..3, 0, &+/2)
 
 Можно сказать, что функции в модуле `Enum` полиморфны, потому что они могут работать с разными типами данных. В частности, функции из модуля `Enum` могут работать с любым типаом данных, который реализует [протокол `Enumerable`](https://hexdocs.pm/elixir/Enumerable.html). Мы поговорим о протоколах позднее; сейчас мы перейдём к особенному виду перечислений, называемых потоками.
 
-## Eager vs Lazy
+## Жадная или ленивая работа
 
-All the functions in the `Enum` module are eager. Many functions expect an enumerable and return a list back:
+Все функции из модуля `Enum` жадные. Многие функции, ожидающие на вход перечисление, возвращают списки:
 
 ```iex
 iex> odd? = &(rem(&1, 2) != 0)
@@ -42,14 +42,14 @@ iex> Enum.filter(1..3, odd?)
 [1, 3]
 ```
 
-This means that when performing multiple operations with `Enum`, each operation is going to generate an intermediate list until we reach the result:
+Это значит, что при выполнении нескольких операций с `Enum`, каждая из них создаст промежуточный список, пока будет достигнут результат:
 
 ```iex
 iex> 1..100_000 |> Enum.map(&(&1 * 3)) |> Enum.filter(odd?) |> Enum.sum
 7500000000
 ```
 
-The example above has a pipeline of operations. We start with a range and then multiply each element in the range by 3. This first operation will now create and return a list with `100_000` items. Then we keep all odd elements from the list, generating a new list, now with `50_000` items, and then we sum all entries.
+В пример выше есть последовательность (pipeline) операций. Мы начинаем с диапазона, затем умножаем каждый его элемента на 3. Первая операция создаст и вернёт список со `100_000` элементов. Затем мы выбираем все нечётные элементы из этого списка, создаём новый список, теперь с `50_000` элементов, и затем суммируем их все.
 
 ## The pipe operator
 
