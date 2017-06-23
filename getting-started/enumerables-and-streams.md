@@ -51,16 +51,16 @@ iex> 1..100_000 |> Enum.map(&(&1 * 3)) |> Enum.filter(odd?) |> Enum.sum
 
 В пример выше есть последовательность (pipeline) операций. Мы начинаем с диапазона, затем умножаем каждый его элемента на 3. Первая операция создаст и вернёт список со `100_000` элементов. Затем мы выбираем все нечётные элементы из этого списка, создаём новый список, теперь с `50_000` элементов, и затем суммируем их все.
 
-## The pipe operator
+## Оператор конвейера
 
-The `|>` symbol used in the snippet above is the **pipe operator**: it takes the output from the expression on its left side and passes it as the first argument to the function call on its right side. It's similar to the Unix `|` operator.  Its purpose is to highlight the data being transformed by a series of functions. To see how it can make the code cleaner, have a look at the example above rewritten without using the `|>` operator:
+Символ `|>` в коде выше - это **оператор конвейера** (pipe operator): он принимает вывод из выражения слева и передаёт его первым аргументом в вызов функции справа. Он аналогичен оператору `|` в Unix. Его задача - явно выделить данные, которые будут преобразованы несколькими функциями. Чтобы увидеть, как это сделает код чище, взгляните на пример выше, переписанный без оператора `|>`:
 
 ```iex
 iex> Enum.sum(Enum.filter(Enum.map(1..100_000, &(&1 * 3)), odd?))
 7500000000
 ```
 
-Find more about the pipe operator [by reading its documentation](https://hexdocs.pm/elixir/Kernel.html#%7C%3E/2).
+Больше информации об операторе конвейера [в его документации](https://hexdocs.pm/elixir/Kernel.html#%7C%3E/2).
 
 ## Streams
 
