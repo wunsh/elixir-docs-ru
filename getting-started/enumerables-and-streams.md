@@ -62,25 +62,25 @@ iex> Enum.sum(Enum.filter(Enum.map(1..100_000, &(&1 * 3)), odd?))
 
 Больше информации об операторе конвейера [в его документации](https://hexdocs.pm/elixir/Kernel.html#%7C%3E/2).
 
-## Streams
+## Потоки (streams)
 
-As an alternative to `Enum`, Elixir provides [the `Stream` module](https://hexdocs.pm/elixir/Stream.html) which supports lazy operations:
+В качестве альтернативы `Enum`, в Elixir есть [модуль `Stream`](https://hexdocs.pm/elixir/Stream.html), который поддерживает ленивые операции:
 
 ```iex
 iex> 1..100_000 |> Stream.map(&(&1 * 3)) |> Stream.filter(odd?) |> Enum.sum
 7500000000
 ```
 
-Streams are lazy, composable enumerables.
+Потоки ленивые, в отличии от перечислений.
 
-In the example above, `1..100_000 |> Stream.map(&(&1 * 3))` returns a data type, an actual stream, that represents the `map` computation over the range `1..100_000`:
+В примере выше `1..100_000 |> Stream.map(&(&1 * 3))` возвращает тип данных, являющийся на самом деле потоком, который представляет вычисление `map` на диапазоне `1..100_000`:
 
 ```iex
 iex> 1..100_000 |> Stream.map(&(&1 * 3))
 #Stream<[enum: 1..100000, funs: [#Function<34.16982430/1 in Stream.map/2>]]>
 ```
 
-Furthermore, they are composable because we can pipe many stream operations:
+Более того, они комбинируются, потому что мы можем собрать в конвейер много потоковых операций:
 
 ```iex
 iex> 1..100_000 |> Stream.map(&(&1 * 3)) |> Stream.filter(odd?)
