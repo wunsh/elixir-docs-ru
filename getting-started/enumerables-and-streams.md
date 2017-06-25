@@ -87,9 +87,9 @@ iex> 1..100_000 |> Stream.map(&(&1 * 3)) |> Stream.filter(odd?)
 #Stream<[enum: 1..100000, funs: [...]]>
 ```
 
-Instead of generating intermediate lists, streams build a series of computations that are invoked only when we pass the underlying stream to the `Enum` module. Streams are useful when working with large, *possibly infinite*, collections.
+Вместо генерации промежуточных списков, потоки выстраивают серию вычислений, которая будет выполнена только когда мы передадит поток в модуль `Enum`. Потоки полезны при работе с большими, *возможно бесконечными*, коллекциями.
 
-Many functions in the `Stream` module accept any enumerable as an argument and return a stream as a result. It also provides functions for creating streams. For example, `Stream.cycle/1` can be used to create a stream that cycles a given enumerable infinitely. Be careful to not call a function like `Enum.map/2` on such streams, as they would cycle forever:
+Многие функции в модуле `Stream` принимают любое перечисление в качестве аргумента и возвращают поток в качестве результата. Также там есть функции для создания потоков. Например, `Stream.cycle/1` может быть использована для создания потока, который зацикливает переданное перечисление бесконечно. Будьте осторожны с тем, чтобы не вызвать функцию в духе `Enum.map/2` на таком потоке, она зациклится навсегда:
 
 ```iex
 iex> stream = Stream.cycle([1, 2, 3])
@@ -98,7 +98,7 @@ iex> Enum.take(stream, 10)
 [1, 2, 3, 1, 2, 3, 1, 2, 3, 1]
 ```
 
-On the other hand, `Stream.unfold/2` can be used to generate values from a given initial value:
+С другой стороны, `Stream.unfold/2` может быть использована для генерации значений из одного переданного значения:
 
 ```iex
 iex> stream = Stream.unfold("hełło", &String.next_codepoint/1)
@@ -107,7 +107,7 @@ iex> Enum.take(stream, 3)
 ["h", "e", "ł"]
 ```
 
-Another interesting function is `Stream.resource/3` which can be used to wrap around resources, guaranteeing they are opened right before enumeration and closed afterwards, even in the case of failures. For example, we can use it to stream a file:
+Другая интересная функция - `Stream.resource/3`, которая может быть использована для оборачивания ресурсов, с гарантией, что она корректно открыты перед последовательным проходом, и закрыты после, даже в случае неудачи. Например, мы можем использовать её для потокового чтения файла:
 
 ```iex
 iex> stream = File.stream!("path/to/file")
@@ -115,7 +115,7 @@ iex> stream = File.stream!("path/to/file")
 iex> Enum.take(stream, 10)
 ```
 
-The example above will fetch the first 10 lines of the file you have selected. This means streams can be very useful for handling large files or even slow resources like network resources.
+Пример выше получит первые 10 строк выбранного файла. Это значит, что потоки могут быть очень полезны для работы с большими файлами или даже с медленными ресурсами, например, сетевыми.
 
 The amount of functionality in the [`Enum`](https://hexdocs.pm/elixir/Enum.html) and [`Stream`](https://hexdocs.pm/elixir/Stream.html) modules can be daunting at first, but you will get familiar with them case by case. In particular, focus on the `Enum` module first and only move to `Stream` for the particular scenarios where laziness is required, to either deal with slow resources or large, possibly infinite, collections.
 
