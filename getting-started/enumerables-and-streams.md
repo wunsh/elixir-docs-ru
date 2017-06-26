@@ -117,6 +117,6 @@ iex> Enum.take(stream, 10)
 
 Пример выше получит первые 10 строк выбранного файла. Это значит, что потоки могут быть очень полезны для работы с большими файлами или даже с медленными ресурсами, например, сетевыми.
 
-The amount of functionality in the [`Enum`](https://hexdocs.pm/elixir/Enum.html) and [`Stream`](https://hexdocs.pm/elixir/Stream.html) modules can be daunting at first, but you will get familiar with them case by case. In particular, focus on the `Enum` module first and only move to `Stream` for the particular scenarios where laziness is required, to either deal with slow resources or large, possibly infinite, collections.
+Объём функциональности модулей  [`Enum`](https://hexdocs.pm/elixir/Enum.html) и [`Stream`](https://hexdocs.pm/elixir/Stream.html) может показаться пугающим, но вы будете знакомиться с ними постепенно. В частности, сосредоточьтесь на модуле `Enum` для начала и переходите к `Strem` только в случае, когда ленивая работа необходима, или для работы с медленными ресурсами, или с большими, возможно бесконечными, коллекциями. 
 
-Next we'll look at a feature central to Elixir, Processes, which allows us to write concurrent, parallel and distributed programs in an easy and understandable way.
+Далее мы посмотрим на основу Elixir - процессы, которые позволяют писать конкуррентные, параллельные и распределённые программы простым и понятным способом.
