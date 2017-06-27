@@ -1,8 +1,6 @@
 ---
-layout: getting-started
-title: Enumerables and Streams
+title: Enumerables и Streams
 ---
-
 # Перечисления и потоки
 
 ## Перечисления (enumerables)
