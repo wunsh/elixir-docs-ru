@@ -12,16 +12,16 @@ title: Процессы
 
 ## `spawn`
 
-The basic mechanism for spawning new processes is the auto-imported `spawn/1` function:
+Основной механизм порождения новых процессов - автоматически импортируемая функция `spawn/1`:
 
 ```iex
 iex> spawn fn -> 1 + 2 end
 #PID<0.43.0>
 ```
 
-`spawn/1` takes a function which it will execute in another process.
+`spawn/1` принимает функцию, которую она выполнит в другом процессе.
 
-Notice `spawn/1` returns a PID (process identifier). At this point, the process you spawned is very likely dead. The spawned process will execute the given function and exit after the function is done:
+Обратите внимание, что `spawn/1` возвращает PID (идентификатор процесса). К этому моменту, процесс, который вы породили, скорее всего мёртв. Порождённый процесс выполнит переданную функцию и умрёт после её окончания:
 
 ```iex
 iex> pid = spawn fn -> 1 + 2 end
@@ -30,9 +30,9 @@ iex> Process.alive?(pid)
 false
 ```
 
-> Note: you will likely get different process identifiers than the ones we are getting in this guide.
+> Вы скорее всего получите идентификаторы процессов, отличные от представленных в этом руководстве.
 
-We can retrieve the PID of the current process by calling `self/0`:
+Мы можем получить PID текущего процесса, вызвав `self/0`:
 
 ```iex
 iex> self()
@@ -41,7 +41,7 @@ iex> Process.alive?(self())
 true
 ```
 
-Processes get much more interesting when we are able to send and receive messages.
+Процессы становятся намного интереснее, когда мы можем отправлять и получать сообщения.
 
 ## `send` and `receive`
 
