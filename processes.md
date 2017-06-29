@@ -43,9 +43,9 @@ true
 
 Процессы становятся намного интереснее, когда мы можем отправлять и получать сообщения.
 
-## `send` and `receive`
+## `send` и `receive`
 
-We can send messages to a process with `send/2` and receive them with `receive/1`:
+Мы можем отправлять сообщения в процесс с помощью `send/2` и принимать их через `recieve/1`
 
 ```iex
 iex> send self(), {:hello, "world"}
@@ -57,11 +57,11 @@ iex> receive do
 "world"
 ```
 
-When a message is sent to a process, the message is stored in the process mailbox. The `receive/1` block goes through the current process mailbox searching for a message that matches any of the given patterns. `receive/1` supports guards and many clauses, such as `case/2`.
+Когда сообщение отправлено в процесс, оно хранится в почтовом ящике процесса. Блок `recieve/1` проходит через почтовый ящик текущего процесса в поисах сообщения, которое подходит под переданный шаблон. `receive/1` поддерживает ограничительные условия и множественные варианты входа, также, как `case/2`.
 
-The process that sends the message does not block on `send/2`, it puts the message in the recipient's mailbox and continues. In particular, a process can send messages to itself.
+Процесс, который отправляет сообщение, не блокируется на `send/2`, он помещает сообщение в почтовый ящик получателя и продолжается. В частности, процесс может отправлять сообщение сам себе.
 
-If there is no message in the mailbox matching any of the patterns, the current process will wait until a matching message arrives. A timeout can also be specified:
+Если в ящике нет сообщений, подходящих какому-либо из шаблонов, текущий процесс будет ждать, пока не появится подходящее сообщение. Время ожидания также может быть задано:
 
 ```iex
 iex> receive do
@@ -72,9 +72,9 @@ iex> receive do
 "nothing after 1s"
 ```
 
-A timeout of 0 can be given when you already expect the message to be in the mailbox.
+Можно установить таймаут 0, если ожидается, что сообщение уже должно быть в ящике.
 
-Let's put it all together and send messages between processes:
+Давайте объединим всё и отправим сообщение между процессами:
 
 ```iex
 iex> parent = self()
@@ -87,9 +87,9 @@ iex> receive do
 "Got hello from #PID<0.48.0>"
 ```
 
-The `inspect/1` function is used to convert a data structure's internal representation into a string, typically for printing. Notice that when the `receive` block gets executed the sender process we have spawned may already be dead, as its only instruction was to send a message.
+Функция `inspect/1` используется для конвертации внутреннего представления структур данных в строки, обычно для вывода. Помните, что когда блок `recieve` выполняется, процесс отправитель может быть уже мёртв, т.к. единственная его инструкция - отправка сообщения.
 
-While in the shell, you may find the helper `flush/0` quite useful. It flushes and prints all the messages in the mailbox.
+Во время работы в консоли, вы можете найти достаточно полезным хелпер `flush/0`. Он получает и печатает все сообщения из ящика:
 
 ```iex
 iex> send self(), :hello
