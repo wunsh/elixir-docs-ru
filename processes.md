@@ -99,9 +99,9 @@ iex> flush()
 :ok
 ```
 
-## Links
+## Ссылки
 
-The majority of times we spawn processes in Elixir, we spawn them as linked processes. Before we show an example with `spawn_link/1`, let's see what happens when a process started with `spawn/1` fails:
+Большую часть времени, порождая процессы в Elixir, мы порождаем их как связанные процессы. До того, как мы покажем пример с использованием `spawn_link/1`, давайте посмотрим, что произойдёт, когда процесс, начатый со `spawn/1` завершится с ошибкой:
 
 ```iex
 iex> spawn fn -> raise "oops" end
@@ -112,7 +112,7 @@ iex> spawn fn -> raise "oops" end
     :erlang.apply/2
 ```
 
-It merely logged an error but the parent process is still running. That's because processes are isolated. If we want the failure in one process to propagate to another one, we should link them. This can be done with `spawn_link/1`:
+Он просто выведет ошибку, но процесс-родитель будет всё равно запущен. Это происходит, т.к. процессы изолированы. Если мы хотим, чтобы отказ одного процесса приводил к отказу другого, следует связать их. Это можно сделать с помощью `spawn_link/1`:
 
 ```iex
 iex> spawn_link fn -> raise "oops" end
@@ -123,15 +123,15 @@ iex> spawn_link fn -> raise "oops" end
         :erlang.apply/2
 ```
 
-Because processes are linked, we now see a message saying the parent process, which is the shell process, has received an EXIT signal from another process causing the shell to terminate. IEx detects this situation and starts a new shell session.
+Т.к. процессы связаны, мы видим сообщение о том, что процесс-родитель, а это процесс консоли, получил сигнал EXIT от другого процесса, что привело к завершению работы консоли. IEx определяет такую ситуацию и начинает новую сессию.
 
-Linking can also be done manually by calling `Process.link/1`. We recommend that you take a look at [the `Process` module](https://hexdocs.pm/elixir/Process.html) for other functionality provided by processes.
+Связывание также можно сделать внучную, вызвав `Process.link/1`. Мы рекомендуем взглянуть на [модуль `Process`](https://hexdocs.pm/elixir/Process.html), чтобы узнать о другой функциональности процессов.
 
-Processes and links play an important role when building fault-tolerant systems. Elixir processes are isolated and don't share anything by default. Therefore, a failure in a process will never crash or corrupt the state of another process. Links, however, allow processes to establish a relationship in a case of failures. We often link our processes to supervisors which will detect when a process dies and start a new process in its place.
+Процессы и ссылки играют важную роль в создании отказоустойчивых систем. Процессы Elixir изолированы и ничего не делят между собой по умолчанию. Таким образом, завершение процесса с ошибкой никогда не завершит и не нарушит другой процесс. Ссылки, однаком, позволяют установить зависимость на случай ошибки. Мы часто связываем наши процессы с супервизором, что позволяет обнаруживать смерть процесса и начинать новый на его месте.
 
-While other languages would require us to catch/handle exceptions, in Elixir we are actually fine with letting processes fail because we expect supervisors to properly restart our systems. "Failing fast" is a common philosophy when writing Elixir software!
+В то время, как другие языки предусматривают отлов и обработку исключений, в Elixir мы на самом деле нормально относимся к ошибкам и ожидаем, что супервизор просто перезапустит систему. "Failing fast" (Быстро разделаться с ошибками?) - основная философия написания ПО на Elixir!
 
-`spawn/1` and `spawn_link/1` are the basic primitives for creating processes in Elixir. Although we have used them exclusively so far, most of the time we are going to use abstractions that build on top of them. Let's see the most common one, called tasks.
+`spawn/1` и `spawn_link/1` самые основные функции порождения процессов в Elixir. Хотя мы их и используем, большую часть времени мы будем использовать абстракции, основанные на них. Давайте разберём одну из основных, которая называется задачи.
 
 ## Tasks
 
