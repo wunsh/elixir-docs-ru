@@ -133,9 +133,9 @@ iex> spawn_link fn -> raise "oops" end
 
 `spawn/1` и `spawn_link/1` самые основные функции порождения процессов в Elixir. Хотя мы их и используем, большую часть времени мы будем использовать абстракции, основанные на них. Давайте разберём одну из основных, которая называется задачи.
 
-## Tasks
+## Задачи
 
-Tasks build on top of the spawn functions to provide better error reports and introspection:
+Задачи основаны на функциях порождения и предоставляют лучшие отчёты об ошибках:
 
 ```iex
 iex(1)> Task.start fn -> raise "oops" end
@@ -149,9 +149,9 @@ Function: #Function<20.90072148/0 in :erl_eval.expr/5>
     Args: []
 ```
 
-Instead of `spawn/1` and `spawn_link/1`, we use `Task.start/1` and `Task.start_link/1` which return `{:ok, pid}` rather than just the PID. This is what enables tasks to be used in supervision trees. Furthermore, `Task` provides convenience functions, like `Task.async/1` and `Task.await/1`, and functionality to ease distribution.
+В отличии от `spawn/1` и `spawn_link/1` мы используем `Task.start/1` и `Task.start_link/1`, которые возвращают `{:ok, pid}`, а не только PID. Это то, что позволяет использовать задачи в деревьях супервизоров. Более того, `Task` предоставляет удобные функции, такие как `Task.async/1` и `Task.await/1`, и функциональность для облегчения организации распределённой работы.
 
-We will explore those functionalities in the ***Mix and OTP guide***, for now it is enough to remember to use `Task` to get better error reports.
+Мы будем разбирать эту функциональность в ***руководстве по Mix и OTP***, сейчас достаточно запомнить, что `Task` используется для получения лучших отчётов об ошибках.
 
 ## State
 
