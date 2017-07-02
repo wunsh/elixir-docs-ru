@@ -153,11 +153,11 @@ Function: #Function<20.90072148/0 in :erl_eval.expr/5>
 
 Мы будем разбирать эту функциональность в ***руководстве по Mix и OTP***, сейчас достаточно запомнить, что `Task` используется для получения лучших отчётов об ошибках.
 
-## State
+## Состояние
 
-We haven't talked about state so far in this guide. If you are building an application that requires state, for example, to keep your application configuration, or you need to parse a file and keep it in memory, where would you store it?
+Мы до сих пор не говорили о состояниях в этом руководстве. Когда вы разрабатываете приложение, которому нужно состояние, например, для хранения конфигурации приложения, или вам нужно распарсить файл и держать его в памяти, где бы вы хранили это?
 
-Processes are the most common answer to this question. We can write processes that loop infinitely, maintain state, and send and receive messages. As an example, let's write a module that starts new processes that work as a key-value store in a file named `kv.exs`:
+Процессы - наиболее частый ответ на этот вопрос. Мы можем написать процессы, которые зациклены бесконечно, хранят состояние, принимают и отправляют сообщения. В качестве примера давайте напишем модуль, который создаёт новые процессы, которые работают как хранилище ключ-значение в файле с названием `kv.exs`:
 
 ```elixir
 defmodule KV do
@@ -177,9 +177,9 @@ defmodule KV do
 end
 ```
 
-Note that the `start_link` function starts a new process that runs the `loop/1` function, starting with an empty map. The `loop/1` function then waits for messages and performs the appropriate action for each message. In the case of a `:get` message, it sends a message back to the caller and calls `loop/1` again, to wait for a new message. While the `:put` message actually invokes `loop/1` with a new version of the map, with the given `key` and `value` stored.
+Обратите внимание, что функция `start_link` начинает новый процесс, который запускает функцию `loop/1` с пустым мэпом. Функция `loop/1` затем ждёт сообщений и выполняет подходящее действие на каждое сообщение. В случае получения сообщения `:get`, она отправляет сообщение назад и вызывает `loop/1` снова, в ожидании нового сообщения. Тогда как сообщение `:put` запускает `loop/1` с новой версией мэпа, сохранив переданные `key` и `value`.
 
-Let's give it a try by running `iex kv.exs`:
+Давайте опробуем это на практике, запустив `iex kv.exs`:
 
 ```iex
 iex> {:ok, pid} = KV.start_link
@@ -191,7 +191,7 @@ nil
 :ok
 ```
 
-At first, the process map has no keys, so sending a `:get` message and then flushing the current process inbox returns `nil`. Let's send a `:put` message and try it again:
+В начале мэп процесса не имеет ключей, поэтому отправка сообщения `:get` и затем чтение почтового ящика текущего процесса возвращает `nil`. Давайте отправим сообщение `:put` и попробуем получить значение снова:
 
 ```iex
 iex> send pid, {:put, :hello, :world}
@@ -203,9 +203,9 @@ iex> flush()
 :ok
 ```
 
-Notice how the process is keeping a state and we can get and update this state by sending the process messages. In fact, any process that knows the `pid` above will be able to send it messages and manipulate the state.
+Теперь мы видим, как процесс хранит состояние и мы можем получить и обновить его, отправляя процессу сообщения. Фактически, любой процесс, который знает `pid` выше, сможет отправлять сообщения и изменять состояние.
 
-It is also possible to register the `pid`, giving it a name, and allowing everyone that knows the name to send it messages:
+Также можно зарегистрировать `pid`, присвоив ему имя, и позволить всем, кто знает это имя, отправлять ему сообщения:
 
 ```iex
 iex> Process.register(pid, :kv)
@@ -217,7 +217,7 @@ iex> flush()
 :ok
 ```
 
-Using processes to maintain state and name registration are very common patterns in Elixir applications. However, most of the time, we won't implement those patterns manually as above, but by using one of the many abstractions that ship with Elixir. For example, Elixir provides [agents](https://hexdocs.pm/elixir/Agent.html), which are simple abstractions around state:
+Использование процессов для хранения состояний и регистрация имён - очень распространённые шаблоны в приложениях на Elixir. Однако, в основном мы не будем вручную реализовывать эти шаблоны, как показано выше, а будем использовать одну из многих абстракций, которые поставляются вместе с Elixir. Например, Elixir предоставляет [агентов](https://hexdocs.pm/elixir/Agent.html), которые являются простой абстракцией вокруг состояний:
 
 ```iex
 iex> {:ok, pid} = Agent.start_link(fn -> %{} end)
@@ -228,6 +228,6 @@ iex> Agent.get(pid, fn map -> Map.get(map, :hello) end)
 :world
 ```
 
-A `:name` option could also be given to `Agent.start_link/2` and it would be automatically registered. Besides agents, Elixir provides an API for building generic servers (called `GenServer`), tasks, and more, all powered by processes underneath. Those, along with supervision trees, will be explored with more detail in the ***Mix and OTP guide*** which will build a complete Elixir application from start to finish.
+Опция `:name` также может быть передана в `Agent.start_link/2` и оно будет автоматически зарегистрировано. Помимо агентов, Elixir предоставляет API для создания генсерверов (generic servers, `GenServer`), задач и прочего, всё это основано на процессах. Всё, что связано с деревом супервизора, будет рассмотрено детально в ***руководстве по Mix и OTP***, в котором будет рассказано о создании законченного Elixir приложения от начала до конца.
 
-For now, let's move on and explore the world of I/O in Elixir.
+Теперь давайте продолжим и поговорим о вводе/выводе (I/O) в Elixir.
