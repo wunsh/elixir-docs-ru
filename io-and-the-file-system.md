@@ -8,9 +8,9 @@ title: Ввод/вывод и файловая система
 
 Изначально мы планировали разместить эту главу намного ближе к началу руководства. Однако, мы поняли, что система ввода/вывода даёт прекрасную возможность пролить свет на некоторые философские и любопытные вещи в Elixir и виртуальной машине.
 
-## The `IO` module
+## Модуль `IO`
 
-The [`IO`](http://elixir-lang.org/docs/v1.0/elixir/IO.html) module is the main mechanism in Elixir for reading and writing to standard input/output (`:stdio`), standard error (`:stderr`), files, and other IO devices. Usage of the module is pretty straightforward:
+Модуль [`IO`](http://elixir-lang.org/docs/v1.0/elixir/IO.html) - основной механизм Эликсира для работы со стандартным вводов/выводом (`:stdio`), стандартным выводом ошибок (`:stderr`), файлами, и другими устройствами IO. Его использование простое и очевидное:
 
 ```iex
 iex> IO.puts "hello world"
@@ -21,7 +21,7 @@ yes or no? yes
 "yes\n"
 ```
 
-By default, functions in the `IO` module read from the standard input and write to the standard output. We can change that by passing, for example, `:stderr` as an argument (in order to write to the standard error device):
+По умолчанию, функции из модуля `IO` читают стандартный ввод и пишут в стандартный вывод. Мы можем изменить это, передав, например, `:stderr` в качестве аргумента (чтобы осуществить запись в стандартное устройство вывода ошибок):
 
 ```iex
 iex> IO.puts :stderr, "hello world"
