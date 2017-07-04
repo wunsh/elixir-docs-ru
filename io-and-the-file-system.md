@@ -29,9 +29,9 @@ hello world
 :ok
 ```
 
-## The `File` module
+## Модуль `File`
 
-The [`File`](https://hexdocs.pm/elixir/File.html) module contains functions that allow us to open files as IO devices. By default, files are opened in binary mode, which requires developers to use the specific `IO.binread/2` and `IO.binwrite/2` functions from the `IO` module:
+Модуль [`File`](https://hexdocs.pm/elixir/File.html) содержит функции, которые позволяют открывать файлы как IO устройства. По умолчанию, файлы открываются в бинарном режиме, что обязывает разработчиков использовать специальные функции `IO.binread/2` и `IO.binwrite/2` из модуля `IO`:
 
 ```iex
 iex> {:ok, file} = File.open "hello", [:write]
@@ -44,11 +44,11 @@ iex> File.read "hello"
 {:ok, "world"}
 ```
 
-A file can also be opened with `:utf8` encoding, which tells the `File` module to interpret the bytes read from the file as UTF-8-encoded bytes.
+Файл может быть также открыт с указанием кодировки `:utf8`, в этом случае модуль `File` будет интерпретировать байты, прочитанные из файла, как байты кодировки UTF-8.
 
-Besides functions for opening, reading and writing files, the `File` module has many functions to work with the file system. Those functions are named after their UNIX equivalents. For example, `File.rm/1` can be used to remove files, `File.mkdir/1` to create directories, `File.mkdir_p/1` to create directories and all their parent chain. There are even `File.cp_r/2` and `File.rm_rf/1` to respectively copy and remove files and directories recursively (i.e., copying and removing the contents of the directories too).
+Кроме функций для открытия, чтения и записи файлов, модуль `File` имеет много функций для работы с файловой системой. Эти функции названы соответственно их UNIX эквивалентам. Например, `File.rm/1` можно использовать для удаления файла, `File.mkdir/1` для создания директорий, `File.mkdir_p/1` для создания директорий и последовательности её предков. Есть также `File.cp_r/2` и `File.rm_rf/1` для копирования директорий со всем содержимым и рекурсивного удаления директории и всех её файлов.
 
-You will also notice that functions in the `File` module have two variants: one "regular" variant and another variant with a trailing bang (`!`). For example, when we read the `"hello"` file in the example above, we use `File.read/1`. Alternatively, we can use `File.read!/1`:
+Вы также можете обнаружить, что функции в модуле `File` представлены в двух вариантах: "обычный" вариант и вариант, принудительный вариант, оканчивающийся восклицательным знаком(`!`). Например, когда мы читаем файл `"hello"` в примере выше, мы используем `File.read/1`. Мы можем также использовать `File.read!/1`:
 
 ```iex
 iex> File.read "hello"
@@ -61,9 +61,9 @@ iex> File.read! "unknown"
 ** (File.Error) could not read file "unknown": no such file or directory
 ```
 
-Notice that the version with `!` returns the contents of the file instead of a tuple, and if anything goes wrong the function raises an error.
+Обратите внимание, что версия с `!` возвращает содержимое файла, а не кортеж, и если что-то идёт не так, выбрасывает ошибку.
 
-The version without `!` is preferred when you want to handle different outcomes using pattern matching:
+Версия без `!` предпочтительна, если вы хотите обработать разные варианты вывода, используя сравнение с шаблоном:
 
 ```elixir
 case File.read(file) do
@@ -72,15 +72,15 @@ case File.read(file) do
 end
 ```
 
-However, if you expect the file to be there, the bang variation is more useful as it raises a meaningful error message. Avoid writing:
+Однако, если вы уверены, что файл существует, принудительный вариант несёт больше пользы, т.к. выдаёт понятное сообщение об ошибке. Не пишите так:
 
 ```elixir
 {:ok, body} = File.read(file)
 ```
 
-as, in case of an error, `File.read/1` will return `{:error, reason}` and the pattern matching will fail. You will still get the desired result (a raised error), but the message will be about the pattern which doesn't match (thus being cryptic in respect to what the error actually is about).
+т.к. в случае ошибки `File.read/1` вернёт `{:error, reason}`, и это не будет соответствовать шаблону, сравнение не пройдёт. Вы также получите желаемый результат (выброшенную ошибку), но она будет связана с отсутствием подходящего шаблона (что не даст нам понять, в чём же на самом деле проблема с файлом).
 
-Therefore, if you don't want to handle the error outcomes, prefer using `File.read!/1`.
+Поэтому, если вы не хотите обрабатывать ошибки, предпочтительнее использовать `File.read!/1`.
 
 ## The `Path` module
 
