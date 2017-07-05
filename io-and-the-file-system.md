@@ -82,9 +82,9 @@ end
 
 Поэтому, если вы не хотите обрабатывать ошибки, предпочтительнее использовать `File.read!/1`.
 
-## The `Path` module
+## Модуль `Path`
 
-The majority of the functions in the `File` module expect paths as arguments. Most commonly, those paths will be regular binaries. The [`Path`](https://hexdocs.pm/elixir/Path.html) module provides facilities for working with such paths:
+Большинство функций в модуле `File` принимают пути в качестве аргументов. Наиболее часто, эти пути будут regular binaries (?). Модуль [`Path`](https://hexdocs.pm/elixir/Path.html) предоставляет возможности для работы с такими путями:
 
 ```iex
 iex> Path.join("foo", "bar")
@@ -93,9 +93,9 @@ iex> Path.expand("~/hello")
 "/Users/jose/hello"
 ```
 
-Using functions from the `Path` module as opposed to directly manipulating strings is preferred since the `Path` module takes care of different operating systems transparently. Finally, keep in mind that Elixir will automatically convert slashes (`/`) into backslashes (`\`) on Windows when performing file operations.
+Использование функций из модуля `Path` вместо прямых манипуляций со строками является предпочтительным, т.к. модуль `Path` заботится о различиях операционных систем. Наконец, помните, что Эликсир автоматически конвертирует слэши (`/`) в обратные слэши (`\`) в Windows при исполнении файловых операций.
 
-With this we have covered the main modules that Elixir provides for dealing with IO and interacting with the file system. In the next sections, we will discuss some advanced topics regarding IO. Those sections are not necessary in order to write Elixir code, so feel free to skip them, but they do provide a nice overview of how the IO system is implemented in the <abbr title="Virtual Machine">VM</abbr> and other curiosities.
+Теперь мы имеем представление об основных модулях, которые Эликсир предоставляет для работы со вводом/выводом и взаимодействия с файловой системой. В следующих секциях мы поговорим о более продвинутых темах, связанных с IO. Эти секции не являются обязательными для написания кода на Эликсире, поэтому их можно пропустить, но они дают представление, как реализована система ввода/вывода в виртуальной машине, и объясняют другие любопытные вещи.
 
 ## Processes and group leaders
 
