@@ -97,16 +97,16 @@ iex> Path.expand("~/hello")
 
 Теперь мы имеем представление об основных модулях, которые Эликсир предоставляет для работы со вводом/выводом и взаимодействия с файловой системой. В следующих секциях мы поговорим о более продвинутых темах, связанных с IO. Эти секции не являются обязательными для написания кода на Эликсире, поэтому их можно пропустить, но они дают представление, как реализована система ввода/вывода в виртуальной машине, и объясняют другие любопытные вещи.
 
-## Processes and group leaders
+## Процессы и лидеры групп
 
-You may have noticed that `File.open/2` returns a tuple like `{:ok, pid}`:
+Вы могли заметить, что `File.open/2` возвращает кортеж вроде `{:ok, pid}`:
 
 ```iex
 iex> {:ok, file} = File.open "hello", [:write]
 {:ok, #PID<0.47.0>}
 ```
 
-That happens because the `IO` module actually works with processes (see [chapter 11](/getting-started/processes.html)). When you write `IO.write(pid, binary)`, the `IO` module will send a message to the process identified by `pid` with the desired operation. Let's see what happens if we use our own process:
+Это происходит, потому что модуль `IO` на самом деле работает с процессами(смотрите [главу 11](/getting-started/processes.html)). Когда вы пишете `IO.write(pid, binary)`, модуль `IO` отправляет сообщение процессу с идентификатором `pid` с желаемой операцией. Давайте посмотрим, что происходит, если мы используем наш собственный процесс:
 
 ```iex
 iex> pid = spawn fn ->
@@ -119,9 +119,9 @@ iex> IO.write(pid, "hello")
 ** (ErlangError) erlang error: :terminated
 ```
 
-After `IO.write/2`, we can see the request sent by the `IO` module (a four-elements tuple) printed out. Soon after that, we see that it fails since the `IO` module expected some kind of result that we did not supply.
+После `IO.write/2` мы можем увидеть запрос, отправленный модулем `IO` (кортеж из четырех элементов). Сразу после мы видим ошибку, т.к. модуль `IO` ожидает некоторый результат, который мы не предоставляем.
 
-The [`StringIO`](https://hexdocs.pm/elixir/StringIO.html) module provides an implementation of the `IO` device messages on top of strings:
+Модуль [`StringIO`](https://hexdocs.pm/elixir/StringIO.html) - реализация сообщений для устройств ввода-вывода поверх строк:
 
 ```iex
 iex> {:ok, pid} = StringIO.open("hello")
@@ -130,9 +130,9 @@ iex> IO.read(pid, 2)
 "he"
 ```
 
-By modelling IO devices with processes, the Erlang <abbr title="Virtual Machine">VM</abbr> allows different nodes in the same network to exchange file processes in order to read/write files in between nodes. Of all IO devices, there is one that is special to each process: the **group leader**.
+При моделировании устройств ввода-вывода с процессами, виртуальная машина Эрланга позволяет разным узлам одной сети обмениваться файловыми процессами и читать/записывать файлы между узлами. Среди всех устройств ввода-вывода есть одно особое для каждого процесса: **лидер группы**.
 
-When you write to `:stdio`, you are actually sending a message to the group leader, which writes to the standard-output file descriptor:
+Когда вы пишете в `:stdio`, вы на самом деле отправляете сообщение лидеру группы, который пишет в файловый дескриптор для стандартного вывода:
 
 ```iex
 iex> IO.puts :stdio, "hello"
@@ -143,7 +143,7 @@ hello
 :ok
 ```
 
-The group leader can be configured per process and is used in different situations. For example, when executing code in a remote terminal, it guarantees messages in a remote node are redirected and printed in the terminal that triggered the request.
+Лидер группы можно задать для процесса и использовать в разных ситуациях. Например, при исполнении кода на удалённом терминале, он гарантирует, что сообщение на удалённом узле будет переправлено и напечатано на терминале, который обрабатывает запрос.
 
 ## `iodata` and `chardata`
 
