@@ -145,11 +145,11 @@ hello
 
 Лидер группы можно задать для процесса и использовать в разных ситуациях. Например, при исполнении кода на удалённом терминале, он гарантирует, что сообщение на удалённом узле будет переправлено и напечатано на терминале, который обрабатывает запрос.
 
-## `iodata` and `chardata`
+## `iodata` и `chardata`
 
-In all of the examples above, we used binaries when writing to files. In the chapter ["Binaries, strings and char lists"](/getting-started/binaries-strings-and-char-lists.html), we mentioned how strings are made of bytes while char lists are lists with unicode codepoints.
+Во всех примерах выше, мы использовали бинарные последовательности для записи файлов. В главе ["Бинарные последовательности, строки и списки символов"](/getting-started/binaries-strings-and-char-lists.html) мы упоминали, как строки формируются из байтов, в то время как списки символов - это списки с кодами юникода.
 
-The functions in `IO` and `File` also allow lists to be given as arguments. Not only that, they also allow a mixed list of lists, integers and binaries to be given:
+Функции в `IO` и `File` также принимают списки в качестве аргументов. Кроме того, они позволяют смешивать списки из списков, целых чисел и бинарных последовательностей:
 
 ```iex
 iex> IO.puts 'hello world'
@@ -160,10 +160,10 @@ hello world
 :ok
 ```
 
-However, using list in IO operations requires some attention. A list may represent either a bunch of bytes or a bunch of characters and which one to use depends on the encoding of the IO device. If the file is opened without encoding, the file is expected to be in raw mode, and the functions in the `IO` module starting with `bin*` must be used. Those functions expect an `iodata` as argument; i.e., they expect a list of integers representing bytes and binaries to be given.
+Однако, использованить списки в операциях ввода/вывода следует осторожно. Список может представлять набор байтов или набор символов, и что из них использовать - зависит от кодировки устройства ввода/вывода. Если файл открыт без кодировки, ожидается, что файл находится в "сыром" режиме (raw mode) и с ним нужно использовать функции из модуля `IO`, которые начинаются с `bin*`. Эти функции принимают в качестве аргумента `iodata`; например они ожидают список чисел, представляющих байты или бинарные последовательности на вход.
 
-On the other hand, `:stdio` and files opened with `:utf8` encoding work with the remaining functions in the `IO` module. Those functions expect a `char_data` as an argument, that is, a list of characters or strings.
+С другой стороны `:stdio` и файлы, открытые с кодировкой `:utf8` работают с остальными функциями модуля `IO`. Эти функции принимают в качестве аргумента `char_data`, списки символов или строки.
 
-Although this is a subtle difference, you only need to worry about these details if you intend to pass lists to those functions. Binaries are already represented by the underlying bytes and as such their representation is always "raw".
+Хотя это существенная разница, вам не нужно беспокоиться об этих деталях, если вы посылаете списки в эти функции. Бинарные последовательности уже представлены байтами и их представление в памяти всегда "сырое".
 
-This finishes our tour of IO devices and IO related functionality. We have learned about four Elixir modules - [`IO`](https://hexdocs.pm/elixir/IO.html), [`File`](https://hexdocs.pm/elixir/File.html), [`Path`](https://hexdocs.pm/elixir/Path.html) and [`StringIO`](https://hexdocs.pm/elixir/StringIO.html) - as well as how the <abbr title="Virtual Machine">VM</abbr> uses processes for the underlying IO mechanisms and how to use `chardata` and `iodata` for IO operations.
+На этом наш обзор ввода/вывода и связанных с ними функций заканчивается. Мы ознакомились с модулями Эликсира -  [`IO`](https://hexdocs.pm/elixir/IO.html), [`File`](https://hexdocs.pm/elixir/File.html), [`Path`](https://hexdocs.pm/elixir/Path.html) и [`StringIO`](https://hexdocs.pm/elixir/StringIO.html), а также с тем, как виртуальная машина использует процессы для механизмов ввода/вывода, и как использовать `chardata` и `iodata`.
