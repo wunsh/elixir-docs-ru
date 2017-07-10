@@ -24,9 +24,9 @@ use Foo
 
 ## alias
 
-`alias` allows you to set up aliases for any given module name.
+`alias` позволяет нам устанавливать псевдонимы для любых имён модулей.
 
-Imagine a module uses a specialized list implemented in `Math.List`. The `alias` directive allows referring to `Math.List` just as `List` within the module definition:
+Представьте модуль, который использует особую форму списка из `Math.List`. Директива `alias` позволяет ссылаться на `Math.List` по имени `List`, без указания модуля:
 
 ```elixir
 defmodule Stats do
@@ -35,23 +35,23 @@ defmodule Stats do
 end
 ```
 
-The original `List` can still be accessed within `Stats` by the fully-qualified name `Elixir.List`.
+Оригинальный `List` также доступен внутри `Stats` по полному имени `Elixir.List`.
 
-> Note: All modules defined in Elixir are defined inside a main `Elixir` namespace. However, for convenience, you can omit "Elixir." when referencing them.
+> Обратите внимание: Все модули, определённые в Эликсире, определены в главном пространстве имён `Elixir`. Однако, для удобства, вы можете опустить "Elixir." при обращении к ним.
 
-Aliases are frequently used to define shortcuts. In fact, calling `alias` without an `:as` option sets the alias automatically to the last part of the module name, for example:
+Псевдонимы часто используются для сокращений. Вызов `alias` без опции `:as` автоматически устанавливает псевдоним для последней части имени модуля, например:
 
 ```elixir
 alias Math.List
 ```
 
-Is the same as:
+То же самое, что:
 
 ```elixir
 alias Math.List, as: List
 ```
 
-Note that `alias` is **lexically scoped**, which allows you to set aliases inside specific functions:
+Помните, что `alias` имеет **лексическую область видимости**, поэтому вы можете устанавливать псевдонимы внутри функций:
 
 ```elixir
 defmodule Math do
@@ -67,6 +67,8 @@ end
 ```
 
 In the example above, since we are invoking `alias` inside the function `plus/2`, the alias will be valid only inside the function `plus/2`. `minus/2` won't be affected at all.
+
+В примере выше, с момента, когда мы вызвали `alias` внутри функции `plus/2`, псевдоним будет работать внутри функции `plus/2`. При этом он не будет доступен внутри `minus/2`.
 
 ## require
 
