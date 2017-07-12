@@ -66,15 +66,13 @@ defmodule Math do
 end
 ```
 
-In the example above, since we are invoking `alias` inside the function `plus/2`, the alias will be valid only inside the function `plus/2`. `minus/2` won't be affected at all.
-
 В примере выше, с момента, когда мы вызвали `alias` внутри функции `plus/2`, псевдоним будет работать внутри функции `plus/2`. При этом он не будет доступен внутри `minus/2`.
 
 ## require
 
-Elixir provides macros as a mechanism for meta-programming (writing code that generates code). Macros are expanded at compile time.
+Эликсир предоставляет макросы, как механизм для мета-программирования (написания кода, который генерирует код). Макросы генерируют код во время компиляции.
 
-Public functions in modules are globally available, but in order to use macros, you need to opt-in by requiring the module they are defined in.
+Публичные функции в модулях доступны глобально, но для использования макросов, вам нужно отказаться от использования модуля, в котором они определены.
 
 ```iex
 iex> Integer.is_odd(3)
@@ -85,13 +83,13 @@ iex> Integer.is_odd(3)
 true
 ```
 
-In Elixir, `Integer.is_odd/1` is defined as a macro so that it can be used as a guard. This means that, in order to invoke `Integer.is_odd/1`, we need to first require the `Integer` module.
+В Эликсире, `Integer.is_odd/1` объявлена как макрос, поэтому её можно использовать как ограничивающее условие. Это значит, что для её вызова нужно подключить (с помощью `require`) модуль `Integer`.
 
-Note that like the `alias` directive, `require` is also lexically scoped. We will talk more about macros in a later chapter.
+Обратите внимание, что как и `alias`, `require` имеет лексическую область видимости. Мы поговорим подробнее о макросах в следющей главе.
 
 ## import
 
-We use `import` whenever we want to easily access functions or macros from other modules without using the fully-qualified name. For instance, if we want to use the `duplicate/2` function from the `List` module several times, we can import it:
+Мы используем `import`, когда хотим получить лёгкий доступ к функциям или макросам из другого модуля, без использования полного имени. Например, если мы хотим использовать фукнцию `duplicate/2` из модуля `List` несколько раз, мы можем импортировать его:
 
 ```iex
 iex> import List, only: [duplicate: 2]
@@ -100,21 +98,21 @@ iex> duplicate :ok, 3
 [:ok, :ok, :ok]
 ```
 
-In this case, we are importing only the function `duplicate` (with arity 2) from `List`. Although `:only` is optional, its usage is recommended in order to avoid importing all the functions of a given module inside the namespace. `:except` could also be given as an option in order to import everything in a module *except* a list of functions.
+В данном случае, мы импортируем только функцию `duplicate` (с арностью 2) из `List`. Хотя `:only` опционален, его использование рекомендовано во избежание импорта всех функций из модуля в текущее пространство имён. `:except` может также быть передан для импорта всех функций, кроме указанных.
 
-`import` also supports `:macros` and `:functions` to be given to `:only`. For example, to import all macros, one could write:
+`import` также поддерживает `:macros` и `:functions` для передачи в `:only`. Например, для импорта всех макросов можно написать:
 
 ```elixir
 import Integer, only: :macros
 ```
 
-Or to import all functions, you could write:
+Или, для импорта всех функций:
 
 ```elixir
 import Integer, only: :functions
 ```
 
-Note that `import` is **lexically scoped** too. This means that we can import specific macros or functions inside function definitions:
+Помните, что `import` также имеет **лексическую область видимости**. Это значит, что мы можем импортировать указанные макросы и функции внутри определения функций:
 
 ```elixir
 defmodule Math do
@@ -125,9 +123,9 @@ defmodule Math do
 end
 ```
 
-In the example above, the imported `List.duplicate/2` is only visible within that specific function. `duplicate/2` won't be available in any other function in that module (or any other module for that matter).
+В примере выше, импортированная `List.duplicate/2` видна только внутри функции. `duplicate/2` не будет доступна в других функциях этого модуля (или любого другого).
 
-Note that `import`ing a module automatically `require`s it.
+Обратите внимание, что `import` модуля автоматически производит его `require`.
 
 ## use
 
