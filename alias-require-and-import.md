@@ -129,9 +129,9 @@ end
 
 ## use
 
-The `use` macro is frequently used by developers to bring external functionality into the current lexical scope, often modules.
+Макрос `use` часто используется разработчиками для добавления внешней функциональности в текущую лексическую область видимости, зачастую, модуль.
 
-For example, in order to write tests using the ExUnit framework, a developer should use the `ExUnit.Case` module:
+Например, для написания тестов с использованием фрэймворка ExUnit, разраобтчику нужен модуль `ExUnit.Case`:
 
 ```elixir
 defmodule AssertionTest do
@@ -143,7 +143,7 @@ defmodule AssertionTest do
 end
 ```
 
-Behind the scenes, `use` requires the given module and then calls the `__using__/1` callback on it allowing the module to inject some code into the current context. Generally speaking, the following module:
+По сути, `use` делает `require` и вызывает коллбэк `__using__/1` для него, позволяя модулю внедрить некоторый код в текущий контекст. В целом, следующий модуль:
 
 ```elixir
 defmodule Example do
@@ -151,7 +151,7 @@ defmodule Example do
 end
 ```
 
-is compiled into
+компилируется в 
 
 ```elixir
 defmodule Example do
