@@ -160,11 +160,11 @@ defmodule Example do
 end
 ```
 
-## Understanding Aliases
+## Понимание псевдонимов
 
-At this point, you may be wondering: what exactly is an Elixir alias and how is it represented?
+К этому моменту, вы, должно быть, задаётесь вопросом: чем являются псевдонимы в Эликсире и как они представлены?
 
-An alias in Elixir is a capitalized identifier (like `String`, `Keyword`, etc) which is converted to an atom during compilation. For instance, the `String` alias translates by default to the atom `:"Elixir.String"`:
+Псевдоним в Эликсире - идентификатор, начинающийся с большой буквы (например, `String`, `Keyword` и т.д.), который конвертируется в атом во время компиляции. Например, псевдоним `String` переводится по умолчанию в атом `:"Elixir.String"`:
 
 ```iex
 iex> is_atom(String)
@@ -175,9 +175,9 @@ iex> :"Elixir.String" == String
 true
 ```
 
-By using the `alias/2` directive, we are changing the atom the alias expands to.
+Используя директиву `alias/2`, мы изменяем атом, в который разворачивается псевдоним.
 
-Aliases expand to atoms because in the Erlang <abbr title="Virtual Machine">VM</abbr> (and consequently Elixir) modules are always represented by atoms. For example, that's the mechanism we use to call Erlang modules:
+Псевдонимы разворачиваются в атомы, потому что модули виртуальной машины Эрланга (и, соответственно, Эликсира) всегда представлены как атомы. Например, вот механизм вызова модулей Эрланга:
 
 ```iex
 iex> :lists.flatten([1, [2], 3])
