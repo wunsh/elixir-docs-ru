@@ -184,9 +184,9 @@ iex> :lists.flatten([1, [2], 3])
 [1, 2, 3]
 ```
 
-## Module nesting
+## Вложенность модулей
 
-Now that we have talked about aliases, we can talk about nesting and how it works in Elixir. Consider the following example:
+Теперь, когда мы поговорили о псевдонимах, мы можем поговорить о вложенности, и как она работает в Эликсире. Рассмотрим следующий пример:
 
 ```elixir
 defmodule Foo do
@@ -195,7 +195,7 @@ defmodule Foo do
 end
 ```
 
-The example above will define two modules: `Foo` and `Foo.Bar`. The second can be accessed as `Bar` inside `Foo` as long as they are in the same lexical scope. The code above is exactly the same as:
+Пример выше определит два модуля: `Foo` и `Foo.Bar`. Последний доступен как `Bar` внутри `Foo`, т.к. они находятся в одной лексической области видимости. Код выше ровно то же самое, что:
 
 ```elixir
 defmodule Elixir.Foo do
@@ -205,18 +205,18 @@ defmodule Elixir.Foo do
 end
 ```
 
-If, later, the `Bar` module is moved outside the `Foo` module definition, it must be referenced by its full name (`Foo.Bar`) or an alias must be set using the `alias` directive discussed above.
+Если позже модуль `Bar` будет перемещён наружу из определения модуля `Foo`, к нему придётся обращаться по полному имени (`Foo.Bar`) или создать псевдоним, используя директиву `alias`, о которой мы поговорили выше.
 
-**Note**: in Elixir, you don't have to define the `Foo` module before being able to define the `Foo.Bar` module, as the language translates all module names to atoms. You can define arbitrarily-nested modules without defining any module in the chain (e.g., `Foo.Bar.Baz` without defining `Foo` or `Foo.Bar` first).
+**Помните**: в Эликсире вам не нужно определить модуль `Foo` перед тем как определить модуль `Foo.Bar`, потому что язык переводит все имена модулей в атомы. Вы можете определить произвольно-вложенные модули без определения модулей в цепочке (например, `Foo.Bar.Baz` без определения `Foo` или `Foo.Bar` в начале).
 
-As we will see in later chapters, aliases also play a crucial role in macros, to guarantee they are hygienic.
+Как мы увидим в более поздних главах, псевдонимы также играют ключевую роль в макросах, гарантируя их корректность.
 
-## Multi alias/import/require/use
+## Множественные alias/import/require/use
 
-From Elixir v1.2, it is possible to alias, import or require multiple modules at once. This is particularly useful once we start nesting modules, which is very common when building Elixir applications. For example, imagine you have an application where all modules are nested under `MyApp`, you can alias the modules `MyApp.Foo`, `MyApp.Bar` and `MyApp.Baz` at once as follows:
+Начиная с Эликсира версии 1.2, можно сделать alias, import или require нескольких модулей одновременно. Это оказывается полезным, когда мы начинаем писать вложенные модули, что часто используется при написании приложений на Эликсире. Например, представьте, что у вас есть приложение, где все модули вложены в `MyApp`, вы можете сделать `alias` модулей `MyApp.Foo`, `MyApp.Bar` и `MyApp.Baz` одновременно:
 
 ```elixir
 alias MyApp.{Foo, Bar, Baz}
 ```
 
-With this we have finished our tour of Elixir modules. The last topic to cover is module attributes.
+На этом мы закончили знакомство с модулями Эликсира. Последняя глава посвящена атрибутам модулей.
