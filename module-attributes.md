@@ -4,17 +4,17 @@ title: Атрибуты модулей
 
 # {{ page.title }}
 
-Module attributes in Elixir serve three purposes:
+Атрибуты модулей в Эликсире решают три задачи:
 
-1. They serve to annotate the module, often with information to be used by the user or the <abbr title="Virtual Machine">VM</abbr>.
-2. They work as constants.
-3. They work as a temporary module storage to be used during compilation.
+1. Они служат для аннотирования модуля, часто с информацией, котороя может использоваться пользователем или виртуальной машиной.
+2. Они работают как константы.
+3. Они работают как временное хранилище модуля, для использования во время компиляции.
 
-Let's check each case, one by one.
+Поговорим о каждом случае отдельно.
 
-## As annotations
+## Аннотации
 
-Elixir brings the concept of module attributes from Erlang. For example:
+Эликсир унаследовал концепцию аттрибутов модулей из Эрланга: Например:
 
 ```elixir
 defmodule MyServer do
@@ -22,18 +22,18 @@ defmodule MyServer do
 end
 ```
 
-In the example above, we are explicitly setting the version attribute for that module. `@vsn` is used by the code reloading mechanism in the Erlang <abbr title="Virtual Machine">VM</abbr> to check if a module has been updated or not. If no version is specified, the version is set to the MD5 checksum of the module functions.
+В примере выше мы добавляем атрибут с версией модуля. `@vsn` используется в механизме перезагрузки кода, в виртуальной машине Эрланга для проверки, был ли модуль обновлён. Если версия не указана, в её качестве устанавливается контрольная сумма MD5 функций модуля.
 
-Elixir has a handful of reserved attributes. Here are a few of them, the most commonly used ones:
+В эликсире есть пригоршня зарезервированных атрибутов. Вот некоторые из них, наиболее часто используемые:
 
-* `@moduledoc` - provides documentation for the current module.
-* `@doc` - provides documentation for the function or macro that follows the attribute.
-* `@behaviour` - (notice the British spelling) used for specifying an <abbr title="Open Telecom Platform">OTP</abbr> or user-defined behaviour.
-* `@before_compile` - provides a hook that will be invoked before the module is compiled. This makes it possible to inject functions inside the module exactly before compilation.
+* `@moduledoc` - для предоставления документации к текущему модулю.
+* `@doc` - для документации к функции или макросу, следующим за атрибутом.
+* `@behaviour` - (обратите внимание на Британское написание) используется для определения <abbr title="Open Telecom Platform">OTP</abbr> или определённого пользователем поведения.
+* `@before_compile` - для хука, который будет выполнен до компиляции модуля. Благодаря этому возможно внедрять функции внутрь модуля прямо перед компиляцией.
 
-`@moduledoc` and `@doc` are by far the most used attributes, and we expect you to use them a lot. Elixir treats documentation as first-class and provides many functions to access documentation. You can read more about [writing documentation in Elixir in our official documentation](https://hexdocs.pm/elixir/writing-documentation.html).
+`@moduledoc` и `@doc` используются чаще всего, и мы ожидаем, что вы тоже будете часто использовать их. Документация очень важна в Эликсире, есть множество функций для доступа к ней. Вы можете больше прочитать о [написании документации в Эликсире в официальной документации](https://hexdocs.pm/elixir/writing-documentation.html).
 
-Let's go back to the `Math` module defined in the previous chapters, add some documentation and save it to the `math.ex` file:
+Давайте вернёмся к модулю `Math`, который мы определили в предыдущих главах, добавим к нему документацию и сохраним файл `math.ex`:
 
 ```elixir
 defmodule Math do
@@ -54,7 +54,7 @@ defmodule Math do
 end
 ```
 
-Elixir promotes the use of Markdown with heredocs to write readable documentation. Heredocs are multiline strings, they start and end with triple double-quotes, keeping the formatting of the inner text. We can access the documentation of any compiled module directly from IEx:
+Эликсир поощряет использование разметки Markdown и синтаксиса Heredoc для написания читаемой документации. Heredoc - многострочные строки, они начинаются и заканчиваются утроенными двойными кавычками, сохраняя форматирование внутреннего текста. Мы можем получить доступ к документации любого скомпилированного модуля прямо из IEx:
 
 ```bash
 $ elixirc math.ex
@@ -68,11 +68,11 @@ iex> h Math.sum # Access the docs for the sum function
 ...
 ```
 
-We also provide a tool called [ExDoc](https://github.com/elixir-lang/ex_doc) which is used to generate HTML pages from the documentation.
+Также существует инструмент [ExDoc](https://github.com/elixir-lang/ex_doc), который используется для генерации HTML страниц из документации.
 
-You can take a look at the docs for [Module](https://hexdocs.pm/elixir/Module.html) for a complete list of supported attributes. Elixir also uses attributes to define [typespecs](/getting-started/typespecs-and-behaviours.html).
+Вы можете обратиться к документации по [модулям](https://hexdocs.pm/elixir/Module.html), чтобы получить полный список поддерживаемых атрибутов. Эликсир также использует атрибуты для определения [typespecs](/getting-started/typespecs-and-behaviours.html) (корректный перевод?).
 
-This section covers built-in attributes. However, attributes can also be used by developers or extended by libraries to support custom behaviour.
+Эта секция рассказывает о встроенных атрибутах Однако, атрибуты могут быть использованы разработчиками или расширены библиотеками для поддержки кастомного поведения.
 
 ## As constants
 
