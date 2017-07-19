@@ -74,9 +74,9 @@ iex> h Math.sum # Access the docs for the sum function
 
 Эта секция рассказывает о встроенных атрибутах Однако, атрибуты могут быть использованы разработчиками или расширены библиотеками для поддержки кастомного поведения.
 
-## As constants
+## Константы
 
-Elixir developers will often use module attributes as constants:
+Эликсир-разработчики часто используют атрибуты модулей как константы:
 
 ```elixir
 defmodule MyServer do
@@ -85,9 +85,9 @@ defmodule MyServer do
 end
 ```
 
-> Note: Unlike Erlang, user defined attributes are not stored in the module by default. The value exists only during compilation time. A developer can configure an attribute to behave closer to Erlang by calling [`Module.register_attribute/3`](https://hexdocs.pm/elixir/Module.html#register_attribute/3).
+> Обратите внимание: в отличии от Эрланга, пользовательские атрибуты не хранятся в модуле по умолчанию. Значение существует только во время компиляции. Разработчик может настроить поведение атрибутов, близкое к Эрлангу, вызвав [`Module.register_attribute/3`](https://hexdocs.pm/elixir/Module.html#register_attribute/3).
 
-Trying to access an attribute that was not defined will print a warning:
+Попытка получить доступ к атрибуту, который не был объявлен, вызовет предупреждение:
 
 ```elixir
 defmodule MyServer do
@@ -96,7 +96,7 @@ end
 warning: undefined module attribute @unknown, please remove access to @unknown or explicitly set it before access
 ```
 
-Finally, attributes can also be read inside functions:
+Наконец, атрибуты могут быть прочитаны внутри функций:
 
 ```elixir
 defmodule MyServer do
@@ -110,7 +110,7 @@ MyServer.first_data #=> 14
 MyServer.second_data #=> 13
 ```
 
-Every time an attribute is read inside a function, a snapshot of its current value is taken. In other words, the value is read at compilation time and not at runtime. As we are going to see, this also makes attributes useful to be used as storage during module compilation.
+Каждый раз, когда атрибут читается внутри функции, берётся снимок его текущего значения. Другими словами, значение прочитано во время компиляции, но не во время выполнения. Как мы увидим далее, это делает атрибуты полезными для использования в качестве хранилища во время компиляции модуля.
 
 ## As temporary storage
 
