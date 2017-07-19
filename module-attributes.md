@@ -112,11 +112,11 @@ MyServer.second_data #=> 13
 
 Каждый раз, когда атрибут читается внутри функции, берётся снимок его текущего значения. Другими словами, значение прочитано во время компиляции, но не во время выполнения. Как мы увидим далее, это делает атрибуты полезными для использования в качестве хранилища во время компиляции модуля.
 
-## As temporary storage
+## Временное хранилище
 
-One of the projects in the Elixir organization is [the `Plug` project](https://github.com/elixir-lang/plug), which is meant to be a common foundation for building web libraries and frameworks in Elixir.
+Один из проектов оргинизации Эликсир - [проект `Plug`](https://github.com/elixir-lang/plug), который должен стать одной из основ создания веб библиотек и фрэймворков на Эликсире.
 
-The Plug library also allows developers to define their own plugs which can be run in a web server:
+Библиотека Plug также позволяет разработчикам определять свои модули, которые могут быть запущены как веб-серверы:
 
 ```elixir
 defmodule MyPlug do
@@ -138,11 +138,11 @@ IO.puts "Running MyPlug with Cowboy on http://localhost:4000"
 Plug.Adapters.Cowboy.http MyPlug, []
 ```
 
-In the example above, we have used the `plug/1` macro to connect functions that will be invoked when there is a web request. Internally, every time you call `plug/1`, the Plug library stores the given argument in a `@plugs` attribute. Just before the module is compiled, Plug runs a callback that defines a function (`call/2`) which handles HTTP requests. This function will run all plugs inside `@plugs` in order.
+В примере выше, мы использовали макрос `plug/1` для подключения функций, которые могут быть вызваны, когда поступает веб запрос. Внутри, каждый раз, когда вы вызывает `plug/1`, библиотека Plug хранит переданный аргумент как атрибут `@plug`. Прямо перед компиляцией модуля, Plug запускает колбэк, который описывает функцию (`call/2`), которая обрабатывает HTTP запрос. Эта фукнция запустит все, что есть в `@plugs` по очереди.
 
-In order to understand the underlying code, we'd need macros, so we will revisit this pattern in the meta-programming guide. However the focus here is on how using module attributes as storage allows developers to create DSLs.
+Для полного понимания работы этого кода, нам нужны макросы, поэтому мы вернёмся к этому шаблону в руководстве по мета-программированию. Однако, здесь мы сосредоточились на использовании атрибутов модулей в качестве хранилища, позволяющего разработчикам создавать DSL.
 
-Another example comes from [the ExUnit framework](https://hexdocs.pm/ex_unit/) which uses module attributes as annotation and storage:
+Другой пример можно взять во [фрэймворке ExUnit](https://hexdocs.pm/ex_unit/), который использует атрибуты модулей как аннтации и хранилище:
 
 ```elixir
 defmodule MyTest do
@@ -155,8 +155,8 @@ defmodule MyTest do
 end
 ```
 
-Tags in ExUnit are used to annotate tests. Tags can be later used to filter tests. For example, you can avoid running external tests on your machine because they are slow and dependent on other services, while they can still be enabled in your build system.
+Тэги в ExUnit используются для аннотирования тестов. Тэги можно дальше использовать для фильтрации тестов. Например, вы можете избежать запуска внешних тестов на вашей машине, потому что они медленные и зависят от других сервисов, и они могут быть запущены на системе для сборки.
 
-We hope this section shines some light on how Elixir supports meta-programming and how module attributes play an important role when doing so.
+Мы надеемся, эта секция проливает немного света на то, как Эликсир поддерживает мета-программирование, и что атрибуты модулей играют важную роль для этого.
 
-In the next chapters we'll explore structs and protocols before moving to exception handling and other constructs like sigils and comprehensions.
+В следующих главах мы рассмотрим структуры и протоколы, перед тем как перейти к обработке исключений и другим конутрукция, таким как строковые метки (sigils) и списковые выражения (comprehensions).
