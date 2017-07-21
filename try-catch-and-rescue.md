@@ -4,11 +4,11 @@ title: try, catch и rescue
 
 # {{ page.title }}
 
-Elixir has three error mechanisms: errors, throws, and exits. In this chapter we will explore each of them and include remarks about when each should be used.
+В Эликсире есть три механизма работы с непредвиденным поведением: ошибки, выбрасывание исключений и выходы. В этой главе мы рассмотрим каждый из них и случаи, когда использовать те или иные механизмы.
 
-## Errors
+## Ошибки
 
-Errors (or *exceptions*) are used when exceptional things happen in the code. A sample error can be retrieved by trying to add a number into an atom:
+Ошибки (или *исключения) используются, когда в коде происходят исключительные ситуации. Пример ошибки можно увидеть при попытке добавить число к атому:
 
 ```iex
 iex> :foo + 1
@@ -16,21 +16,21 @@ iex> :foo + 1
      :erlang.+(:foo, 1)
 ```
 
-A runtime error can be raised any time by using `raise/1`:
+Ошибка рантайма может быть вызвана с помощью `raise/1`:
 
 ```iex
 iex> raise "oops"
 ** (RuntimeError) oops
 ```
 
-Other errors can be raised with `raise/2` passing the error name and a list of keyword arguments:
+Другие ошибки можно вызвать, передав имя ошибки и список аргументов с ключами в `raise/2`:
 
 ```iex
 iex> raise ArgumentError, message: "invalid argument foo"
 ** (ArgumentError) invalid argument foo
 ```
 
-You can also define your own errors by creating a module and using the `defexception` construct inside it; this way, you'll create an error with the same name as the module it's defined in. The most common case is to define a custom exception with a message field:
+Вы также можете объявить собственные ошибки, создав модуль и использовав конструкцию `defexception` внутри него; таким образом вы создадите ошибку с тем же именем, что и у модуля, в котором она объявлена. Наиболее распространенный случай - объявление исключений с полем message:
 
 ```iex
 iex> defmodule MyError do
@@ -42,7 +42,7 @@ iex> raise MyError, message: "custom message"
 ** (MyError) custom message
 ```
 
-Errors can be **rescued** using the `try/rescue` construct:
+Ошибки могут быть обработаны с помощью конструкции `try/rescue`:
 
 ```iex
 iex> try do
@@ -53,9 +53,9 @@ iex> try do
 %RuntimeError{message: "oops"}
 ```
 
-The example above rescues the runtime error and returns the error itself which is then printed in the `iex` session.
+В примере выше ошибка рантайма отлавливается и возвращается для вывода в сессии `iex`.
 
-If you don't have any use for the error, you don't have to provide it:
+Если у вас нет причины использовать саму ошибку, не обязательно её предоставлять:
 
 ```iex
 iex> try do
@@ -66,7 +66,7 @@ iex> try do
 "Error!"
 ```
 
-In practice, however, Elixir developers rarely use the `try/rescue` construct. For example, many languages would force you to rescue an error when a file cannot be opened successfully. Elixir instead provides a `File.read/1` function which returns a tuple containing information about whether the file was opened successfully:
+На практике, однако, Эликсир-разработчики редко используют конструкцию `try/rescue`. Например, многие языки обязали бы вас отловить ошибку, когда файл не может быть открыт. Эликсир же предоставляет функцию `File.read/1`, которая возвращает кортеж с информацие о том, что файл открыт успешно:
 
 ```iex
 iex> File.read "hello"
@@ -77,7 +77,7 @@ iex> File.read "hello"
 {:ok, "world"}
 ```
 
-There is no `try/rescue` here. In case you want to handle multiple outcomes of opening a file, you can use pattern matching within the `case` construct:
+Здесь нет `try/rescue`. Если вы хотите обрабатывать различные исходы попытки открыть файл, можно использовать паттерн матчинг с конструкцией `case`:
 
 ```iex
 iex> case File.read "hello" do
@@ -86,9 +86,9 @@ iex> case File.read "hello" do
 ...> end
 ```
 
-At the end of the day, it's up to your application to decide if an error while opening a file is exceptional or not. That's why Elixir doesn't impose exceptions on `File.read/1` and many other functions. Instead, it leaves it up to the developer to choose the best way to proceed.
+В конце концов, ваше приложение должно само решать, является ли ошибка при открытии файла исключительно или нет. Поэтому Элеисир не создаёт исключений в `File.read/1` и многих других функциях. Напротив, разработчик сам волен выбирать лучший способ поведения.
 
-For the cases where you do expect a file to exist (and the lack of that file is truly an *error*) you may use `File.read!/1`:
+Для случаев, когда вы ожидаете, что файл существует (и отсутствие этого файла действительно *ошибка*), вы можете использовать `File.read!/1`:
 
 ```iex
 iex> File.read! "unknown"
@@ -96,9 +96,9 @@ iex> File.read! "unknown"
     (elixir) lib/file.ex:305: File.read!/1
 ```
 
-Many functions in the standard library follow the pattern of having a counterpart that raises an exception instead of returning tuples to match against. The convention is to create a function (`foo`) which returns `{:ok, result}` or `{:error, reason}` tuples and another function (`foo!`, same name but with a trailing `!`) that takes the same arguments as `foo` but which raises an exception if there's an error. `foo!` should return the result (not wrapped in a tuple) if everything goes fine. The [`File` module](https://hexdocs.pm/elixir/File.html) is a good example of this convention.
+Многие функции в стандартной библиотеке следуют схеме наличия двух вариантов функции, одна из которых вызывает исключения, вместо возврата кортежа. Договорённость состоит в том, чтобы была функция (`foo`), которая возввращает кортеж `{:ok, result}` или `{:error, reason}`, и другая функция (`foo!`, такое же имя с `!` в конце), которая принимает те же аргументы, что и `foo`, но вызывает исключения в случае ошибки. `foo!` должна возвращать результат (не обёрнтый кортежем), если всё прошло хорошо. [Модуль `File`](https://hexdocs.pm/elixir/File.html) - хороший пример следования этой договорённости.
 
-In Elixir, we avoid using `try/rescue` because **we don't use errors for control flow**. We take errors literally: they are reserved for unexpected and/or exceptional situations. In case you actually need flow control constructs, *throws* should be used. That's what we are going to see next.
+В Эликсире мы избегаем использования `try/rescue`, потому что **не используем ошибки для контроля работы приложения**. Мы понимаем ошибки буквально: они оставлены для неожиданных и исключительных ситуаций. В случае, если вам действительно нужно контроллировать ход работы, следует использовать выбрасывание исключений с помощью *throw*. О нём мы и поговорим.
 
 ## Throws
 
