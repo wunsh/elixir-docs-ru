@@ -102,9 +102,9 @@ iex> File.read! "unknown"
 
 ## Throws
 
-In Elixir, a value can be thrown and later be caught. `throw` and `catch` are reserved for situations where it is not possible to retrieve a value unless by using `throw` and `catch`.
+В Эликсире, некоторое значение может быть выброшено (thrown) и далее отловлено (caught). `throw` и `catch` зарезервированы для ситуации, когда невозможно получить значение без использования `throw` и `catch`.
 
-Those situations are quite uncommon in practice except when interfacing with libraries that do not provide a proper API. For example, let's imagine the `Enum` module did not provide any API for finding a value and that we needed to find the first multiple of 13 in a list of numbers:
+Такие ситуации на практике встречаются очень не часто, исключая случае работы с библиотеками, которые не предоставляют нормального API. Например, представьте, что модуль `Enum` не предоставлят API для поиска значений и что нам нужно найти первое кратное 13 число в списке чисел:
 
 ```iex
 iex> try do
@@ -118,7 +118,7 @@ iex> try do
 "Got -39"
 ```
 
-Since `Enum` *does* provide a proper API, in practice `Enum.find/2` is the way to go:
+Но т.к. `Enum` *предоставляет* хороший API, на практике задача решается с использованием `Enum.find/2`:
 
 ```iex
 iex> Enum.find -50..50, &(rem(&1, 13) == 0)
