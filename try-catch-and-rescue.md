@@ -127,7 +127,7 @@ iex> Enum.find -50..50, &(rem(&1, 13) == 0)
 
 ## Exits
 
-All Elixir code runs inside processes that communicate with each other. When a process dies of "natural causes" (e.g., unhandled exceptions), it sends an `exit` signal. A process can also die by explicitly sending an exit signal:
+Весь код на Эликсире работает внутри процессов, которые общаются между собой. Когда процесс убирает по "естественным причинам" (например, необработанное исключение), он отправляет сигнал `exit`. Процесс также может умереть при вызове сигнала `exit` вручную:
 
 ```iex
 iex> spawn_link fn -> exit(1) end
@@ -135,9 +135,9 @@ iex> spawn_link fn -> exit(1) end
 ** (EXIT from #PID<0.56.0>) 1
 ```
 
-In the example above, the linked process died by sending an `exit` signal with value of 1. The Elixir shell automatically handles those messages and prints them to the terminal.
+В примере выше, связанный процесс умирает при отправке сигнала `exit` со значением 1. Оболочка Эликсира автоматически обрабатывает такие сообщения и выводит их в терминал.
 
-`exit` can also be "caught" using `try/catch`:
+`exit` также можно "отловить" используя `try/catch`:
 
 ```iex
 iex> try do
@@ -148,11 +148,11 @@ iex> try do
 "not really"
 ```
 
-Using `try/catch` is already uncommon and using it to catch exits is even more rare.
+Использование `try/catch` само по себе не распространено, и использование его для отлова выходов ещё более редкое.
 
-`exit` signals are an important part of the fault tolerant system provided by the Erlang <abbr title="Virtual Machine">VM</abbr>. Processes usually run under supervision trees which are themselves processes that listen to `exit` signals from the supervised processes. Once an exit signal is received, the supervision strategy kicks in and the supervised process is restarted.
+Сигналы `exit` - важная часть отказоустойчивости, предоставляемой виртуальной машиной Эрланга. Процессы обычно работают в деревьях супервизоров, которые тоже являются процессами, которые слушают сигналы `exit` от наблюдаемых ими процессов. Как только приходит сигнал выхода, процесс перезапускается.
 
-It is exactly this supervision system that makes constructs like `try/catch` and `try/rescue` so uncommon in Elixir. Instead of rescuing an error, we'd rather "fail fast" since the supervision tree will guarantee our application will go back to a known initial state after the error.
+Именно эта система супервизоров делает конструкции вроде `try/catch` и `try/rescue` настолько непопулярными в Эликсире. Вместо попытки решить ошибку, мы лучше побыстрее закончим с проблемным местом и дерево супервизора будет гарантировать работу нашего приложения, откатив его к известному начальному состоянию после ошибки.
 
 ## After
 
