@@ -156,7 +156,7 @@ iex> try do
 
 ## After
 
-Sometimes it's necessary to ensure that a resource is cleaned up after some action that could potentially raise an error. The `try/after` construct allows you to do that. For example, we can open a file and use an `after` clause to close it--even if something goes wrong:
+Иногда необходимо убедиться, что ресурс очищен после некоторых действий, которые могли быть потенциальной причиной ошибки. Конструкция `try/after` позволяет это сделать. Например, мы можем открыть файл и использовать `after` для его закрытия, это будет сделано даже если что-то пойдёт не так:
 
 ```iex
 iex> {:ok, file} = File.open "sample", [:utf8, :write]
@@ -169,11 +169,9 @@ iex> try do
 ** (RuntimeError) oops, something went wrong
 ```
 
-The `after` clause will be executed regardless of whether or not the tried block succeeds. Note, however, that if a linked process exits,
-this process will exit and the `after` clause will not get run. Thus `after` provides only a soft guarantee. Luckily, files in Elixir are also linked to the current processes and therefore they will always get closed if the current process crashes, independent of the
-`after` clause. You will find the same to be true for other resources like ETS tables, sockets, ports and more.
+Секция `after` будет выполнена независимо от того, выполнился блок `try` без ошибок или нет. Однако, обратите внимание, если связанный процесс существует, этот процесс отправит `exit` и секция `after` не будет выполнена. `after` предоставляет лишь неполную гарантию. К счастью, файлы в Эликсире также связаны с текущим процессом и всегда будут закрыты, если текущий процесс завершился с ошибкой, независимо от секции `after`. Вы можете обнаружить, что так работают и другие ресурсы: таблицы ETS, сокеты, порты и др.
 
-Sometimes you may want to wrap the entire body of a function in a `try` construct, often to guarantee some code will be executed afterwards. In such cases, Elixir allows you to omit the `try` line:
+Иногда вы можете захотеть обернуть всё тело функции в конструкцию `try`, часто чтобы убедиться, что некоторый код наверняка выполнится после. В этом случае, Эликсир позволяет опустить строку `try`:
 
 ```iex
 iex> defmodule RunAfter do
@@ -188,7 +186,7 @@ cleaning up!
 ** (RuntimeError) oops
 ```
 
-Elixir will automatically wrap the function body in a `try` whenever one of `after`, `rescue` or `catch` is specified.
+Эликсир автоматически обернёт тело функции в `try`, если обнаружит `after`, `rescue` или `catch`.
 
 ## Else
 
