@@ -190,7 +190,7 @@ cleaning up!
 
 ## Else
 
-If an `else` block is present, it will match on the results of the `try` block whenever the `try` block finishes without a throw or an error.
+Если указан блок `else`, он будет выполнен после блока `try` в любом случае, были в процессе ошибки или нет.
 
 ```iex
 iex> x = 2
@@ -209,11 +209,11 @@ iex> try do
 :small
 ```
 
-Exceptions in the `else` block are not caught. If no pattern inside the `else` block matches, an exception will be raised; this exception is not caught by the current `try/catch/rescue/after` block.
+Исключения в блоке `else` не отлавливаются. Если ни один шаблон внутри `else` не подходит, будет выброшено исключение; оно не будет отловлено текущим `try/catch/rescue/after` блоком.
 
-## Variables scope
+## Область видимости переменных
 
-It is important to bear in mind that variables defined inside `try/catch/rescue/after` blocks do not leak to the outer context. This is because the `try` block may fail and as such the variables may never be bound in the first place. In other words, this code is invalid:
+Важно понимать, что переменные, определенные внутри `try/catch/rescue/after` блока не влияют на внешний контекст. Это связано с тем, что блок `try` может завершиться с ошибкой и некоторые переменные могут никогда не достичь своего объявления. Другими словами, следующий код не корректен:
 
 ```iex
 iex> try do
@@ -225,8 +225,8 @@ iex> try do
 iex> what_happened
 ** (RuntimeError) undefined function: what_happened/0
 ```
-
-Instead, you can store the value of the `try` expression:
+\
+Вместо этого, вы можете сохранить значение выражения из `try`:
 
 ```iex
 iex> what_happened =
@@ -240,4 +240,4 @@ iex> what_happened
 :rescued
 ```
 
-This finishes our introduction to `try`, `catch`, and `rescue`. You will find they are used less frequently in Elixir than in other languages, although they may be handy in some situations where a library or some particular code is not playing "by the rules".
+На этом заканчивается наше введение в `try`, `catch` и `rescue`. Вы можете обнаружить, что в Эликсире они используются реже, чем в других языках, хотя они могут быть полезны в некоторых ситуациях, когда библиотека или некоторая часть кода играет "не по правилам".
