@@ -18,11 +18,11 @@ $ mix new path/to/new/project
 
 * [Mix и OTP](/getting-started/mix-otp/introduction-to-mix.html)
 
-## Meta-programming
+## Мета-программирование
 
-Elixir is an extensible and very customizable programming language thanks to its meta-programming support. Most meta-programming in Elixir is done through macros, which are very useful in several situations, especially for writing DSLs. We have written a short guide that explains the basic mechanisms behind macros, shows how to write macros, and how to use macros to create DSLs:
+Эликсир - расширяемый и глубоко кастомизируемый язык программирования, благодаря поддержке мета-программирования. Большая часть мета-программирования в Эликсире основана на макросах, которые очень полезны в некоторых ситуациях, особенно при написании DSL. Мы написали небольшое руководство, которое объясняет основы работые макросов, показывает, как писать макросы, и как их использовать для создания DSL:
 
-* [Meta-programming in Elixir](/getting-started/meta/quote-and-unquote.html)
+* [Мета-программирование в Эликсире](/getting-started/meta/quote-and-unquote.html)
 
 ## Community and other resources
 
