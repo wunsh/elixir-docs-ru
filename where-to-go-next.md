@@ -24,11 +24,11 @@ $ mix new path/to/new/project
 
 * [Мета-программирование в Эликсире](/getting-started/meta/quote-and-unquote.html)
 
-## Community and other resources
+## Сообщество и другие ресурсы
 
-We have a [Learning](/learning.html) section that suggests books, screencasts, and other resources for learning Elixir and exploring the ecosystem. There are also plenty of Elixir resources out there, like conference talks, open source projects, and other learning material produced by the community.
+У нас есть раздел ["Обучение"](/learning.html), где мы рекомендуем книги, скринкасты и другие ресурсы для изучения Эликсира и его экосистемы. Есть и другие ресурсы, например, конференции, проекты с открытым исходным кодом и прочие материалы, предоставляемые сообществом.
 
-Don't forget that you can also check the [source code of Elixir itself](https://github.com/elixir-lang/elixir), which is mostly written in Elixir (mainly the `lib` directory), or [explore Elixir's documentation](/docs.html).
+Не забывайте и о возможности взглянуть на [исходный код самого Эликсира](https://github.com/elixir-lang/elixir), Который написан в основном на Эликсире (главным образом директория `lib`), или [исследовать документацию](/docs.html).
 
 ## A byte of Erlang
 
