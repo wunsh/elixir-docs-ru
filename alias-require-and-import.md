@@ -151,7 +151,7 @@ defmodule Example do
 end
 ```
 
-компилируется в 
+компилируется в
 
 ```elixir
 defmodule Example do
