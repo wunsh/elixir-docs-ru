@@ -4,14 +4,9 @@ title: Библиотеки Эрланга
 
 # {{ page.title }}
 
-Elixir provides excellent interoperability with Erlang libraries. In fact,
-Elixir discourages simply wrapping Erlang libraries in favor of directly
-interfacing with Erlang code. In this section we will present some of the
-most common and useful Erlang functionality that is not found in Elixir.
+Эликсир отлично поддерживает работу с библиотеками Эрланга. Фактически, Эликсир отбивает желание писать обёртки для библиотек Эрланга, сделав удобным прямое взаимодействие с Эрланг кодом. В данном разделе мы покажем наиболее полезную функциональность из Эрланга, которой нет в Эликсире.
 
-As you grow more proficient in Elixir, you may want to explore the Erlang 
-[STDLIB Reference Manual](http://erlang.org/doc/apps/stdlib/index.html) in more
-detail.
+Когда вы узнаете Эликсир достаточно глубоко, вероятно вы захотите ознакомиться с [STDLIB Reference Manual](http://erlang.org/doc/apps/stdlib/index.html) более подробно.
 
 ## The binary module
 
