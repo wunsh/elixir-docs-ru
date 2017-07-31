@@ -8,11 +8,9 @@ title: Библиотеки Эрланга
 
 Когда вы узнаете Эликсир достаточно глубоко, вероятно вы захотите ознакомиться с [STDLIB Reference Manual](http://erlang.org/doc/apps/stdlib/index.html) более подробно.
 
-## The binary module
+## Модуль Binary
 
-The built-in Elixir String module handles binaries that are UTF-8 encoded.
-[The binary module](http://erlang.org/doc/man/binary.html) is useful when
-you are dealing with binary data that is not necessarily UTF-8 encoded.
+Встроенный в Эликсир модуль String работает с бинарными данными, кодирующими UTF-8. [Модуль Binary](http://erlang.org/doc/man/binary.html) полезен, когда вам нужно работать с бинарными данными, которые не обязательно представляют Юникод.
 
 ```iex
 iex> String.to_charlist "Ø"
@@ -21,8 +19,7 @@ iex> :binary.bin_to_list "Ø"
 [195, 152]
 ```
 
-The above example shows the difference; the `String` module returns Unicode
-codepoints, while `:binary` deals with raw data bytes.
+Пример выше показывает разницу; модуль `String` Возвращает значения символов Юникода, тогда как `:binary` работает с сырыми байтами данных.
 
 ## Formatted text output
 
