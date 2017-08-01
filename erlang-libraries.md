@@ -21,13 +21,9 @@ iex> :binary.bin_to_list "Ø"
 
 Пример выше показывает разницу; модуль `String` Возвращает значения символов Юникода, тогда как `:binary` работает с сырыми байтами данных.
 
-## Formatted text output
+## Форматированный текстовый вывод
 
-Elixir does not contain a function similar to `printf` found in C and other
-languages. Luckily, the Erlang standard library functions `:io.format/2` and
-`:io_lib.format/2` may be used. The first formats to terminal output, while
-the second formats to an iolist. The format specifiers differ from `printf`,
-[refer to the Erlang documentation for details](http://erlang.org/doc/man/io.html#format-1).
+В Эликсире нет функции вроде `printf` из C и других языков. К счастью, в стандартной библиотеке Эрланга есть функции `:io.format/2` и `:io_lib.format/2`. Первая форматирует вывод терминала, тогда как вторая работает с `iolist`. Спецификаторы форматирования отличаются от `printf`, [подробности можно узнать в документации Эрланга](http://erlang.org/doc/man/io.html#format-1).
 
 ```iex
 iex> :io.format("Pi is approximately given by:~10.3f~n", [:math.pi])
@@ -37,8 +33,7 @@ iex> to_string :io_lib.format("Pi is approximately given by:~10.3f~n", [:math.pi
 "Pi is approximately given by:     3.142\n"
 ```
 
-Also note that Erlang's formatting functions require special attention to
-Unicode handling.
+Также помните, что функции форматирования в Эрланге уделяют особое внимание обработке Юникода.
 
 ## The crypto module
 
