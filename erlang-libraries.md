@@ -35,10 +35,9 @@ iex> to_string :io_lib.format("Pi is approximately given by:~10.3f~n", [:math.pi
 
 Также помните, что функции форматирования в Эрланге уделяют особое внимание обработке Юникода.
 
-## The crypto module
+## Модуль `crypto`
 
-[The crypto module](http://erlang.org/doc/man/crypto.html) contains hashing
-functions, digital signatures, encryption and more:
+[Модуль crypto](http://erlang.org/doc/man/crypto.html) содержит функции хэширования, цифровых подписей, шифрования и другие:
 
 ```iex
 iex> Base.encode16(:crypto.hash(:sha256, "Elixir"))
@@ -49,6 +48,8 @@ The `:crypto` module is not part of the Erlang standard library, but is
 included with the Erlang distribution. This means you must list `:crypto`
 in your project's applications list whenever you use it. To do this,
 edit your `mix.exs` file to include:
+
+Модуль `:crypto` не является частью стандартной библиотеки Эрланга, но содержится в стандартной поставке. Это значит, что вам нужно указать `:crypto` в вашем приложении, когда вы хотите его использовать. Чтобы это сделать, отредактируйте файл `mix.exs`, чтобы он включал следующее:
 
 ```elixir
 def application do
