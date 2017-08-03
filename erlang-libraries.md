@@ -57,15 +57,11 @@ def application do
 end
 ```
 
-## The digraph module
+## Модуль `digraph`
 
-[The digraph module](http://erlang.org/doc/man/digraph.html) (as well as
-[digraph_utils](http://erlang.org/doc/man/digraph_utils.html)) contains
-functions for dealing with directed graphs built of vertices and edges.
-After constructing the graph, the algorithms in there will help finding
-for instance the shortest path between two vertices, or loops in the graph.
+[Модуль digraph](http://erlang.org/doc/man/digraph.html) (также как и [digraph_utils](http://erlang.org/doc/man/digraph_utils.html)) содержит функции для работы с направленными графами, состоящими из вершин и рёбер. После построения графа, алгоритмы в нём помогут найти, например, кратчайший путь между двумя вершинами или зацикленность в графе.
 
-Given three vertices, find the shortest path from the first to the last.
+Дано три вершины, найдём кратчайший путь из первой к последней.
 
 ```iex
 iex> digraph = :digraph.new()
@@ -77,8 +73,7 @@ iex> :digraph.get_short_path(digraph, v0, v2)
 [{0.0, 0.0}, {1.0, 0.0}, {1.0, 1.0}]
 ```
 
-Note that the functions in `:digraph` alter the graph structure in-place, this
-is possible because they are implemented as ETS tables, explained next.
+Обратите внимание, что функции в `:digraph` изменяют структуру графа налету, это возможно благодаря использованию таблиц ETS, которые мы рассмотрим следующим пунктом.
 
 ## Erlang Term Storage
 
