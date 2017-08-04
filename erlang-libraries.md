@@ -77,17 +77,11 @@ iex> :digraph.get_short_path(digraph, v0, v2)
 
 ## Erlang Term Storage
 
-The modules [`ets`](http://erlang.org/doc/man/ets.html) and
-[`dets`](http://erlang.org/doc/man/dets.html) handle storage of large
-data structures in memory or on disk respectively.
+Модули [`ets`](http://erlang.org/doc/man/ets.html) и [`dets`](http://erlang.org/doc/man/dets.html) позволяют хранить большие структуры данных в памяти или на диске соответственно.
 
-ETS lets you create a table containing tuples. By default, ETS tables
-are protected, which means only the owner process may write to the table
-but any other process can read. ETS has some functionality to be used as
-a simple database, a key-value store or as a cache mechanism.
+ETS позволяет вам создать таблицу, содержащую кортежи. По умолчанию, таблицы ETS защищены, это значит, что только владелец процесса может писать в таблицу, но любой другой процесс может её читать. В ETS есть функциональность, позволяющая использовать их как простую базу данных, хранилище пар ключ-значение или в качестве механизма кеширования.
 
-The functions in the `ets` module will modify the state of the table as a
-side-effect.
+Функции в модуле `ets` будут менять состояние таблице как сайд-эффект.
 
 ```iex
 iex> table = :ets.new(:ets_test, [])
