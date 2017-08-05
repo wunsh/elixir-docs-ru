@@ -111,10 +111,9 @@ iex> :math.log(7.694785265142018e23)
 55.0
 ```
 
-## The queue module
+## Модуль `queue`
 
-The [`queue` is a data structure](http://erlang.org/doc/man/queue.html)
-that implements (double-ended) FIFO (first-in first-out) queues efficiently:
+[Очередь или `queue`](http://erlang.org/doc/man/queue.html) - структура данных, которая эффективно реализует очереди FIFO (first-in first-out):
 
 ```iex
 iex> q = :queue.new
