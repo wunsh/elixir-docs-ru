@@ -1,6 +1,6 @@
 # Elixir documentation in Russian
 
-This repository contains translation of official Elixir documentation into Russian. 
+This repository contains translation of official Elixir documentation into Russian.
 
 ## Contributing
 
