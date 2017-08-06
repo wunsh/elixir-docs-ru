@@ -95,11 +95,9 @@ iex> :ets.i(table)
 <3   > {<<"China">>,1374000000}
 ```
 
-## The math module
+## Модуль `math`
 
-[The `math` module](http://erlang.org/doc/man/math.html) contains common
-mathematical operations covering trigonometry, exponential, and logarithmic
-functions.
+[Модуль `math`](http://erlang.org/doc/man/math.html) содержит основные математические операции: тригонометрия, экспоненциальные и логарифмические функции.
 
 ```iex
 iex> angle_45_deg = :math.pi() * 45.0 / 180.0
