@@ -128,10 +128,9 @@ iex> value
 :empty
 ```
 
-## The rand module
+## Модуль `rand`
 
-[`rand` has functions](http://erlang.org/doc/man/rand.html) for returning
-random values and setting the random seed.
+[В `rand` есть функции](http://erlang.org/doc/man/rand.html) для возврата случайного значения или получения произвольного элемента множества.
 
 ```iex
 iex> :rand.uniform()
