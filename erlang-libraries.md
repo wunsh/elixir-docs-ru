@@ -142,20 +142,18 @@ iex> :rand.uniform(6)
 6
 ```
 
-## The zip and zlib modules
+## Модули `zip` и `zlib`
 
-[The `zip` module](http://erlang.org/doc/man/zip.html) lets you read and write
-ZIP files to and from disk or memory, as well as extracting file information.
+[Модуль `zip`](http://erlang.org/doc/man/zip.html) позволяет вам читать и записывать ZIP файлы на диск или в память, а также извлекать информацию из этих файлов
 
-This code counts the number of files in a ZIP file:
+Этот код подсчитывает количество файлов в ZIP файле:
 
 ```iex
 iex> :zip.foldl(fn _, _, _, acc -> acc + 1 end, 0, :binary.bin_to_list("file.zip"))
 {:ok, 633}
 ```
 
-[The `zlib` module](http://erlang.org/doc/man/zlib.html) deals with data compression in zlib format, as found in the
-`gzip` command.
+[Модуль `zlib`](http://erlang.org/doc/man/zlib.html) работает со сжатием данных в формате zlib, тем же, с которым работает команда `gzip`.
 
 ```iex
 iex> song = "
