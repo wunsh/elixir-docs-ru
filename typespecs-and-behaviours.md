@@ -1,16 +1,15 @@
 ---
-title: Typespecs and behaviours
+title: Спецификации типов и поведения
 ---
 
 # {{ page.title }}
 
-## Types and specs
+## Типы и спецификации
 
-Elixir is a dynamically typed language, so all types in Elixir are inferred by the runtime. Nonetheless, Elixir comes with **typespecs**, which are a notation used for:
+Эликсир - язык с динамической типизацией, поэтому все типы в Эликсире определяются во время выполнения. В эликсире есть **спецификации типов**, которые являются нотациями для:
 
-1. declaring typed function signatures (specifications);
-2. declaring custom data types.
-
+1. определения сигнатур типизированных функции (спецификации);
+2. определения пользовательских типов данных.
 
 ### Function specifications
 
