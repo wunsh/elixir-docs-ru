@@ -11,15 +11,15 @@ title: Спецификации типов и поведения
 1. определения сигнатур типизированных функции (спецификации);
 2. определения пользовательских типов данных.
 
-### Function specifications
+### Спецификации функций
 
-By default, Elixir provides some basic types, such as `integer` or `pid`, as well as more complex types: for example, the `round/1` function, which rounds a float to its nearest integer, takes a `number` as an argument (an `integer` or a `float`) and returns an `integer`. As you can see [in its documentation](https://hexdocs.pm/elixir/Kernel.html#round/1), `round/1`'s typed signature is written as:
+По умолчанию в Эликсире есть несколько базовых типов, таких как `integer` или `pid`, а также более сложные типы: например, функция `round/1`, которая округляет число с плавающей точкой до ближайшего целого, принимает `number` в качестве аргумента (`integer` или `float`) и возвращает `integer`. Как вы можете увидеть в [ее документации](https://hexdocs.pm/elixir/Kernel.html#round/1), сигнатура `round/1` выглядит следующим образом:
 
 ```
 round(number) :: integer
 ```
 
-`::` means that the function on the left side *returns* a value whose type is what's on the right side. Function specs are written with the `@spec` directive, placed right before the function definition. The `round/1` function could be written as:
+`::` означает, что функция слева возвращает значение того типа, который указан справа. Спецификации функций пишутся с помощью директивы `@spec`, расположенной прямо перед определением функции. Функция `round/1` может быть написана так:
 
 ```elixir
 @spec round(number) :: integer
@@ -27,6 +27,8 @@ def round(number), do: # implementation...
 ```
 
 Elixir supports compound types as well. For example, a list of integers has type `[integer]`. You can see all the built-in types provided by Elixir [in the typespecs docs](https://hexdocs.pm/elixir/typespecs.html).
+
+Эликсир также поддерживает составные типы. Например, список целых чисел будет выглядеть как `[integer]`. Вы можете увидеть все встроенные типы Эликсира в [документации по спецификациям типов](https://hexdocs.pm/elixir/typespecs.html).
 
 ### Defining custom types
 
