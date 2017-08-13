@@ -79,9 +79,11 @@ end
 
 Если вы хотите оставить пользовательский тип приватным, вы можете использовать директиву `@typep` вместо `@type`.
 
-### Static code analysis
+### Статистический анализ кода
 
 Typespecs are not only useful to developers as additional documentation. The Erlang tool [Dialyzer](http://www.erlang.org/doc/man/dialyzer.html), for example, uses typespecs in order to perform static analysis of code. That's why, in the `QuietCalculator` example, we wrote a spec for the `make_quiet/1` function even though it was defined as a private function.
+
+Спецификации типов полезны для разработчиков как дополнительная документация. Инструмент из Эрланга под названием [Dialyzer](http://www.erlang.org/doc/man/dialyzer.html), например, использует спецификации типов для статического анализа кода. Именно поэтому в примере `QuietCalculator`, мы писали спцификацию для функции `make_quiet/1`, хотя она была приватной.
 
 ## Behaviours
 
