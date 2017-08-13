@@ -26,15 +26,13 @@ round(number) :: integer
 def round(number), do: # implementation...
 ```
 
-Elixir supports compound types as well. For example, a list of integers has type `[integer]`. You can see all the built-in types provided by Elixir [in the typespecs docs](https://hexdocs.pm/elixir/typespecs.html).
-
 Эликсир также поддерживает составные типы. Например, список целых чисел будет выглядеть как `[integer]`. Вы можете увидеть все встроенные типы Эликсира в [документации по спецификациям типов](https://hexdocs.pm/elixir/typespecs.html).
 
-### Defining custom types
+### Определение пользовательских типов
 
-While Elixir provides a lot of useful built-in types, it's convenient to define custom types when appropriate. This can be done when defining modules through the `@type` directive.
+Эликсир предоставляет множество удобных встроенных типов, и также удобно в некоторых ситуациях определять пользовательские типы. Это можно сделать при определении модулей с помощью директивы `@type`.
 
-Say we have a `LousyCalculator` module, which performs the usual arithmetic operations (sum, product, and so on) but, instead of returning numbers, it returns tuples with the result of an operation as the first element and a random remark as the second element.
+Допустим, у нас есть модуль `LousyCalculator`, который умеет выполнять обычные арифметические операции (сложение, умножение и т.д.), но, вместо возврата чисел, он возвращает кортежи с результатом операции первым элементом и рандомно цитатой вторым.
 
 ```elixir
 defmodule LousyCalculator do
@@ -46,9 +44,9 @@ defmodule LousyCalculator do
 end
 ```
 
-As you can see in the example, tuples are a compound type and each tuple is identified by the types inside it. To understand why `String.t` is not written as `string`, have another look at the [notes in the typespecs docs](https://hexdocs.pm/elixir/typespecs.html#notes).
+Как вы можете увидеть в примере, кортежи - составные типы, каждый кортеж идентифицируется типами внутри него. Чтобы понять, почему `String.t` не записано как `string`, взгляните на [заметки в документации по спецификациям типов](https://hexdocs.pm/elixir/typespecs.html#notes).
 
-Defining function specs this way works, but it quickly becomes annoying since we're repeating the type `{number, String.t}` over and over. We can use the `@type` directive in order to declare our own custom type.
+Определение спецификации функции таким способом работает, но быстро станет надоедать, если придётся повторять `{number, String.t}` снова и снова. Мы можем использовать директиву `@type` для объявления нашего пользовательского типа.
 
 ```elixir
 defmodule LousyCalculator do
@@ -65,9 +63,9 @@ defmodule LousyCalculator do
 end
 ```
 
-The `@typedoc` directive, similarly to the `@doc` and `@moduledoc` directives, is used to document custom types.
+Директива `@typedoc` используется по аналогии с `@doc` и `@moduledoc`, только для определения пользовательских типов.
 
-Custom types defined through `@type` are exported and available outside the module they're defined in:
+Типы, определённые через `@type` экспортируются и становятся доступны снаружи модуля, в котором они определены:
 
 ```elixir
 defmodule QuietCalculator do
@@ -79,7 +77,7 @@ defmodule QuietCalculator do
 end
 ```
 
-If you want to keep a custom type private, you can use the `@typep` directive instead of `@type`.
+Если вы хотите оставить пользовательский тип приватным, вы можете использовать директиву `@typep` вместо `@type`.
 
 ### Static code analysis
 
