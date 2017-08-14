@@ -85,16 +85,19 @@ Typespecs are not only useful to developers as additional documentation. The Erl
 
 Спецификации типов полезны для разработчиков как дополнительная документация. Инструмент из Эрланга под названием [Dialyzer](http://www.erlang.org/doc/man/dialyzer.html), например, использует спецификации типов для статического анализа кода. Именно поэтому в примере `QuietCalculator`, мы писали спцификацию для функции `make_quiet/1`, хотя она была приватной.
 
-## Behaviours
+## Поведения (behaviours)
 
-Many modules share the same public API. Take a look at [Plug](https://github.com/elixir-lang/plug), which, as its description states, is a **specification** for composable modules in web applications. Each *plug* is a module which **has to** implement at least two public functions: `init/1` and `call/2`.
+Многие модули предоставляют одинаковый публичный API. Взгляните на [Plug](https://github.com/elixir-lang/plug) который, согласно его описанию, является **спецификацией** для компонуемых модулей в веб приложениях. Каждый *plug* - это модуль, который **должен** реализовывать как минимум две публичных функции: `init/1` и `call/2`.
 
-Behaviours provide a way to:
+Поведения предосатвляют нужны для того, чтобы:
 
 * define a set of functions that have to be implemented by a module;
 * ensure that a module implements all the functions in that set.
 
-If you have to, you can think of behaviours like interfaces in object oriented languages like Java: a set of function signatures that a module has to implement.
+* определить набора функций, который модуль должен реализовывать;
+* убедиться, что модуль реализует все функции из рабора.
+
+Если нужно, вы можете думать о поведениях как о подобии интерфейсов из объектно-ориентированных языков, вроде Java: набор сигнатур функций, который модуль обязан реализовывать.
 
 ### Defining behaviours
 
