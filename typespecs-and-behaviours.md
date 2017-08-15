@@ -99,11 +99,11 @@ Typespecs are not only useful to developers as additional documentation. The Erl
 
 Если нужно, вы можете думать о поведениях как о подобии интерфейсов из объектно-ориентированных языков, вроде Java: набор сигнатур функций, который модуль обязан реализовывать.
 
-### Defining behaviours
+### Определение поведений
 
-Say we want to implement a bunch of parsers, each parsing structured data: for example, a JSON parser and a YAML parser. Each of these two parsers will *behave* the same way: both will provide a `parse/1` function and an `extensions/0` function. The `parse/1` function will return an Elixir representation of the structured data, while the `extensions/0` function will return a list of file extensions that can be used for each type of data (e.g., `.json` for JSON files).
+Допустим, мы хотим сделать несколько парсеров, каждый должен парсить структурированные данные: например, JSON и YAML. Каждый из этих двух парсеров будет вести себя подобным образом: оба будут реализовывать функции `parse/1` и `extensions/0`. Функция `parse/1` будет возвращать представление этих данных в Эликсире, тогда как `extensions/0` будет возвращать список файловых расширений, которые можно использовать для каждого типа данных (напирмер, `.json` для JSON файлов).
 
-We can create a `Parser` behaviour:
+Мы можем создать поведение `Parser`:
 
 ```elixir
 defmodule Parser do
@@ -112,7 +112,7 @@ defmodule Parser do
 end
 ```
 
-Modules adopting the `Parser` behaviour will have to implement all the functions defined with the `@callback` directive. As you can see, `@callback` expects a function name but also a function specification like the ones used with the `@spec` directive we saw above.
+Модули, принимающие поведение `Parser` должны будут иметь все функции, заданные директивой `@callback`. Как вы видите, `@callback` принимает имя функции, а также её спецификацию, аналогично директиве `@spec`, рассмотренной выше.
 
 ### Adopting behaviours
 
