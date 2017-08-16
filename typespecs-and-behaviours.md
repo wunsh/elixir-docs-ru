@@ -112,11 +112,11 @@ defmodule Parser do
 end
 ```
 
-Модули, принимающие поведение `Parser` должны будут иметь все функции, заданные директивой `@callback`. Как вы видите, `@callback` принимает имя функции, а также её спецификацию, аналогично директиве `@spec`, рассмотренной выше.
+Модули, реализующие поведение `Parser` должны будут иметь все функции, заданные директивой `@callback`. Как вы видите, `@callback` принимает имя функции, а также её спецификацию, аналогично директиве `@spec`, рассмотренной выше.
 
-### Adopting behaviours
+### Применение поведений
 
-Adopting a behaviour is straightforward:
+Применить поведение достаточно просто:
 
 ```elixir
 defmodule JSONParser do
@@ -136,5 +136,4 @@ defmodule YAMLParser do
 end
 ```
 
-If a module adopting a given behaviour doesn't implement one of the callbacks required by that behaviour, a compile-time warning will be generated.
-
+Если модуль, реализующий переданное поведение не имеет всех функций, указанных в поведении, будет сгенерировано предупреждение во время компиляции.
