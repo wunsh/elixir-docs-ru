@@ -4,11 +4,11 @@ title: ETS
 
 # {{ page.title }}
 
-Every time we need to look up a bucket, we need to send a message to the registry. In case our registry is being accessed concurrently by multiple processes, the registry may become a bottleneck!
+Каждый раз, когда нам нужно обратиться к корзине, мы вынждены отправлять сообщение в реестр. В случае, если к реестру конкуретно обращаются несколько процессов, он рискует стать узким местом!
 
-In this chapter we will learn about ETS (Erlang Term Storage) and how to use it as a cache mechanism.
+В этой главе мы поговорим о ETS (Erlang Term Storage, хранилище термов Эрланга), и о том, как его использовать для кеширования
 
-> Warning! Don't use ETS as a cache prematurely! Log and analyze your application performance and identify which parts are bottlenecks, so you know *whether* you should cache, and *what* you should cache. This chapter is merely an example of how ETS can be used, once you've determined the need.
+> Осторожно! Не начинайте использовать ETS для кеша преждевременно! Логируйте и анализируйте производительность вашего приложения и ищите узкие места, чтобы знать, *нужен ли* вам кеш, и *что* вам нужно кешировать. Эта глава - просто пример, как можно использовать ETS, когда вы поймёте, что это вам действительно нужно.
 
 ## ETS as a cache
 
