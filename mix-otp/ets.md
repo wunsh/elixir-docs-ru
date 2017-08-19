@@ -10,9 +10,11 @@ title: ETS
 
 > Осторожно! Не начинайте использовать ETS для кеша преждевременно! Логируйте и анализируйте производительность вашего приложения и ищите узкие места, чтобы знать, *нужен ли* вам кеш, и *что* вам нужно кешировать. Эта глава - просто пример, как можно использовать ETS, когда вы поймёте, что это вам действительно нужно.
 
-## ETS as a cache
+## ETS для кеша
 
 ETS allows us to store any Elixir term in an in-memory table. Working with ETS tables is done via [Erlang's `:ets` module](http://www.erlang.org/doc/man/ets.html):
+
+ETS позволяет нам хранить любой терм Эликсира в таблице в памяти. Работа с таблицами ETS возможна через [модуль Эрланга `:ets`](http://www.erlang.org/doc/man/ets.html):
 
 ```iex
 iex> table = :ets.new(:buckets_registry, [:set, :protected])
@@ -23,9 +25,9 @@ iex> :ets.lookup(table, "foo")
 [{"foo", #PID<0.41.0>}]
 ```
 
-When creating an ETS table, two arguments are required: the table name and a set of options. From the available options, we passed the table type and its access rules. We have chosen the `:set` type, which means that keys cannot be duplicated. We've also set the table's access to `:protected`, meaning only the process that created the table can write to it, but all processes can read from it. Those are actually the default values, so we will skip them from now on.
+Для создания таблицы ETS обязательны два аргумента: имя таблицы и набор опций. Из доступных опций мы передали тип таблицы и правила доступа к ней. Мы выбрали тип `:set`, который запрещает дублирование ключей. Мы также обозначили доступ к таблице как `:protected`, чтобы позволить записывать данные в таблицу только процессу, который её создал, а все остальные могут только читать эти данные. Эти значения стандартные, поэтому далее мы их будем опускать.
 
-ETS tables can also be named, allowing us to access them by a given name:
+Таблицы ETS могут быть также именованными, позволяя получать доступ к ним, передавая имя:
 
 ```iex
 iex> :ets.new(:buckets_registry, [:named_table])
@@ -36,9 +38,9 @@ iex> :ets.lookup(:buckets_registry, "foo")
 [{"foo", #PID<0.41.0>}]
 ```
 
-Let's change the `KV.Registry` to use ETS tables. The first change is to modify our registry to require a name argument, we will use it to name the ETS table and the registry process itself. ETS names and process names are stored in different locations, so there is no chance of conflicts.
+Давайте изменим `KV.Registry`, использовав таблицы ETS. Первое изменение - обязательный аргумент `name`, который мы будем использовать для именования таблицы ETS и самого процесса реестра. Имена процессов и таблиц ETS хранятся в разных местах, поэтому конфликты между ними не возникнут.
 
-Open up `lib/kv/registry.ex`, and let's change its implementation. We've added comments to the source code to highlight the changes we've made:
+Откройте `lib/kv/registry.ex` и измените его реализацию. Мы добавили комметарии в исходный код, чтобы увидеть все сделанные изменения:
 
 ```elixir
 defmodule KV.Registry do
@@ -115,11 +117,11 @@ defmodule KV.Registry do
 end
 ```
 
-Notice that before our changes `KV.Registry.lookup/2` sent requests to the server, but now it reads directly from the ETS table, which is shared across all processes. That's the main idea behind the cache mechanism we are implementing.
+Обратите внимание, что до изменений `KV.Registry.lookup/2` отправлял запросы на сервер, но теперь он читает прямо из таблицы ETS, которая доступна всем процессам. Это главная идея механизма кеширования, который мы делаем.
 
-In order for the cache mechanism to work, the created ETS table needs to have access `:protected` (the default), so all clients can read from it, while only the `KV.Registry` process writes to it. We have also set `read_concurrency: true` when starting the table, optimizing the table for the common scenario of concurrent read operations.
+Для работы механизма кеширования созданная таблица ETS должна иметь политику доступа `:protected` (по умолчанию), чтобы все клиенты могли читать из неё данные, тогда как только процесс `KV.Registry` записывает их. Мы также можем установить `read_concurrency: true` при создании таблицы, оптимизировав таблицу для частых сценариев параллельных операций чтения.
 
-The changes we have performed above have broken our tests because the registry requires the `:name` option when starting up. Furthermore, some registry operations such as `lookup/2` require the name to be given as argument, instead of a PID, so we can do the ETS table lookup. Let's change the setup function in `test/kv/registry_test.exs` to fix both issues:
+Сделанные нами изменения сломали тесты, потому что реестр теперь должен принимать опцию `name:` при старте. Более того, некоторые операции с реестром, такие как `lookup/2` тоже должны принимать `name` в качестве аргумента, вместо PID, т.к. поиск теперь нужно делать в таблице ETS. Давайте изменим эти функции в `test/kv/registry_test.exs`, чтобы решить обе проблемы:
 
 ```elixir
   setup context do
@@ -128,7 +130,7 @@ The changes we have performed above have broken our tests because the registry r
   end
 ```
 
-Once we change `setup`, some tests will continue to fail. You may even notice tests pass and fail inconsistently between runs. For example, the "spawns buckets" test:
+После изменения блока `setup` некоторые тесты продолжат проваливаться. Вы можете отметить, что тесты проходят и валятся не одинаково от запуска к запуску. Например, тест "spawns buckets":
 
 ```elixir
 test "spawns buckets", %{registry: registry} do
@@ -142,18 +144,18 @@ test "spawns buckets", %{registry: registry} do
 end
 ```
 
-may be failing on this line:
+может провалиться на этой строке:
 
 ```elixir
 {:ok, bucket} = KV.Registry.lookup(registry, "shopping")
 ```
 
-How can this line fail if we just created the bucket in the previous line?
+Как эта строка может провалиться, если мы только что создали корзину на предыдущей строке?
 
-The reason those failures are happening is because, for didactic purposes, we have made two mistakes:
+Причина этих провалов в том, что мы допустили две ошибки:
 
-  1. We are prematurely optimizing (by adding this cache layer)
-  2. We are using `cast/2` (while we should be using `call/2`)
+  1. Мы сделали оптимизацию (с помощью добавления этого слоя кеширования)
+  2. Мы используем `cast/2` (тогда как следует использовать `call/2`)
 
 ## Race conditions?
 
