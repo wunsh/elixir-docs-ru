@@ -157,25 +157,25 @@ end
   1. Мы сделали оптимизацию (с помощью добавления этого слоя кеширования)
   2. Мы используем `cast/2` (тогда как следует использовать `call/2`)
 
-## Race conditions?
+## Состояния гонки?
 
-Developing in Elixir does not make your code free of race conditions. However, Elixir's abstractions where nothing is shared by default make it easier to spot a race condition's root cause.
+Разработка на Эликсире не гарантирует, что в коде не будет состояний гонки. Однако, абстракции Эликсира, где нет общих данных по умолчанию облегчанает поиск причин возникновения состояния гонки.
 
-What is happening in our tests is that there is a delay in between an operation and the time we can observe this change in the ETS table. Here is what we were expecting to happen:
+Во время выполнения наших тестах происходит задержка между операциями и есть время, когда мы можем посмотреть на изменения в таблице ETS. Вот что мы ожидаем увидеть:
 
-1. We invoke `KV.Registry.create(registry, "shopping")`
-2. The registry creates the bucket and updates the cache table
-3. We access the information from the table with `KV.Registry.lookup(registry, "shopping")`
-4. The command above returns `{:ok, bucket}`
+1. Мы выполняем `KV.Registry.create(registry, "shopping")`
+2. Реестр создаёт корзину и обновляет таблицу кеша
+3. Мы смотрим информацию из таблицы с помощью `KV.Registry.lookup(registry, "shopping")`
+4. Команда выше возвращает `{:ok, bucket}`
 
-However, since `KV.Registry.create/2` is a cast operation, the command will return before we actually write to the table! In other words, this is happening:
+Однако, т.к. `KV.Registry.create/2` - это операция преобразования (cast operation), команда закончится до того, как мы на самом деле запишем данные в таблицу! Другими словами, вот что произойдёт на самом деле:
 
-1. We invoke `KV.Registry.create(registry, "shopping")`
-2. We access the information from the table with `KV.Registry.lookup(registry, "shopping")`
-3. The command above returns `:error`
-4. The registry creates the bucket and updates the cache table
+1. Мы выполняем `KV.Registry.create(registry, "shopping")`
+2. Мы получаем доступ к информации из таблицы с помощью `KV.Registry.lookup(registry, "shopping")`
+3. Команда выше возвращает `:error`
+4. Реестр создаёт корзину и обновляет таблицу кеша
 
-To fix the failure we need to make `KV.Registry.create/2` synchronous by using `call/2` rather than `cast/2`. This will guarantee that the client will only continue after changes have been made to the table. Let's change the function and its callback as follows:
+Чтобы исправить эту проблему, нам нужно сделать `KV.Registry.create/2` синхронной с помощью `call/2` вместо `cast/2`. Это гарантирует, что клиент продолжит выполнение только после изменений, сделанных в таблице. Давайте изменим функцию и её колбэк, как показано ниже:
 
 ```elixir
 def create(server, name) do
@@ -196,15 +196,15 @@ def handle_call({:create, name}, _from, {names, refs}) do
 end
 ```
 
-We changed the callback from `handle_cast/2` to `handle_call/3` and changed it to reply with the pid of the created bucket. Generally speaking, Elixir developers prefer to use `call/2` instead of `cast/2` as it also provides back-pressure - you block until you get a reply. Using `cast/2` when not necessary can also be considered a premature optimization.
+Мы изменили коллбэк с `handle_cast/2` на `handle_call/3` и изменили его, чтобы возвращался PID созданной корзины. Говоря в целом, Эликсир разработчики предпочитают использовать `call/2` вместо `cast/2`, потому что это также блокирует выполнение до получения ответа. Использование `cast/2`, когда это не нужно может быть воспринято как преждевреманная оптимизация.
 
-Let's run the tests once again. This time though, we will pass the `--trace` option:
+Давайте запустим тесты ещё раз. Однако теперь мы передадим опцию `--trace`:
 
 ```bash
 $ mix test --trace
 ```
 
-The `--trace` option is useful when your tests are deadlocking or there are race conditions, as it runs all tests synchronously (`async: true` has no effect) and shows detailed information about each test. This time we should be down to one or two intermittent failures:
+Опция `--trace` полезна для выполнения выявления дедлоков или состояния гонки, т.к. все тесты запускаются синхронно (`async: true` не имеет эффекта) и показывает детальную информацию о каждом тесте. В этот раз мы должны получить одну или две (intermittent) ошибки:
 
 ```
   1) test removes buckets on exit (KV.RegistryTest)
@@ -217,11 +217,11 @@ The `--trace` option is useful when your tests are deadlocking or there are race
        test/kv/registry_test.exs:23
 ```
 
-According to the failure message, we are expecting that the bucket no longer exists on the table, but it still does! This problem is the opposite of the one we have just solved: while previously there was a delay between the command to create a bucket and updating the table, now there is a delay between the bucket process dying and its entry being removed from the table.
+Следуя сообщениям об ошибках, мы ожидаем, что корзина больше не существует в таблице, но это не так! Эта проблема обратна той, которую мы только что решили: тогда как ранее была задержка между командой создания корзины и обновлением таблицы, теперь есть задержка между смертью процесса корзины и удалением из неё записи.
 
-Unfortunately this time we cannot simply change `handle_info/2`, the operation responsible for cleaning the ETS table, to a synchronous operation. Instead we need to find a way to guarantee the registry has processed the `:DOWN` notification sent when the bucket crashed.
+К несчастью, в этот раз мы не можем просто изменить `handle_info/2`, операцию, ответственную за очистку таблицы ETS, для выполнения синхронно. Напротив, нам нужно найти способ отправки реестром уведомления `:DOWN`, когда корзина падает.
 
-An easy way to do so is by sending a synchronous request to the registry: because messages are processed in order, if the registry replies to a request sent after the `Agent.stop` call, it means that the `:DOWN` message has been processed. Let's do so by creating a "bogus" bucket, which is a synchronous request, after `Agent.stop` in both tests:
+Лёгкий способ сделать это - отправлять синхронно запрос к реестру: потому что сообщения приходят по очереди, если реестр отвечает на запрос после вызова `Agent.stop`, это значит, что сообщение `:DOWN` было отправлено. Давайте сделаем так, создав корзину "bogus" синхронным запросом, после `Agent.stop` в обоих тестах:
 
 
 ```elixir
@@ -248,11 +248,10 @@ An easy way to do so is by sending a synchronous request to the registry: becaus
   end
 ```
 
-Our tests should now (always) pass!
+Теперь все тесты должны пройти, и должны проходить всегда.
 
-This concludes our optimization chapter. We have used ETS as a cache mechanism where reads can happen from any processes but writes are still serialized through a single process. More importantly, we have also learned that once data can be read asynchronously, we need to be aware of the race conditions it might introduce.
+На этом мы заканчиваем главу об оптимизации. Мы использовали ETS для кеша, в котором чтение может быть выполнено любым процессом, а запись только одним процессом. Более важно то, мы узнали, что данные могут быть прочитанны асинхронно, а значит нам нужно опасаться возникновения состояния гонки.
 
-In practice, if you find yourself in a position where you need a process registry for dynamic processes, you should use [the `Registry` module](https://hexdocs.pm/elixir/Registry.html) provided as part of Elixir. It provides functionality similar to the one we have built using a GenServer + `:ets` while also being able to perform both writes and reads concurrently. [It has been benchmarked to scale across all cores even on machines with 40 cores](https://elixir-lang.org/blog/2017/01/05/elixir-v1-4-0-released/).
+На практике, если вам понадобится реестр для динамических процессов, посмотрите на [модуль `Registry`](https://hexdocs.pm/elixir/Registry.html), который является частью Эликсира. Он предоставляет функциональность, подобную той, которую мы сделали с помощью GenServer и `:ets`, а также позволяет выполнять чтение и запись параллельно. [Это было испытано бенчмарком на линейную масштабируемость даже на машине с 40 ядрами](https://elixir-lang.org/blog/2017/01/05/elixir-v1-4-0-released/).
 
-Next let's discuss external and internal dependencies and how Mix helps us manage large codebases.
-
+Далее давайте поговорим о внешних и внутренних зависимостях, и о том, как Mix помогает управлять большими базами исходников.
