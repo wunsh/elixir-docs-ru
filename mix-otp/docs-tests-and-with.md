@@ -1,10 +1,10 @@
 ---
-title: Doctests, patterns and with
+title: Тесты документации, паттерны и `with`
 ---
 
 # {{ page.title }}
 
-In this chapter, we will implement the code that parses the commands we described in the first chapter:
+В этой главе мы реализуем код, который парсит команды, описанные в первой главе:
 
 ```
 CREATE shopping
@@ -24,7 +24,7 @@ DELETE shopping eggs
 OK
 ```
 
-After the parsing is done, we will update our server to dispatch the parsed commands to the `:kv` application we built previously.
+Когда парсинг будет закончен, мы обновим наш сервер для отправки распарсенных команд в приложение `:kv`, созданное ранее.
 
 ## Doctests
 
