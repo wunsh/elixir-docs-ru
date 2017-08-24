@@ -36,8 +36,7 @@
       [
         "remark-lint-list-item-indent",
         "space"
-      ],
-      "remark-lint-are-links-valid-alive"
+      ]
     ],
     "settings": {
       "commonmark": true
