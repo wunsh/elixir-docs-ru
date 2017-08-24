@@ -1,5 +1,5 @@
 ---
-title: Тесты документации, паттерны и `with`
+title: Доктесты, паттерны и `with`
 ---
 
 # {{ page.title }}
@@ -26,13 +26,13 @@ OK
 
 Когда парсинг будет закончен, мы обновим наш сервер для отправки распарсенных команд в приложение `:kv`, созданное ранее.
 
-## Doctests
+## Доктесты (doctests)
 
-On the language homepage, we mention that Elixir makes documentation a first-class citizen in the language. We have explored this concept many times throughout this guide, be it via `mix help` or by typing `h Enum` or another module in an IEx console.
+В самом начале мы упомянули, что документация является гражданином первого класса в языке. Мы подходили к этому с разных сторон по ходу этого руководство, будь то `mix help`, или `h Enum`, или справка по другим модулям в консоли.
 
-In this section, we will implement the parse functionality using doctests, which allows us to write tests directly from our documentation. This helps us provide documentation with accurate code samples.
+В этом разделе мы реализуем парсинг с использованием доктестов, которые позволяют нам писать тесты прямо в нашей документации. Это помогает нам предоставлять документацию сразу с примерами кода.
 
-Let's create our command parser at `lib/kv_server/command.ex` and start with the doctest:
+Давайте создадим модуль `lib/kv_server/command.ex` с парсером, и начнём с доктеста к нему:
 
 ```elixir
 defmodule KVServer.Command do
@@ -51,11 +51,11 @@ defmodule KVServer.Command do
 end
 ```
 
-Doctests are specified in by an indentation of four spaces followed by the `iex>` prompt in a documentation string. If a command spans multiple lines, you can use `...>`, as in IEx. The expected result should start at the next line after `iex>` or `...>` line(s) and is terminated either by a newline or a new `iex>` prefix.
+Доктесты задаются с помощью отступа в четыре пробела перед `iex>`. Если команда занимает несколько строк, можно использовать `...>`, также как IEx. Ожидаемый результат должен начинаться на следующей строке после строки `iex>` или `...>`, и заканчиваться новой строкой или новым префиксом `iex>`.
 
-Also note that we started the documentation string using `@doc ~S"""`. The `~S` prevents the `\r\n` characters from being converted to a carriage return and line feed until they are evaluated in the test.
+Также обратите внимание, что мы начале строку документации с помощью `@doc ~S"""`. `~S` предовращает конвертацию символов `\r\n` в возват каретки при разборе документации, пока они не будут достигнуты в тесте.
 
-To run our doctests, we'll create a file at `test/kv_server/command_test.exs` and call `doctest KVServer.Command` in the test case:
+Для запуска нашего доктеста мы создадим файл `test/kv_server/command_test.exs` и вызовем `doctest KVServer.Command`:
 
 ```elixir
 defmodule KVServer.CommandTest do
@@ -64,7 +64,7 @@ defmodule KVServer.CommandTest do
 end
 ```
 
-Run the test suite and the doctest should fail:
+Запустим тесты, доктест должен упасть:
 
 ```
   1) test doc at KVServer.Command.parse/1 (1) (KVServer.CommandTest)
@@ -76,9 +76,9 @@ Run the test suite and the doctest should fail:
        lib/kv_server/command.ex:7: KVServer.Command (module)
 ```
 
-Excellent!
+Прекрасно!
 
-Now let's make the doctest pass. Let's implement the `parse/1` function:
+Теперь сделаем так, чтобы доктест проходил успешно. Реализуем функцию `parse/1`:
 
 ```elixir
 def parse(line) do
@@ -88,7 +88,7 @@ def parse(line) do
 end
 ```
 
-Our implementation splits the line on whitespace and then matches the command against a list. Using `String.split/1` means our commands will be whitespace-insensitive. Leading and trailing whitespace won't matter, nor will consecutive spaces between words. Let's add some new doctests to test this behaviour along with the other commands:
+Наша реализация разбивает линию по пробелам, затем ищет команду в списке. Использование `String.split/1` означает, что наши команды будут нечувствительны к пробелам. Пробелы в начале и конце будут проигнорированы, как и множественные пробелы между словами. Давайте добавим несколько новых доктестов, чтобы протестировать это поведение вместе с остальными командами:
 
 ```elixir
 @doc ~S"""
@@ -123,7 +123,7 @@ arguments return an error:
 """
 ```
 
-With doctests at hand, it is your turn to make tests pass! Once you're ready, you can compare your work with our solution below:
+Когда доктесты написаны, ваша задача самостоятельно сделать так, чтобы они проходили! Когда закончите, можете сравнить вашу работу с нашим решением ниже:
 
 ```elixir
 def parse(line) do
@@ -137,9 +137,9 @@ def parse(line) do
 end
 ```
 
-Notice how we were able to elegantly parse the commands without adding a bunch of `if/else` clauses that check the command name and number of arguments!
+Посмотрите, как мы смогли элегантно парсить команды без добавления кучи `if/else`, которые проверяют имя команды и количество аргументов!
 
-Finally, you may have observed that each doctest was considered to be a different test in our test case, as our test suite now reports a total of 7 tests. That is because ExUnit considers the following to define two different tests:
+Наконец, вы можете увидеть, что каждый доктест воспринимается как отдельный тест, наш тестовый набор теперь сообщает о том, что всего их 7. Это происходит, потому что ExUnit воспринимает следующее как два разных теста:
 
 ```iex
 iex> KVServer.Command.parse "UNKNOWN shopping eggs\r\n"
@@ -149,7 +149,7 @@ iex> KVServer.Command.parse "GET shopping\r\n"
 {:error, :unknown_command}
 ```
 
-Without new lines, as seen below, ExUnit compiles it into a single test:
+Без добавления пустых строк ExUnit скомпилирует их в один тест:
 
 ```iex
 iex> KVServer.Command.parse "UNKNOWN shopping eggs\r\n"
@@ -158,7 +158,7 @@ iex> KVServer.Command.parse "GET shopping\r\n"
 {:error, :unknown_command}
 ```
 
-You can read more about doctests in [the `ExUnit.DocTest` docs](https://hexdocs.pm/ex_unit/ExUnit.DocTest.html).
+Вы можете прочитать больше о доктестах в [документации `ExUnit.DocTest`](https://hexdocs.pm/ex_unit/ExUnit.DocTest.html).
 
 ## with
 
