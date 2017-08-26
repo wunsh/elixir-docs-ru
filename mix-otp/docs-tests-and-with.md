@@ -162,7 +162,7 @@ iex> KVServer.Command.parse "GET shopping\r\n"
 
 ## with
 
-As we are now able to parse commands, we can finally start implementing the logic that runs the commands. Let's add a stub definition for this function for now:
+Так как теперь мы можем парсить команды, мы наконец приступаем к реализации логики, которая будет запускать их. Давайте пока добавим определение-заглушку для этой функции:
 
 ```elixir
 defmodule KVServer.Command do
@@ -175,7 +175,7 @@ defmodule KVServer.Command do
 end
 ```
 
-Before we implement this function, let's change our server to start using our new `parse/1` and `run/1` functions. Remember, our `read_line/1` function was also crashing when the client closed the socket, so let's take the opportunity to fix it, too. Open up `lib/kv_server.ex` and replace the existing server definition:
+До того, как мы реализуем эту функцию, давайте изменим наш сервер, чтобы он использовал наши новые функции `parse/1` и `run/1`. Вспомните, наша функция `read_line/1` также падала, когда клиент закрывал сокет, так что давайте попробуем заодно решить и эту проблему. Откройте `lib/kv_server.ex` и замените существующее определение сервера:
 
 ```elixir
 defp serve(socket) do
@@ -196,7 +196,7 @@ defp write_line(line, socket) do
 end
 ```
 
-by the following:
+на следующее:
 
 ```elixir
 defp serve(socket) do
@@ -242,7 +242,7 @@ defp write_line(socket, {:error, error}) do
 end
 ```
 
-If we start our server, we can now send commands to it. For now we will get two different responses: "OK" when the command is known and "UNKNOWN COMMAND" otherwise:
+Если мы запустим наш сервер, мы можем теперь отправлять в него команды. Пока мы будем получать два разных ответа: "OK" когда команда известна и "UNKNOWN COMMAND" в ином случае:
 
 ```bash
 $ telnet 127.0.0.1 4040
@@ -255,11 +255,11 @@ HELLO
 UNKNOWN COMMAND
 ```
 
-This means our implementation is going in the correct direction, but it doesn't look very elegant, does it?
+Это значит, что наш вариант идёт в верном направлении, но это не выглядит достаточно элегантно, не так ли?
 
-The previous implementation used pipelines which made the logic straight-forward to follow. However, now that we need to handle different error codes along the way, our server logic is nested inside many `case` calls.
+Предыдущая реализация использовала пайплайны, которые делали логику прямолинейной. Однако, теперь нам нужно обрабатывать разные коды ошибок, а логика нашего сервера вложена во много вызовов `case`.
 
-Thankfully, Elixir v1.2 introduced the `with` construct, which allows you to simplify code like the above, replacing nested `case` calls with a chain of matching clauses. Let's rewrite the `serve/1` function to use `with`:
+К счастью, Эликсир v1.2 представил конструкцию `with`, которая позволяет вам упростить код вроде примера выше, заменив вложенные вызовы `case` на цепочку условий сравнения. Давайте перепишем функцию `serve/1`, используя `with`:
 
 ```elixir
 defp serve(socket) do
@@ -273,11 +273,11 @@ defp serve(socket) do
 end
 ```
 
-Much better! `with` will retrieve the value returned by the right-side of `<-` and match it against the pattern on the left side. If the value matches the pattern, `with` moves on to the next expression. In case there is no match, the non-matching value is returned.
+Намного лучше! `with` получит значение, возвращённое правой стороной `<-` и сравнит его с шаблоном слева. Если значение подходит под шаблон, `with` перейдёт к следующему выражению. Если совпадения нет, результат, не прошедший сравнение, будет возвращён.
 
-In other words, we converted each expression given to `case/2` as a step in `with`. As soon as any of the steps return something that does not match `{:ok, x}`, `with` aborts, and returns the non-matching value.
+Другими словами, мы преобразовали каждое выражение, переданное в `case/2` в шаг внутри `with`. Как только любой из шагов возвращает что-то отличное от `{:ok, x}`, `with` прерывается и возвращает это не прошедшее сравнение значение.
 
-You can read more about [`with` in our documentation](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#with/1).
+Вы можете прочитать больше о [`with` в нашей документации](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#with/1).
 
 ## Running commands
 
