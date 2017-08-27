@@ -279,9 +279,9 @@ end
 
 Вы можете прочитать больше о [`with` в нашей документации](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#with/1).
 
-## Running commands
+## Запуск команд
 
-The last step is to implement `KVServer.Command.run/1`, to run the parsed commands against the `:kv` application. Its implementation is shown below:
+Последний шаг - написать `KVServer.Command.run/1` для запуска команд после парсинга в приложении `:kv`. Реализация представлена ниже:
 
 ```elixir
 @doc """
@@ -323,11 +323,11 @@ defp lookup(bucket, callback) do
 end
 ```
 
-Every function clause dispatches the appropriate command to the `KV.Registry` server that we registered during the `:kv` application startup. Since our `:kv_server` depends on the `:kv` application, it is completely fine to depend on the services it provides.
+Каждый вариант функции отправляет нужную команду на сервер `KV.Registry`, который мы зарегистрировали при запуске приложения `:kv`. Т.к. наш `:kv_server` зависит от приложения `:kv`, он также зависит от предоставляемых последним сервисов.
 
-Note that we have also defined a private function named `lookup/2` to help with the common functionality of looking up a bucket and returning its `pid` if it exists, `{:error, :not_found}` otherwise.
+Обратите внимание, что мы также определили приватную функцию `lookup/2`, чтобы переиспользовать общую функциональность по поиску корзины и возврату её `pid`, если она существует, или `{:error, :not_found}` в ином случае.
 
-By the way, since we are now returning `{:error, :not_found}`, we should amend the `write_line/2` function in `KVServer` to print such error as well:
+Кстати, т.к. теперь мы возвращаем `{:error, :not_found}`, следует изменить функцию `write_line/2` в `KVServer`, чтобы она выводила эту ошибку:
 
 ```elixir
 defp write_line(socket, {:error, :not_found}) do
@@ -335,11 +335,11 @@ defp write_line(socket, {:error, :not_found}) do
 end
 ```
 
-Our server functionality is almost complete. Only tests are missing. This time, we have left tests for last because there are some important considerations to be made.
+Функциональность нашего сервера почти закончена. Остались только тесты. Сейчас мы оставим тесты на самый конец, потому что есть несколько важных вещей, которым стоит уделить внимание.
 
-`KVServer.Command.run/1`'s implementation is sending commands directly to the server named `KV.Registry`, which is registered by the `:kv` application. This means this server is global and if we have two tests sending messages to it at the same time, our tests will conflict with each other (and likely fail). We need to decide between having unit tests that are isolated and can run asynchronously, or writing integration tests that work on top of the global state, but exercise our application's full stack as it is meant to be exercised in production.
+`KVServer.Command.run/1` отправляет команды напрямую в сервер `KV.Registry`, который зарегистрирован приложением `:kv`. Это значит, что сервер доступен глобально и если у нас будет два теста, отправляющих сообщения в одно время, тесты будут конфликтовать друг с другом (и скорее всего упадут). Нам нужно решить, использовать юнит тесты, которые изолированы и могут быть запущены асинхронно, или писать интеграционные тесты, которые используют глобальное состояние, но испытывают наше приложение полностью, как оно будет работать в продакшне.
 
-So far we have only written unit tests, typically testing a single module directly. However, in order to make `KVServer.Command.run/1` testable as a unit we would need to change its implementation to not send commands directly to the `KV.Registry` process but instead pass a server as argument. For example, we would need to change `run`'s signature to `def run(command, pid)` and then change all clauses accordingly:
+До сих пор мы писали только юнит тесты, обычно тестировали отдельно взятый модуль. Однако, чтобы сделать тестируемым `KVServer.Command.run/1` как юнит, нам придётся изменить его реализацию, не посылать команды в процесс `KV.Registry` напрямую, а передавать сервер как аргумент. Например, нам бы пришлось изменить сигнатуру `run` на `def run(command, pid)` и затем изменить все варианты функции:
 
 ```elixir
 def run({:create, bucket}, pid) do
@@ -350,13 +350,13 @@ end
 # ... other run clauses ...
 ```
 
-Feel free to go ahead and do the changes above and write some unit tests. The idea is that your tests will start an instance of the `KV.Registry` and pass it as argument to `run/2` instead of relying on the global `KV.Registry`. This has the advantage of keeping our tests asynchronous as there is no shared state.
+Можете попробовать продолжить, сделать изменения, описанные выше, и написать юнит тесты. Идея в том, что наши тесты будут стартовать экземпляр `KV.Registry` и передавать его аргументом в `run/2` вместо обращений к глобальному `KV.Registry`. Это позволит сохранить тесты асинхронными, т.к. у них не будет общего состояния.
 
-But let's also try something different. Let's write integration tests that rely on the global server names to exercise the whole stack from the TCP server to the bucket. Our integration tests will rely on global state and must be synchronous. With integration tests we get coverage on how the components in our application work together at the cost of test performance. They are typically used to test the main flows in your application. For example, we should avoid using integration tests to test an edge case in our command parsing implementation.
+Но также давайте попробуем кое-что иное. Напишем интеграционные тесты, которые основаны на глобальном сервере, чтобы испытать весь стэк от TCP сервера и до корзин. Наши интеграционные тесты будут полагаться на глобальное состояние и должны быть синхронными. С интеграционными тестами мы будем знать, как компоненты нашего приложения работают друг с другом. Обычно так тестируют основные сценарии работы вашего приложения. Например, нет смысла писать интеграционные тесты для реализации парсинга.
 
-Our integration test will use a TCP client that sends commands to our server and assert we are getting the desired responses.
+Наш интеграционный тест будет использовать клиент TCP, который будет отправлять команды нашему серверу и утверждать, какой ответ мы хотим получить.
 
-Let's implement the integration test in `test/kv_server_test.exs` as shown below:
+Давайте реализуем интеграционный тест `test/kv_server_test.exs` как показано ниже:
 
 ```elixir
 defmodule KVServerTest do
@@ -406,23 +406,23 @@ defmodule KVServerTest do
 end
 ```
 
-Our integration test checks all server interaction, including unknown commands and not found errors. It is worth noting that, as with <abbr title="Erlang Term Storage">ETS</abbr> tables and linked processes, there is no need to close the socket. Once the test process exits, the socket is automatically closed.
+Наш интеграционный тест проверяет все взаимодействия с сервером, учитывая неизвестные команды и ошибки "not found". Мы используем таблицы <abbr title="Erlang Term Storage">ETS</abbr> и связанные процессы, поэтому даже нет необходимости закрывать сокет. Как только тестовый процесс закончится, сокет закроется автоматически.
 
-This time, since our test relies on global data, we have not given `async: true` to `use ExUnit.Case`. Furthermore, in order to guarantee our test is always in a clean state, we stop and start the `:kv` application before each test. In fact, stopping the `:kv` application even prints a warning on the terminal:
+Т.к. теперь наш тест основан на глобальном состоянии, мы не передаём `async: true` в `use ExUnit.Case`. Более того, чтобы гарантировать нашим тестам одинаковое чистое исходное состояние, мы останавливаем и запускаем приложение `:kv` перед каждым тестом. Остановка `:kv` пишет предупреждение в терминал:
 
 ```
 18:12:10.698 [info] Application kv exited: :stopped
 ```
 
-To avoid printing log messages during tests, ExUnit provides a neat feature called `:capture_log`. By setting `@tag :capture_log` before each test or `@moduletag :capture_log` for the whole test case, ExUnit will automatically capture anything that is logged while the test runs. In case our test fails, the captured logs will be printed alongside the ExUnit report.
+Чтобы избежать печати логов во время тестов, в ExUnit есть изящное решение `:capture_log`. Если установить `@tag :capture_log` перед каждым тестом или `@moduletag :capture_log` перед всем набором тестов, ExUnit будет автоматически отлавливать весь лог во время работы тестов. Если тест провалится, отловленный лог будет выведен в отчёте ExUnit.
 
-Between `use ExUnit.Case` and setup, add the following call:
+Между `use ExUnit.Case` и запуском добавьте следующую строку:
 
 ```elixir
 @moduletag :capture_log
 ```
 
-In case the test crashes, you will see a report as follows:
+Если тест упадёт, вы увидете отчёт вроде этого:
 
 ```
   1) test server interaction (KVServerTest)
@@ -436,8 +436,8 @@ In case the test crashes, you will see a report as follows:
      13:44:10.035 [info]  Application kv exited: :stopped
 ```
 
-With this simple integration test, we start to see why integration tests may be slow. Not only this test cannot run asynchronously, it also requires the expensive setup of stopping and starting the `:kv` application.
+С этим простым интеграционным тестом мы можем увидеть, почему интеграционные тесты могут быть медленными. Не только потому, что такой тест не может работать асинхронно, он также предусматривает дорогой установку запуска и старта приложения `:kv`.
 
-At the end of the day, it is up to you and your team to figure out the best testing strategy for your applications. You need to balance code quality, confidence, and test suite runtime. For example, we may start with testing the server only with integration tests, but if the server continues to grow in future releases, or it becomes a part of the application with frequent bugs, it is important to consider breaking it apart and writing more intensive unit tests that don't have the weight of an integration test.
+В конце концов, ваша задача и задача вашей команды понять, какая стратегия тестирования будет лучшей для вашего приложения. Вам нужно найти баланс между качеством кода, уверенностью в его корректной работе и временем выполнения тестов. Например, мы можем выполнять только интеграционные тесты, но если сервер продолжает расти в следующих релизах, или становится часть приложения с частыми багами, важно иметь возможность разделить его на части и написать более быстрые и дешевые юнит тесты.
 
-In the next chapter we will finally make our system distributed by adding a bucket routing mechanism. We'll also learn about application configuration.
+В следующей главе мы наконец сделаем нашу систему распределяемой, добавив механизм маршрутизации корзин. А также поговорим о конфигурации приложений.
