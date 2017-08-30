@@ -1,12 +1,12 @@
 ---
-title: Dependencies and umbrella projects
+title: Зависимости и зонтичные проекты
 ---
 
 # {{ page.title }}
 
-In this chapter, we will discuss how to manage dependencies in Mix.
+В этой главе мы обсудим, как управлять зависимостями с помощью Mix.
 
-Our `kv` application is complete, so it's time to implement the server that will handle the requests we defined in the first chapter:
+Наше приложение `kv` закончино, и значит пришло время сделать сервер, который будет обрабатывать закросы, которые мы объявили в первой главе:
 
 ```
 CREATE shopping
@@ -26,9 +26,9 @@ DELETE shopping eggs
 OK
 ```
 
-However, instead of adding more code to the `kv` application, we are going to build the TCP server as another application that is a client of the `kv` application. Since the whole runtime and Elixir ecosystem are geared towards applications, it makes sense to break our projects into smaller applications that work together rather than building a big, monolithic app.
+Однако, вместо добавления ещё большего количества кода в приложение `kv`, мы сделаем TCP сервер отдельным приложением, которое будет клиентом приложения `kv`. Т.к. весь рантайм и экосистема Эликсира основана на приложениях, есть смысл разделять наши проекты в приложения меньшего размера, которые работают вместе, вместо создания одного большого монолитного приложения.
 
-Before creating our new application, we must discuss how Mix handles dependencies. In practice, there are two kinds of dependencies we usually work with: internal and external dependencies. Mix supports mechanisms to work with both of them.
+Перед тем, как создать наше новое приложение, мы должны обсудить, как Mix разрешает зависимости. На практике существует два типа зависимостей, с которыми мы обычно работаем: внутренние и внешние зависимости. Mix поддерживает механизмы для работы с обоими.
 
 ## External dependencies
 
