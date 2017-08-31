@@ -30,11 +30,11 @@ OK
 
 Перед тем, как создать наше новое приложение, мы должны обсудить, как Mix разрешает зависимости. На практике существует два типа зависимостей, с которыми мы обычно работаем: внутренние и внешние зависимости. Mix поддерживает механизмы для работы с обоими.
 
-## External dependencies
+## Внешние зависимости
 
-External dependencies are the ones not tied to your business domain. For example, if you need an HTTP API for your distributed KV application, you can use the [Plug](https://github.com/elixir-lang/plug) project as an external dependency.
+Внешними называют зависимости, которые не относятся к вашей бизнес-логике. Например, если вам нужен HTTP API для распределённого приложения KV, вы можете использовать проект [Plug](https://github.com/elixir-lang/plug) как внешнюю зависимость.
 
-Installing external dependencies is simple. Most commonly, we use the [Hex Package Manager](https://hex.pm), by listing the dependency inside the deps function in our `mix.exs` file:
+Установка внешних зависимостей предельна проста. Как правило, мы используем [Пакетный Менеджер Hex](https://hex.pm), перечисляя зависимости в функции `deps` в нашем файле `mix.exs`:
 
 ```elixir
 def deps do
@@ -42,9 +42,9 @@ def deps do
 end
 ```
 
-This dependency refers to the latest version of Plug in the 1.x.x version series that has been pushed to Hex. This is indicated by the `~>` preceding the version number. For more information on specifying version requirements, see the [documentation for the Version module](https://hexdocs.pm/elixir/Version.html).
+Эта зависимость ссылается на последнюю версию Plug в серии версий 1.x.x, которая известна Hex. Для указания последней версии используется `~>` перед номером минимальной версии. Больше информации о версиях можно получить в [документации к модулю Version](https://hexdocs.pm/elixir/Version.html).
 
-Typically, stable releases are pushed to Hex. If you want to depend on an external dependency still in development, Mix is able to manage git dependencies too:
+Обычно стабильные релизы загружены в Hex. Если вы хотите добавить внешнюю зависимость, которая ещё находится в разработке, Mix позволяет указать git зависимост:
 
 ```elixir
 def deps do
@@ -52,9 +52,9 @@ def deps do
 end
 ```
 
-You will notice that when you add a dependency to your project, Mix generates a `mix.lock` file that guarantees *repeatable builds*. The lock file must be checked in to your version control system, to guarantee that everyone who uses the project will use the same dependency versions as you.
+Вы можете заметить, что при добавлении зависимости в ваш проект Mix генерирует файл `mix.lock`, который гарантирует *повторяемость сборок*. Файл блокировки должен быть включен в вашу систему контроля версии, чтобы гарантировать для всех пользователей проекта использование тех же версий зависимостей, что и у вас.
 
-Mix provides many tasks for working with dependencies, which can be seen in `mix help`:
+Mix предоставляет много функций для работы с зависимостями, которые можно увидеть, вызвав `mix help`:
 
 ```bash
 $ mix help
@@ -67,7 +67,7 @@ mix deps.unlock       # Unlocks the given dependencies
 mix deps.update       # Updates the given dependencies
 ```
 
-The most common tasks are `mix deps.get` and `mix deps.update`. Once fetched, dependencies are automatically compiled for you. You can read more about deps by typing `mix help deps`, and in the [documentation for the Mix.Tasks.Deps module](https://hexdocs.pm/mix/Mix.Tasks.Deps.html).
+Чаще всего используются функции `mix deps.get` и `mix deps.update`. Однажды загруженные, зависимости будут автоматически скомпилированы. Вы можете узнать больше про `deps`, если вызовите `mix help deps`, а также из [документации к модулю Mix.Tasks.Deps](https://hexdocs.pm/mix/Mix.Tasks.Deps.html).
 
 ## Internal dependencies
 
