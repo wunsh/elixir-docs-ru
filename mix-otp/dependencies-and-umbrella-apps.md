@@ -102,9 +102,9 @@ end
 
 Что ж, начнём!
 
-## Umbrella projects
+## Зонтичные проекты
 
-Let's start a new project using `mix new`. This new project will be named `kv_umbrella` and we need to pass the `--umbrella` option when creating it. Do not create this new project inside the existing `kv` project!
+Давайте начнём новый проект, запустив `mix new`. Назовём этот проект `kv_umbrella`, а также добавим опцию `--umbrella` при создании. Не создавайте этот новый проект внутри существующего проекта `kv`!
 
 ```bash
 $ mix new kv_umbrella --umbrella
@@ -116,7 +116,7 @@ $ mix new kv_umbrella --umbrella
 * creating config/config.exs
 ```
 
-From the printed information, we can see far fewer files are generated. The generated `mix.exs` file is different too. Let's take a look (comments have been removed):
+Исходя из выведенной информации, мы можем увидеть, что сгенерировано намного меньше файлов. Сгенерированный `mix.exs` также отличается от стандартного. Давайте взглянем на него (коммантарии удалены):
 
 ```elixir
 defmodule KvUmbrella.Mixfile do
@@ -136,16 +136,16 @@ defmodule KvUmbrella.Mixfile do
 end
 ```
 
-What makes this project different from the previous one is the `apps_path: "apps"` entry in the project definition. This means this project will act as an umbrella. Such projects do not have source files nor tests, although they can have their own dependencies. Each child application must be defined inside the `apps` directory.
+Отличие от предыдущего проекта в строке `apps_path: "apps"` в определении проекта. Это значит, что проект будет вести себя, как зонтичный. Такие проекты не не содержат ни исходников, ни тестов, но они могут иметь свои зависимости. Каждое дочернее приложение должно быть определено внутри директории `apps`.
 
-Let's move inside the apps directory and start building `kv_server`. This time, we are going to pass the `--sup` flag, which will tell Mix to generate a supervision tree automatically for us, instead of building one manually as we did in previous chapters:
+Давайте перейдём в директорию `apps` и начнём создавать `kv_server`. В этот раз мы передадим флаг `--sup`, который укажет Mix сгенерировать дерево супервизора автоматически, вместо того, чтобы создавать его руками, как мы делали в предыдущих главах:
 
 ```bash
 $ cd kv_umbrella/apps
 $ mix new kv_server --module KVServer --sup
 ```
 
-The generated files are similar to the ones we first generated for `kv`, with a few differences. Let's open up `mix.exs`:
+Сгенерированные файлы идентичны сгенерированным для `kv`, но с некоторыми отличиями. Откройте `mix.exs`:
 
 ```elixir
 defmodule KVServer.Mixfile do
@@ -184,7 +184,7 @@ defmodule KVServer.Mixfile do
 end
 ```
 
-First of all, since we generated this project inside `kv_umbrella/apps`, Mix automatically detected the umbrella structure and added four lines to the project definition:
+Первое, что можно заметить, Mix автоматически определил структуру зонтичного проекта, т.к. мы сгенерировали этот проект внутри `kv_umbrella/apps`, и добавил следующие строки:
 
 ```elixir
 build_path: "../../_build",
@@ -193,9 +193,9 @@ deps_path: "../../deps",
 lockfile: "../../mix.lock",
 ```
 
-Those options mean all dependencies will be checked out to `kv_umbrella/deps`, and they will share the same build, config and lock files. This ensures dependencies will be fetched and compiled once for the whole umbrella structure, instead of once per umbrella application.
+Эти опции означают, что все зависимости будут взяты из `kv_umbrella/deps`, будут находиться в одной сборке, иметь общую конфигурацию и `lock` файлы. При этом зависимости будут загружены и скомпилированы один раз и для всего зонтичного проекта, а не для каждого приложения.
 
-The second change is in the `application` function inside `mix.exs`:
+Второе изменение в функции `application` внутри `mix.exs`:
 
 ```elixir
 def application do
@@ -206,9 +206,9 @@ def application do
 end
 ```
 
-Because we passed the `--sup` flag, Mix automatically added `mod: {KVServer.Application, []}`, specifying that `KVServer.Application` is our application callback module. `KVServer.Application` will start our application supervision tree.
+Т.к. мы передали флаг `--sup`, Mix автоматически добавил `mod: {KVServer.Application, []}`, определяющий, что `KVServer.Application` - модуль обратного вызова приложения. `KVServer.Application` запустит дерево супервизора нашего приложения.
 
-In fact, let's open up `lib/kv_server/application.ex`:
+А теперь откроем `lib/kv_server/application.ex`:
 
 ```elixir
 defmodule KVServer.Application do
@@ -233,17 +233,17 @@ defmodule KVServer.Application do
 end
 ```
 
-Notice that it defines the application callback function, `start/2`, and instead of defining a supervisor named `KVServer.Supervisor` that uses the `Supervisor` module, it conveniently defined the supervisor inline! You can read more about such supervisors by reading [the Supervisor module documentation](https://hexdocs.pm/elixir/Supervisor.html).
+Обратите внимание, что тут определена функция обратного вызова приложения, `start/2`, и вместо определения супервизора с именем `KVServer.Supervisor`, который использует модуль `Supervisor`, супервизор удобно определён в списке атрибутов! Вы можете прочитать больше о таких супервизорах в [документации модуля `Supervisor`](https://hexdocs.pm/elixir/Supervisor.html).
 
-We can already try out our first umbrella child. We could run tests inside the `apps/kv_server` directory, but that wouldn't be much fun. Instead, go to the root of the umbrella project and run `mix test`:
+Мы уже можем попробовать наше первое приложение внутри проекта. Можно запустить тесты в директории `apps/kv_server`, но это будет не так круто, как перейти в корневую директорию зонтичного проекта и запустить `mix test`:
 
 ```bash
 $ mix test
 ```
 
-And it works!
+И это сработает!
 
-Since we want `kv_server` to eventually use the functionality we defined in `kv`, we need to add `kv` as a dependency to our application.
+Т.к. мы хотим, чтобы `kv_server` периодически использовал функциональность из приложения `kv`, нужно добавить его в зависимости нашего приложения.
 
 ## In umbrella dependencies
 
