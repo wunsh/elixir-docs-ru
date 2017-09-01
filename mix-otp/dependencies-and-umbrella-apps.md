@@ -69,13 +69,13 @@ mix deps.update       # Updates the given dependencies
 
 Чаще всего используются функции `mix deps.get` и `mix deps.update`. Однажды загруженные, зависимости будут автоматически скомпилированы. Вы можете узнать больше про `deps`, если вызовите `mix help deps`, а также из [документации к модулю Mix.Tasks.Deps](https://hexdocs.pm/mix/Mix.Tasks.Deps.html).
 
-## Internal dependencies
+## Внутренние зависимости
 
-Internal dependencies are the ones that are specific to your project. They usually don't make sense outside the scope of your project/company/organization. Most of the time, you want to keep them private, whether due to technical, economic or business reasons.
+Специфичные для вашего проекта зависимости называют внутренними. Они обычно не имеют смысла вне вашего проекта/компании/организации. Как правило, вы хотите сохранить их приватными, ввиду технических, экономических или бизнес причин.
 
-If you have an internal dependency, Mix supports two methods to work with them: git repositories or umbrella projects.
+Если у вас есть внутренняя зависимость, Mix поддерживает два метода работы с ними: репозитории git и зонтичные проекты.
 
-For example, if you push the `kv` project to a git repository, you'll need to list it in your deps code in order to use it:
+Например, если вы храните проект `kv` в git репозиторие, вам нужно указать его в списке зависимостей, чтобы начать его использовать:
 
 ```elixir
 def deps do
@@ -83,24 +83,24 @@ def deps do
 end
 ```
 
-If the repository is private though, you may need to specify the private URL `git@github.com:YOUR_ACCOUNT/kv.git`. In any case, Mix will be able to fetch it for you as long as you have the proper credentials.
+Если же репозиторий приватный, вам понадобится приватный URL `git@github.com:YOUR_ACCOUNT/kv.git`. В этом случае Mix сможет получать доступ к репозиторию, пока у вас есть права доступа.
 
-Using git dependencies for internal dependencies is somewhat discouraged in Elixir. Remember that the runtime and the Elixir ecosystem already provide the concept of applications. As such, we expect you to frequently break your code into applications that can be organized logically, even within a single project.
+Использование git для внутренних зависимостей в Эликсире не лучший вариант. Помните, что экосистема Эликсира следует концепции приложении. Поэтому мы надеемся, что вы часто будете разделять свой код на приложения, которые могут быть логически организованны, даже в рамках одного проекта.
 
-However, if you push every application as a separate project to a git repository, your projects may become very hard to maintain as you will spend a lot of time managing those git repositories rather than writing your code.
+Однако, если каждое приложение будет иметь свой репозиторий, ваш проект станет очень сложным в поддержке, вы будете тратить много времени на управление этими репозиториями вместо написания кода.
 
-For this reason, Mix supports "umbrella projects". Umbrella projects are used to build applications that run together and have clear boundaries between them in a single repository. That is exactly the style we are going to explore in the next sections.
+По этой причине Mix поддерживает "зонтичные проекты". Зонтичные проекты используются для разработки приложений, которые работают вместе и имеют четкие границы внутри одного репозитория. Именно этот стиль мы изучим в следующих разделах.
 
-Let's create a new Mix project. We are going to creatively name it `kv_umbrella`, and this new project will have both the existing `kv` application and the new `kv_server` application inside. The directory structure will look like this:
+Давайте создадим новый проект Mix. Мы оригинально назовём его `kv_umbrella`, и этот проект будет включать в себя уже созданное приложение `kv` и новое, `kv_server`. Структура директорий должна выглядить следующим образом:
 
     + kv_umbrella
       + apps
         + kv
         + kv_server
 
-The interesting thing about this approach is that Mix has many conveniences for working with such projects, such as the ability to compile and test all applications inside `apps` with a single command. However, even though they are all listed together inside `apps`, they are still decoupled from each other, so you can build, test and deploy each application in isolation if you want to.
+Интересно, что для этого подхода в Mix есть много удобных возможностей, например, возможность компилировать и тестировать все приложения внутри `apps` одной командой. Однако, хотя они и перечислены вместе внутри `apps`, это всё ещё отдельные, изолированные друг от друга приложения, поэтому мы можем собирать, тестировать и деплоить каждое приложение отдельно, если это необходимо.
 
-So let's get started!
+Что ж, начнём!
 
 ## Umbrella projects
 
