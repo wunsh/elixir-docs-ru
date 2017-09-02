@@ -245,9 +245,9 @@ $ mix test
 
 Т.к. мы хотим, чтобы `kv_server` периодически использовал функциональность из приложения `kv`, нужно добавить его в зависимости нашего приложения.
 
-## In umbrella dependencies
+## Зависимости внутри зонтичного проекта
 
-Mix supports an easy mechanism to make one umbrella child depend on another. Open up `apps/kv_server/mix.exs` and change the `deps/0` function to the following:
+Mix предоставляет лёгкий механизм для указания зависимостей одного приложения-потомка от другого. Откройте `apps/kv_server/mix.exs` и измените функцию `deps/0` на следующую:
 
 ```elixir
 defp deps do
@@ -255,9 +255,9 @@ defp deps do
 end
 ```
 
-The line above makes `:kv` available as a dependency inside `:kv_server` and automatically starts the `:kv` application before the server starts.
+Строка выше делает `:kv` доступным как зависимость внутри `:kv_server`, и автоматически запускает приложение `:kv` до запуска сервера.
 
-Finally, copy the `kv` application we have built so far to the `apps` directory in our new umbrella project. The final directory structure should match the structure we mentioned earlier:
+Наконец, скопируйте приложение `kv`, которое мы недавно создали, в директорию `apps` нашего нового зонтичного проекта. Конечная структура директорий должна соответствовать структуре, которую мы упоминали ранее:
 
     + kv_umbrella
       + apps
@@ -266,6 +266,8 @@ Finally, copy the `kv` application we have built so far to the `apps` directory 
 
 We now need to modify `apps/kv/mix.exs` to contain the umbrella entries we have seen in `apps/kv_server/mix.exs`. Open up `apps/kv/mix.exs` and add to the `project` function:
 
+А теперь нам нужно изменить `apps/kv/mix.exs`, чтобы он содержал строки, специфичные для зонтичного приложения, которые мы видели в `apps/kv_server/mix.exs`. Откройте `apps/kv/mix.exs` и добавьте в функцию `project` следующее:
+
 ```elixir
 build_path: "../../_build",
 config_path: "../../config/config.exs",
@@ -273,9 +275,9 @@ deps_path: "../../deps",
 lockfile: "../../mix.lock",
 ```
 
-Now you can run tests for both projects from the umbrella root with `mix test`. Sweet!
+Теперь вы можете запускать тесты для обоих проектов из корневой директории зонта, запустив `mix test`. Супер!
 
-Remember that umbrella projects are a convenience to help you organize and manage your applications. Applications inside the `apps` directory are still decoupled from each other. Dependencies between them must be explicitly listed. This allows them to be developed together, but compiled, tested and deployed independently if desired.
+Помните, что зонтичные проекты помогают удобно организовать ваши приложения и управлять ими. Приложения внутри директории `apps` остаются отдельными друг от труга. Зависимости между ними должны быть явно указаны. Это позволяет разрабатывать их вместе, но компилировать, тестировать и деплоить независимо, если это необходимо.
 
 ## Summing up
 
