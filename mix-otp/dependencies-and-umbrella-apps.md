@@ -245,9 +245,9 @@ $ mix test
 
 Т.к. мы хотим, чтобы `kv_server` периодически использовал функциональность из приложения `kv`, нужно добавить его в зависимости нашего приложения.
 
-## In umbrella dependencies
+## Зависимости внутри зонтичного проекта
 
-Mix supports an easy mechanism to make one umbrella child depend on another. Open up `apps/kv_server/mix.exs` and change the `deps/0` function to the following:
+Mix предоставляет лёгкий механизм для указания зависимостей одного приложения-потомка от другого. Откройте `apps/kv_server/mix.exs` и измените функцию `deps/0` на следующую:
 
 ```elixir
 defp deps do
@@ -255,9 +255,9 @@ defp deps do
 end
 ```
 
-The line above makes `:kv` available as a dependency inside `:kv_server` and automatically starts the `:kv` application before the server starts.
+Строка выше делает `:kv` доступным как зависимость внутри `:kv_server`, и автоматически запускает приложение `:kv` до запуска сервера.
 
-Finally, copy the `kv` application we have built so far to the `apps` directory in our new umbrella project. The final directory structure should match the structure we mentioned earlier:
+Наконец, скопируйте приложение `kv`, которое мы недавно создали, в директорию `apps` нашего нового зонтичного проекта. Конечная структура директорий должна соответствовать структуре, которую мы упоминали ранее:
 
     + kv_umbrella
       + apps
@@ -266,6 +266,8 @@ Finally, copy the `kv` application we have built so far to the `apps` directory 
 
 We now need to modify `apps/kv/mix.exs` to contain the umbrella entries we have seen in `apps/kv_server/mix.exs`. Open up `apps/kv/mix.exs` and add to the `project` function:
 
+А теперь нам нужно изменить `apps/kv/mix.exs`, чтобы он содержал строки, специфичные для зонтичного приложения, которые мы видели в `apps/kv_server/mix.exs`. Откройте `apps/kv/mix.exs` и добавьте в функцию `project` следующее:
+
 ```elixir
 build_path: "../../_build",
 config_path: "../../config/config.exs",
@@ -273,21 +275,20 @@ deps_path: "../../deps",
 lockfile: "../../mix.lock",
 ```
 
-Now you can run tests for both projects from the umbrella root with `mix test`. Sweet!
+Теперь вы можете запускать тесты для обоих проектов из корневой директории зонта, запустив `mix test`. Супер!
 
-Remember that umbrella projects are a convenience to help you organize and manage your applications. Applications inside the `apps` directory are still decoupled from each other. Dependencies between them must be explicitly listed. This allows them to be developed together, but compiled, tested and deployed independently if desired.
+Помните, что зонтичные проекты помогают удобно организовать ваши приложения и управлять ими. Приложения внутри директории `apps` остаются отдельными друг от труга. Зависимости между ними должны быть явно указаны. Это позволяет разрабатывать их вместе, но компилировать, тестировать и деплоить независимо, если это необходимо.
 
-## Summing up
+## Заключение
 
-In this chapter, we have learned more about Mix dependencies and umbrella projects. While we may run `kv` without a server, our `kv_server` depends directly on `kv`. By breaking them into separate applications, we gain more control in how they are developed and tested.
+В этой главе мы узнали больше о зависимостях Mix и о зонтичных проектах. Тогда как мы можем запустить `kv` без сервера, наш `kv_server` прямо зависит от `kv`. Разделив их на изобированные приложения, мы получаем больший контроль над их разработкой и тестированием.
 
-When using umbrella applications, it is important to have a clear boundary between them. Our upcoming `kv_server` must only access public APIs defined in `kv`. Think of your umbrella apps as any other dependency or even Elixir itself: you can only access what is public and documented. Reaching into private functionality in your dependencies is a poor practice that will eventually cause your code to break when a new version is up.
+При использовании зонтичных приложений очень важно иметь чёткие границы между ними. Наш предстоящий `kv_server` должен иметь доступ только к публичному API, определённому в `kv`. Отнеситесь к зонтичным приложениям как любым другим зависимостям или даже самому Эликсиру: вы можете осуществить доступ только к тому, что публично и задокументированно. Доступ к приватной функциональности ваших зависимостей - плохая практика, которая может привести к поломке проекта при обновлении версий зависимостей.
 
-Umbrella applications can also be used as a stepping stone for eventually extracting an application from your codebase. For example, imagine a web application that has to send "push notifications" to its users. The whole "push notifications system" can be developed as an umbrella application, with its own supervision tree and APIs. If you ever run into a situation where another project needs the push notifications system, extraction should be straightforward as long as the web application respects the push notification API boundary. Regardless if it happens in 2 weeks or in 3 years from development. Once extracted, the push notifications system can be moved to a private git repository or a public hex.pm package.
+Зонтичные приложения можно использовать как промежуточный этап при выделении некоторой функциональности из вашего кода в отдельное приложение. Например, представьте веб-приложение, которое отправляет "push уведомления" своим пользователям. Вся "система push уведомлений" может быть разработана как зонтичное приложение, с собственным супервизором и API. Если вы когда-нибудь столкнётесь с ситуацией, когда другой проект тоже должен отправлять push уведомления, отделение этой логики будет предельно простым, а зависеть будет только от изменений API. Неважно, сделаете вы это на вторую неделю или третий год разработки. Выделенная однажды, система push уведомлений может быть перемещена в приватный репозиторий или публичный пакет на hex.pm.
 
-Developers may also use umbrella applications to break large business domains apart. The caution here is to make sure the domains don't depend on each other (also known as cyclic dependencies). If you run into such situations, it means those applications are not as isolated from each other as you originally thought, and you have architectural and design issues to solve. Overall, umbrella applications do not magically improve the design of your code. They can, however, help enforce boundaries when the code is well designed.
+Разработчики также могут использовать зонтичные приложения для разделения объёмной бизнес-логики на части. Главное в этой ситуации - убедиться, что эти части не зависят друг от друга в двух направлениях (это называется циклической зависимостью). Если такая ситуация происходит, эти приложения не изолированы друг от друга, как вы думали изначально, и у вас есть проблемы в архитектуре и проектировании, которые нужно решить. Резюмируя, зонтичные приложения не являются магическим улучшеием структуры вашего кода. Они могут, однако, помочь соблюдению границ, когда код хорошо спроектирован.
 
-Finally, keep in mind that applications in an umbrella project all share the same configurations and dependencies. If two applications in your umbrella need to configure the same dependency in drastically different ways or even use different versions, such is impossible in umbrellas, and those apps likely need to be moved to separate projects.
+Наконец, помните, что приложения в зонтичном проекте разделяют друг с другом одну конфигурацию и зависимости. Если два приложения в вашем проекте нуждаются в указании одних зависимостей карндинально разными способами или даже разных версий, это невозможно внутри зонтичной структуры, и эти приложения наверняка нужно разделить по разным проектам.
 
-With our umbrella project up and running, it is time to start writing our server.
-
+Имея наш работающий зонтичный проект, самое время перейти к написанию нашего сервера.
