@@ -1,25 +1,25 @@
 ---
-title: Distributed tasks and configuration
+title: Распределенные задачи и конфигурация
 ---
 
 # {{ page.title }}
 
-In this last chapter, we will go back to the `:kv` application and add a routing layer that will allow us to distribute requests between nodes based on the bucket name.
+В последней главе мы вернёмся к приложению `:kv` и добавим слой маршрутизации, который позволит нам распределять задачи между узлами, основываясь на имени корзины.
 
-The routing layer will receive a routing table of the following format:
+Слой маршрутизации будет получать таблицу маршрутизации в следующем формате:
 
 ```elixir
 [{?a..?m, :"foo@computer-name"},
  {?n..?z, :"bar@computer-name"}]
 ```
 
-The router will check the first byte of the bucket name against the table and dispatch to the appropriate node based on that. For example, a bucket starting with the letter "a" (`?a` represents the Unicode codepoint of the letter "a") will be dispatched to node `foo@computer-name`.
+Маршрутизатор будет искать первый байт имени корзины в таблице и передавать запрос нужному узлу. Например, если имя начинается с буквы "a" (`?a` представляет код буквы "a" в Юникоде), запрос будет передан узлу `foo@computer-name`.
 
-If the matching entry points to the node evaluating the request, then we've finished routing, and this node will perform the requested operation. If the matching entry points to a different node, we'll pass the request to this node, which will look at its own routing table (which may be different from the one in the first node) and act accordingly. If no entry matches, an error will be raised.
+Если подходящий узел тот, что обрабатывает запрос, мы закончили маршрутизацию, и узел выполнит запрошенную операцию. Если же подошел другой узел, мы отправим запрос этому узлу, который будет проверять свою таблицу маршрутизации (которая может отличаться от той, что была на первом узле) и действовать аналогично. Если ни один узел не подошел, будет выброшена ошибка.
 
-You may wonder why we don't tell the node we found in our routing table to perform the requested operation directly, but instead pass the routing request on to that node to process. While a routing table as simple as the one above might reasonably be shared between all nodes, passing on the routing request in this way makes it much simpler to break the routing table into smaller pieces as our application grows. Perhaps at some point, `foo@computer-name` will only be responsible for routing bucket requests, and the buckets it handles will be dispatched to different nodes. In this way, `bar@computer-name` does not need to know anything about this change.
+Вы можете удивиться, почему мы не запрашиваем у найденного в таблице узла выполнение запроса напрямую, а вместо этого посылаем запрос на дальнейшую маршрутизацию этому узлу. Пока таблица маршрутизации такая простая, как показано выше, её логично использовать для всех узлов, но пересылка запросов маршрутизации позволяет гораздо проще разделить таблицу маршрутизации на небольшие части, когда приложение начинает расти. Возможно в какой-то момент `foo@computer-name` будет отвечать только за маршрутизацию запросов к хрализищу, а корзины будут храниться на разных узлах. При этом `bar@computer-name` не должен ничего знать о таких изменениях.
 
-> Note: we will be using two nodes in the same machine throughout this chapter. You are free to use two (or more) different machines on the same network but you need to do some prep work. First of all, you need to ensure all machines have a `~/.erlang.cookie` file with exactly the same value. Second, you need to guarantee [epmd](http://www.erlang.org/doc/man/epmd.html) is running on a port that is not blocked (you can run `epmd -d` for debug info). Third, if you want to learn more about distribution in general, we recommend [this great Distribunomicon chapter from Learn You Some Erlang](http://learnyousomeerlang.com/distribunomicon).
+> Замечание: Мы будем использовать оба узла на одной машине в этой главе. Вы можете использовать две (или больше) разных машины в одной сети, но для этого нужно будет сделать некоторые приготовления. Для начала нужно убедиться, что на машинах есть файл `~/.erlang.cookie` с одинаковым значением. Далее необходимо, чтобы [epmd](http://www.erlang.org/doc/man/epmd.html) был запущен на незаблокированном порту (вы можете запустить `epmd -d` для получения отладочной информации). И наконец, если вы хотите больше узнать о распределенности, мы рекомендуем [замечательную главу "Distribunomicon" из "Learn You Some Erlang"](http://learnyousomeerlang.com/distribunomicon).
 
 ## Our first distributed code
 
