@@ -21,24 +21,24 @@ title: Распределенные задачи и конфигурация
 
 > Замечание: Мы будем использовать оба узла на одной машине в этой главе. Вы можете использовать две (или больше) разных машины в одной сети, но для этого нужно будет сделать некоторые приготовления. Для начала нужно убедиться, что на машинах есть файл `~/.erlang.cookie` с одинаковым значением. Далее необходимо, чтобы [epmd](http://www.erlang.org/doc/man/epmd.html) был запущен на незаблокированном порту (вы можете запустить `epmd -d` для получения отладочной информации). И наконец, если вы хотите больше узнать о распределенности, мы рекомендуем [замечательную главу "Distribunomicon" из "Learn You Some Erlang"](http://learnyousomeerlang.com/distribunomicon).
 
-## Our first distributed code
+## Наш первый распределённый код
 
-Elixir ships with facilities to connect nodes and exchange information between them. In fact, we use the same concepts of processes, message passing and receiving messages when working in a distributed environment because Elixir processes are *location transparent*. This means that when sending a message, it doesn't matter if the recipient process is on the same node or on another node, the <abbr title="Virtual Machine">VM</abbr> will be able to deliver the message in both cases.
+В Эликсире из коробки есть возможность подключать узлы и обмениваться информацией между ними. Фактически мы используем ту же концепцию, что и с процессами, сообщения отправляются и принимаются в распределённом окружении, потому что процессы Эликсира имеют *прозрачное расположение*. Это значит, что при отправке сообщения нам неважно, находится процесс-получатель на этом или на другом узле, виртуальная машина доставит его в любом случае.
 
-In order to run distributed code, we need to start the <abbr title="Virtual Machine">VM</abbr> with a name. The name can be short (when in the same network) or long (requires the full computer address). Let's start a new IEx session:
+Чтобы запустить распределённый код, нам нужно запустить виртуальную машину, задав ей имя. Имя может быть коротким (при расположении узлов в одной сети) или длинным (включающим полный адрес машины). Запустим новую сессию IEx:
 
 ```bash
 $ iex --sname foo
 ```
 
-You can see now the prompt is slightly different and shows the node name followed by the computer name:
+Вы можете увидеть, что приглашение строки ввода отличается и показывает имя узла после имени машины:
 
     Interactive Elixir - press Ctrl+C to exit (type h() ENTER for help)
     iex(foo@jv)1>
 
-My computer is named `jv`, so I see `foo@jv` in the example above, but you will get a different result. We will use `foo@computer-name` in the following examples and you should update them accordingly when trying out the code.
+Мой компьютер назван `jv`, поэтому я вижу `foo@jv` в примере выше, но вы получите другой результат. Мы будем использовать `foo@computer-name` в дальнейших примерах, а вам нужно будет изменить их в соответствии с именем своей машины для запуска кода.
 
-Let's define a module named `Hello` in this shell:
+Объявим модуль `Hello` в этом терминале:
 
 ```iex
 iex> defmodule Hello do
@@ -46,13 +46,13 @@ iex> defmodule Hello do
 ...> end
 ```
 
-If you have another computer on the same network with both Erlang and Elixir installed, you can start another shell on it. If you don't, you can start another IEx session in another terminal. In either case, give it the short name of `bar`:
+Если у вас есть другой компьютер в той же сети с установленными Эрлангом и Эликсиром, вы можете запустить на нём вторую сессию IEx. Если нет, запустите её в другом терминале. В обоихслучаях дайте ей короткое имя `bar`:
 
 ```bash
 $ iex --sname bar
 ```
 
-Note that inside this new IEx session, we cannot access `Hello.world/0`:
+Обратите внимание, что внутри этой новой сессии у нас нет доступа к `Hello.world/0`:
 
 ```iex
 iex> Hello.world
@@ -60,7 +60,7 @@ iex> Hello.world
     Hello.world()
 ```
 
-However, we can spawn a new process on `foo@computer-name` from `bar@computer-name`! Let's give it a try (where `@computer-name` is the one you see locally):
+Однако, мы можем порождать новые процессы на `foo@computer-name`, находясь на `bar@computer-name`! Попробуйте (только укажите вместо `@computer-name` то имя, которое видите у себя):
 
 ```iex
 iex> Node.spawn_link :"foo@computer-name", fn -> Hello.world end
