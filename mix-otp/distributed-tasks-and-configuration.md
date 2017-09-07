@@ -68,9 +68,9 @@ iex> Node.spawn_link :"foo@computer-name", fn -> Hello.world end
 hello world
 ```
 
-Elixir spawned a process on another node and returned its pid. The code then executed on the other node where the `Hello.world/0` function exists and invoked that function. Note that the result of "hello world" was printed on the current node `bar` and not on `foo`. In other words, the message to be printed was sent back from `foo` to `bar`. This happens because the process spawned on the other node (`foo`) still has the group leader of the current node (`bar`). We have briefly talked about group leaders in the [IO chapter](/getting-started/io-and-the-file-system.html#processes-and-group-leaders).
+Эликсир породил процесс на другом узле и вернул его pid. Затем код выполнился на другом узле, где существует функция `Hello.world/0` и вызвал эту функцию. Обратите внимание, что результат "hello world" был выведен на текущем узле `bar`, но не на `foo`. Другими словами, сообщение было отправлено назад с `foo` на `bar`. Это происходит, потому что процесс, порождённый на другом узле (`foo`) всё ещё имеет лидера группы на текущем узле (`bar`). Мы кратко говорили о лидерах групп в [главе IO](/getting-started/io-and-the-file-system.html#processes-and-group-leaders).
 
-We can send and receive messages from the pid returned by `Node.spawn_link/2` as usual. Let's try a quick ping-pong example:
+Мы также можем посылать и принимать сообщения на pid, возвращённый `Node.spawn_link/2`, как обычно. Попробуем простой ping-pong пример:
 
 ```iex
 iex> pid = Node.spawn_link :"foo@computer-name", fn ->
@@ -86,23 +86,23 @@ iex> flush()
 :ok
 ```
 
-From our quick exploration, we could conclude that we should use `Node.spawn_link/2` to spawn processes on a remote node every time we need to do a distributed computation. However, we have learned throughout this guide that spawning processes outside of supervision trees should be avoided if possible, so we need to look for other options.
+Из нашего небольшого исследования мы можем заключить, что нужно использовать `Node.spawn_link/2` для порождения процессов на удалённом узле каждый раз, когда нам нужны распределенные вычисления. Однако, мы также выяснили в этом руководстве, что порождение процессов вне дерева супервизора следует максимально избегать, поэтому нам нужно найти другие варианты.
 
-There are three better alternatives to `Node.spawn_link/2` that we could use in our implementation:
+Есть три лучших альтернативы `Node.spawn_link/2`, которые можно использовать в нашем примере:
 
-1. We could use Erlang's [:rpc](http://www.erlang.org/doc/man/rpc.html) module to execute functions on a remote node. Inside the `bar@computer-name` shell above, you can call `:rpc.call(:"foo@computer-name", Hello, :world, [])` and it will print "hello world"
+1. Можно использовать модуль [:rpc](http://www.erlang.org/doc/man/rpc.html) из Эрланга для выполнения функций на удалённом узле. В оболочке `bar@computer-name` выше, вы можете вызвать `:rpc.call(:"foo@computer-name", Hello, :world, [])` и получите "hello world"
 
-2. We could have a server running on the other node and send requests to that node via the [GenServer](https://hexdocs.pm/elixir/GenServer.html) API. For example, you can call a server on a remote node by using `GenServer.call({name, node}, arg)` or passing the remote process PID as the first argument
+2. Можно запустить сервер на другом узле и посылать запросы через [GenServer](https://hexdocs.pm/elixir/GenServer.html) API. Например, можно осуществить вызов к другому серверу через `GenServer.call({name, node}, arg)` или отправку PID удалённого процесса в качестве первого аргумента
 
-3. We could use [tasks](https://hexdocs.pm/elixir/Task.html), which we have learned about in [a previous chapter](/getting-started/mix-otp/task-and-gen-tcp.html), as they can be spawned on both local and remote nodes
+3. Можно исользовать [задачи](https://hexdocs.pm/elixir/Task.html), которые мы изучили в [предыдущей главе](/getting-started/mix-otp/task-and-gen-tcp.html), т.к. они могут быть порождены и на локальном, и на удалённом узле
 
-The options above have different properties. Both `:rpc` and using a GenServer would serialize your requests on a single server, while tasks are effectively running asynchronously on the remote node, with the only serialization point being the spawning done by the supervisor.
+Варианты выше имеют свои особенности. `:rpc` и использование GenServer сериализуют запрос к одному серверу, тогда как задачи будут запущены асинфронно на удалённом узле, сериализация будет произведена только на уровне порождения супервизором.
 
-For our routing layer, we are going to use tasks, but feel free to explore the other alternatives too.
+На нашем уровне маршрутизации мы будем использовать задачи, но вы также можете попробовать остальные альтернативы.
 
 ## async/await
 
-So far we have explored tasks that are started and run in isolation, with no regard for their return value. However, sometimes it is useful to run a task to compute a value and read its result later on. For this, tasks also provide the `async/await` pattern:
+До сих пор мы использовали задачи, которые запускаются и работают в изоляции, игнорируя возвращаемые ими значения. Однако, иногда полезно запустить задачу для вычисления значения и прочитать этот результат после. Для этого в задачах есть шаблон `async/await`:
 
 ```elixir
 task = Task.async(fn -> compute_something_expensive end)
@@ -110,7 +110,7 @@ res  = compute_something_else()
 res + Task.await(task)
 ```
 
-`async/await` provides a very simple mechanism to compute values concurrently. Not only that, `async/await` can also be used with the same [`Task.Supervisor`](https://hexdocs.pm/elixir/Task.Supervisor.html) we have used in previous chapters. We just need to call `Task.Supervisor.async/2` instead of `Task.Supervisor.start_child/2` and use `Task.await/2` to read the result later on.
+`async/await` предоставляет очень простой механизм параллельного вычисления значений. Кроме того, `async/await` может быть использован с тем же [`Task.Supervisor`](https://hexdocs.pm/elixir/Task.Supervisor.html), который мы использовали в предыдущих главах. Достаточно вызвать `Task.Supervisor.async/2` вместо `Task.Supervisor.start_child/2` и использовать `Task.await/2` для чтения результата.
 
 ## Distributed tasks
 
