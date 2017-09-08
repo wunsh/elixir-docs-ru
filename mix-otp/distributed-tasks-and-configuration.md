@@ -112,22 +112,22 @@ res + Task.await(task)
 
 `async/await` предоставляет очень простой механизм параллельного вычисления значений. Кроме того, `async/await` может быть использован с тем же [`Task.Supervisor`](https://hexdocs.pm/elixir/Task.Supervisor.html), который мы использовали в предыдущих главах. Достаточно вызвать `Task.Supervisor.async/2` вместо `Task.Supervisor.start_child/2` и использовать `Task.await/2` для чтения результата.
 
-## Distributed tasks
+## Распределённые задачи
 
-Distributed tasks are exactly the same as supervised tasks. The only difference is that we pass the node name when spawning the task on the supervisor. Open up `lib/kv/supervisor.ex` from the `:kv` application. Let's add a task supervisor as the last child of the tree:
+Распределённые задачи - ровно то же самое, что контроллируемые супервизором задачи. Единственная разиница в том, что мы передаём имя узла супервизору при порождении задачи. Откройте `lib/kv/supervisor.ex` из приложения `:kv`. Давайте добавим супервизор задач как последнего потомка в дереве:
 
 ```elixir
 {Task.Supervisor, name: KV.RouterTasks},
 ```
 
-Now, let's start two named nodes again, but inside the `:kv` application:
+Теперь запустим два именованных узла снова, но внутри приложения `:kv`:
 
 ```bash
 $ iex --sname foo -S mix
 $ iex --sname bar -S mix
 ```
 
-From inside `bar@computer-name`, we can now spawn a task directly on the other node via the supervisor:
+Изнутри `bar@computer-name` мы теперь можем порождать задачи прямо на другом узле через супервизор:
 
 ```iex
 iex> task = Task.Supervisor.async {KV.RouterTasks, :"foo@computer-name"}, fn ->
@@ -138,7 +138,7 @@ iex> Task.await(task)
 {:ok, :"foo@computer-name"}
 ```
 
-Our first distributed task retrieves the name of the node the task is running on. Notice we have given an anonymous function to `Task.Supervisor.async/2` but, in distributed cases, it is preferable to give the module, function, and arguments explicitly:
+Наша первая распределённая задача получает имя узла, на котором запускать задачу. Обратите внимание, что мы передали анонимную функцию в `Task.Supervisor.async/2`, но для распределённых случаев предпочтительно передавать модуль, функцию и аргументы явно:
 
 ```iex
 iex> task = Task.Supervisor.async {KV.RouterTasks, :"foo@computer-name"}, Kernel, :node, []
@@ -147,9 +147,9 @@ iex> Task.await(task)
 :"foo@computer-name"
 ```
 
-The difference is that anonymous functions require the target node to have exactly the same code version as the caller. Using module, function, and arguments is more robust because you only need to find a function with matching arity in the given module.
+Разница в том, что анонимная функция обязывает иметь одинаковый код на узле выполнения и узле, который осуществляет вызов. Использование модуля, функции и аргументов более надёжный вариант, вам достаточно найти функцию, которая подходит по арности в переданном модуле.
 
-With this knowledge in hand, let's finally write the routing code.
+С этими знаниями можно наконец написать код маршрутизации.
 
 ## Routing layer
 
