@@ -151,9 +151,9 @@ iex> Task.await(task)
 
 С этими знаниями можно наконец написать код маршрутизации.
 
-## Routing layer
+## Слой маршрутизации
 
-Create a file at `lib/kv/router.ex` with the following contents:
+Создайте файл `lib/kv/router.ex` со следующим содержимым:
 
 ```elixir
 defmodule KV.Router do
@@ -196,7 +196,7 @@ defmodule KV.Router do
 end
 ```
 
-Let's write a test to verify our router works. Create a file named `test/kv/router_test.exs` containing:
+Давайте напишем тест, чтобы убедиться, что наш маршрутизатор работает. Создайте файл с именем `test/kv/router_test.exs`, содержащий:
 
 ```elixir
 defmodule KV.RouterTest do
@@ -217,23 +217,23 @@ defmodule KV.RouterTest do
 end
 ```
 
-The first test invokes `Kernel.node/0`, which returns the name of the current node, based on the bucket names "hello" and "world". According to our routing table so far, we should get `foo@computer-name` and `bar@computer-name` as responses, respectively.
+Первый тест вызывает функцию `Kernel.node/0`, которая возвращает имя текущего узла, основываясь на именах корзин "hello" и "world". Согласно нашей таблице маршрутизации, мы должны получить `foo@computer-name` и `bar@computer-name` в качестве ответов, соответственно.
 
-The second test checks that the code raises for unknown entries.
+Второй тест проверяет, что код падает на вводе неизвестных значений.
 
-In order to run the first test, we need to have two nodes running. Move into `apps/kv` and let's restart the node named `bar` which is going to be used by tests.
+Для запуска первого теста нам нужно два запущенных узла. Перейдём в `apps/kv` и перезапустим узел с именем `bar`, чтобы использовать его в тестах.
 
 ```bash
 $ iex --sname bar -S mix
 ```
 
-And now run tests with:
+И запустим тест следующим образом:
 
 ```bash
 $ elixir --sname foo -S mix test
 ```
 
-The test should pass.
+Тест должен пройти без ошибок.
 
 ## Test filters and tags
 
