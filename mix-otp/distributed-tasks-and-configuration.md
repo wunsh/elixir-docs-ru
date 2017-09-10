@@ -235,22 +235,22 @@ $ elixir --sname foo -S mix test
 
 Тест должен пройти без ошибок.
 
-## Test filters and tags
+## Фильтры тестов и тэги
 
-Although our tests pass, our testing structure is getting more complex. In particular, running tests with only `mix test` causes failures in our suite, since our test requires a connection to another node.
+Хотя наши тесты проходят, структура тестов становится более сложной. А именно, запуск тестов через `mix test` приведёт к ошибкам, т.к. наш тест предусматривает подключение к другому узлу.
 
-Luckily, ExUnit ships with a facility to tag tests, allowing us to run specific callbacks or even filter tests altogether based on those tags. We have already used the `:capture_log` tag in the previous chapter, which has its semantics specified by ExUnit itself.
+К счастью, в ExUnit есть средства для тэгирования тестов, которые позволяют запускать определённые обратные вызовы или даже фильтровать тесты по этим тэгам. Мы уже использовали тэг `:capture_log` в предыдущей главе, семантику которого определяет сам ExUnit.
 
-This time let's add a `:distributed` tag to `test/kv/router_test.exs`:
+Теперь давайте добавим тэг `:distributed` в `test/kv/router_test.exs`:
 
 ```elixir
 @tag :distributed
 test "route requests across nodes" do
 ```
 
-Writing `@tag :distributed` is equivalent to writing `@tag distributed: true`.
+Формулировка `@tag :distributed` эквивалентна `@tag distributed: true`.
 
-With the test properly tagged, we can now check if the node is alive on the network and, if not, we can exclude all distributed tests. Open up `test/test_helper.exs` inside the `:kv` application and add the following:
+Когда тесты отмечены нужными тегами, мы можем проверить, запущен ли узел в сети, и, если нет, мы можем исключить все распределённые тесты. Откройте `test/test_helper.exs` внутри приложения `:kv` и добавьте следующее:
 
 ```elixir
 exclude =
@@ -259,7 +259,7 @@ exclude =
 ExUnit.start(exclude: exclude)
 ```
 
-Now run tests with `mix test`:
+Теперь запустите `mix test`:
 
 ```bash
 $ mix test
@@ -271,15 +271,15 @@ Finished in 0.1 seconds (0.1s on load, 0.01s on tests)
 7 tests, 0 failures, 1 skipped
 ```
 
-This time all tests passed and ExUnit warned us that distributed tests were being excluded. If you run tests with `$ elixir --sname foo -S mix test`, one extra test should run and successfully pass as long as the `bar@computer-name` node is available.
+На этот раз все тесты прошл и ExUnit предупреждает нас, что распределённые тесты были исключены. Если вы запустите `$ elixir --sname foo -S mix test`, один дополнительный тест должен запуститься и проходить, пока узел `bar@computer-name` доступен.
 
-The `mix test` command also allows us to dynamically include and exclude tags. For example, we can run `$ mix test --include distributed` to run distributed tests regardless of the value set in `test/test_helper.exs`. We could also pass `--exclude` to exclude a particular tag from the command line. Finally, `--only` can be used to run only tests with a particular tag:
+Команда `mix test` также позволяет нам динамически включать и исключать теги. Например, мы можем запустить `$ mix test --include distributed` для запуска распределенных тестов независимо от значения в `test/test_helper.exs`. Мы также можем передать `--exclude` чтобы исключить тег. Наконец, `--only` можно использовать для запуска только тестов с определённым тегом:
 
 ```bash
 $ elixir --sname foo -S mix test --only distributed
 ```
 
-You can read more about filters, tags and the default tags in [`ExUnit.Case` module documentation](https://hexdocs.pm/ex_unit/ExUnit.Case.html).
+Вы можете прочитать больше о фильтрах, тегах и стандартных тегах в [документации модуля `ExUnit.Case`](https://hexdocs.pm/ex_unit/ExUnit.Case.html).
 
 ## Application environment and configuration
 
