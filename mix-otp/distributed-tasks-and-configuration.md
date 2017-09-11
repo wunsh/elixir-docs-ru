@@ -366,12 +366,12 @@ import_config "../apps/*/config/config.exs"
 
 * изменить и настроить приложение `:kv_server` для использования маршрутизации вместо прямых вызовов локального `KV.Registry`. Для тестирования `:kv_server` вы можете создать таблицу маршрутизации, которая указывает на текущий узел
 
-## Summing up
+## Заключение
 
-In this chapter, we have built a simple router as a way to explore the distributed features of Elixir and the Erlang <abbr title="Virtual Machine">VM</abbr>, and learned how to configure its routing table. This is the last chapter in our Mix and  <abbr title="Open Telecom Platform">OTP</abbr> guide.
+В этой главе мы создали простой маршрутизатор, чтобы попробовать на практике возможности распределённой работы Эликсира и виртуальной машины Эрланга, а также изучили конфигурирование таблиц маршрутизации. Это последняя глава в нашем руководстве по Mix и <abbr title="Open Telecom Platform">OTP</abbr>
 
-Throughout the guide, we have built a very simple distributed key-value store as an opportunity to explore many constructs like generic servers, supervisors, tasks, agents, applications and more. Not only that, we have written tests for the whole application, got familiar with ExUnit, and learned how to use the Mix build tool to accomplish a wide range of tasks.
+В этом руководстве мы сделали очень простое распределённое хранилище пар ключ-значение, чтобы исследовать многие конструкции, например, GenServer, супервизоры, задачи, агенты, приложения и другие. Кроме того, мы написали тесты для всего нашего приложения, познакомились с ExUnit, и изучили использование средства сборки Mix для решения многих задач.
 
-If you are looking for a distributed key-value store to use in production, you should definitely look into [Riak](http://basho.com/riak/), which also runs in the Erlang <abbr title="Virtual Machine">VM</abbr>. In Riak, the buckets are replicated, to avoid data loss, and instead of a router, they use [consistent hashing](https://en.wikipedia.org/wiki/Consistent_hashing) to map a bucket to a node. A consistent hashing algorithm helps reduce the amount of data that needs to be migrated when new nodes to store buckets are added to your infrastructure.
+Если вы ищете распределённое хранилище ключ-значение для продакшна, вам определённо стоит посмотреть [Riak](http://basho.com/riak/), который также работает в виртуальной машине Эрланга. В Riak корзины реплицируются во избежание потери данных, и, в отличие от маршрутизатора, они используют [консистентное хеширование](https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BD%D1%82%D0%BD%D0%BE%D0%B5_%D1%85%D0%B5%D1%88%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5) для сопоставления корзины и узла сети. Алгоритм консистентного хеширования помогает уменьшить количество данных, которые нужно мигрировать, когда в инфраструктуру добавляется новый узел для хранения корзин.
 
-Happy coding!
+Приятного кодинга!
