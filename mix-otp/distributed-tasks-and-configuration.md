@@ -281,13 +281,13 @@ $ elixir --sname foo -S mix test --only distributed
 
 Вы можете прочитать больше о фильтрах, тегах и стандартных тегах в [документации модуля `ExUnit.Case`](https://hexdocs.pm/ex_unit/ExUnit.Case.html).
 
-## Application environment and configuration
+## Окружение приложения и конфигурация
 
-So far we have hardcoded the routing table into the `KV.Router` module. However, we would like to make the table dynamic. This allows us not only to configure development/test/production, but also to allow different nodes to run with different entries in the routing table. There is a feature of  <abbr title="Open Telecom Platform">OTP</abbr> that does exactly that: the application environment.
+До сих пор мы задавали таблицу маршрутизации статически в модуле `KV.Router`. Однако, мы бы хотели сделать таблицу динамической. Это позволит нам не только сконфигурировать окружение для разработки/тестирования/продакшена, но также позволит разным узлам запускаться с разными значениями в таблице маршрутизации. В <abbr title="Открытая Телекоммуникационная Платформа">ОТП</abbr> есть возможность задавать окружение приложения.
 
-Each application has an environment that stores the application's specific configuration by key. For example, we could store the routing table in the `:kv` application environment, giving it a default value and allowing other applications to change the table as needed.
+Каждое приложение имеет окружение, которое хранит конфигурацию приложения по ключу. Например, мы могли бы сохранить таблицу маршрутизации в окружении `:kv`, задать ему стандартные значения и позволить другим приложениям изменять таблицу, если необходимо.
 
-Open up `apps/kv/mix.exs` and change the `application/0` function to return the following:
+Откройте `apps/kv/mix.exs` и измените функцию `application/0`:
 
 ```elixir
 def application do
@@ -297,9 +297,9 @@ def application do
 end
 ```
 
-We have added a new `:env` key to the application. It returns the application default environment, which has an entry of key `:routing_table` and value of an empty list. It makes sense for the application environment to ship with an empty table, as the specific routing table depends on the testing/deployment structure.
+Мы добавили новый ключ `:env` в приложение. Он возвращает стандартное окружение приложения, которое имеет ключ `:routing_table` и пустой список в качестве значения. Есть смысл в том, чтобы приложение изначально было с пустой таблицей, т.к. вид таблицы будет зависеть от структуры тестирования/разработки.
 
-In order to use the application environment in our code, we need to replace `KV.Router.table/0` with the definition below:
+Для использования окружения в нашем коде, нам нужно заменить `KV.Router.table/0` на код ниже:
 
 ```elixir
 @doc """
@@ -312,22 +312,24 @@ end
 
 We use `Application.fetch_env!/2` to read the entry for `:routing_table` in `:kv`'s environment. You can find more information and other functions to manipulate the app environment in the [Application module](https://hexdocs.pm/elixir/Application.html).
 
-Since our routing table is now empty, our distributed test should fail. Restart the apps and re-run tests to see the failure:
+Мы используем `Application.fetch_env!/2` для чтения записи `:routing_table` в окружени `:kv`. Вы можете найти больше информации и другие функции для работы с окружением приложения в [модуле Application](https://hexdocs.pm/elixir/Application.html).
+
+Т.к. наша таблица маршрутизации теперь пуста, распределённые тесты должны упасть. перезапустите приложение и тесты, чтобы увидеть падение:
 
 ```bash
 $ iex --sname bar -S mix
 $ elixir --sname foo -S mix test --only distributed
 ```
 
-The interesting thing about the application environment is that it can be configured not only for the current application, but for all applications. Such configuration is done by the `config/config.exs` file. For example, we can configure IEx default prompt to another value. Just open `apps/kv/config/config.exs` and add the following to the end:
+Интересная особенность окружении приложения состоит в том, что оно может быть настроено не только для текущего приложения, но и для всех приложений. Такая конфигурация осуществляется в файле `config/config/exs`. Например, мы можем изменить стандартную строку ввода IEx на другое значение. Просто откройте `apps/kv/config/config.exs` и добавьте в конец:
 
 ```elixir
 config :iex, default_prompt: ">>>"
 ```
 
-Start IEx with `iex -S mix` and you can see that the IEx prompt has changed.
+Запустите IEx через `iex -S mis` и вы сможете увидеть, что приглашение строки ввода изменилось.
 
-This means we can also configure our `:routing_table` directly in the `apps/kv/config/config.exs` file:
+Это значит, что мы также можем настроить нашу `:routing_table` прямо в файле `apps/kv/config/config.exs`:
 
 ```elixir
 # Replace computer-name with your local machine nodes.
@@ -336,33 +338,33 @@ config :kv, :routing_table,
         {?n..?z, :"bar@computer-name"}]
 ```
 
-Restart the nodes and run distributed tests again. Now they should all pass.
+Перезапустите все узлы и запустите распределённые тесты снова. Теперь они снова должны пройти.
 
-Since Elixir v1.2, all umbrella applications share their configurations, thanks to this line in `config/config.exs` in the umbrella root that loads the configuration of all children:
+Начиная с Эликсира версии 1.2, все зонтичные приложения имеют общую конфигурацию, благодаря этой строке в `config/config.exs` в корне зонтичного проекта, которая загружает конфигурацию всем потомкам:
 
 ```elixir
 import_config "../apps/*/config/config.exs"
 ```
 
-The `mix run` command also accepts a `--config` flag, which allows configuration files to be given on demand. This could be used to start different nodes, each with its own specific configuration (for example, different routing tables).
+Команда `mix run` также принимает флаг `--config`, который позволяет файлам конфигурации быть переданными по требованию. Это можно использовать для запуска разных узлов, каждый из которых имеет отличающуюся конфигурацию (например, разные таблицы маршрутизации).
 
-Overall, the built-in ability to configure applications and the fact that we have built our software as an umbrella application gives us plenty of options when deploying the software. We can:
+Более того, встроенная возможность конфигурировать приложения и тот факт, что мы сделали наш проект зонтичным, позволяет нам по-разному деплоить его. Мы можем:
 
-* deploy the umbrella application to a node that will work as both TCP server and key-value storage
+* деплоить зонтичное приложение на узел, который будет и TCP сервером, и хранилищем ключ-значение
 
-* deploy the `:kv_server` application to work only as a TCP server as long as the routing table points only to other nodes
+* деплоить приложение `:kv_server` для работы только в качестве TCP сервера, а в таблице маршрутизации указать другие узлы
 
-* deploy only the `:kv` application when we want a node to work only as storage (no TCP access)
+* деплоить только приложение `:kv`, когда мы хотим узел с хранилищем (без TCP доступа)
 
-As we add more applications in the future, we can continue controlling our deploy with the same level of granularity, cherry-picking which applications with which configuration are going to production.
+По мере добавления новых приложений в будущем, мы можем продолжить контроллировать наш деплой с тем же уровнем контроля, какие приложения и с какими конфигурациями уйдут в продакшн.
 
-You can also consider building multiple releases with a tool like [Distillery](https://github.com/bitwalker/distillery), which will package the chosen applications and configuration, including the current Erlang and Elixir installations, so we can deploy the application even if the runtime is not pre-installed on the target system.
+Вы также можете решить создавать разные релизы с инструментом вроде [Distillery](https://github.com/bitwalker/distillery), который будет упаковывать выбранные приложения и конфигурации, включая выбранные дистрибутивы Эрланга и Эликсира, поэтому приложения можно будет деплоить даже если рантайм не предустановлен на выбранной системе.
 
-Finally, we have learned some new things in this chapter, and they could be applied to the `:kv_server` application as well. We are going to leave the next steps as an exercise:
+Наконец, в этой главе мы изучили несколько новых вещей, и они могут быть применены в приложении `:kv_server`. Мы оставим следующие задачи на самостоятельную работу:
 
-* change the `:kv_server` application to read the port from its application environment instead of using the hardcoded value of 4040
+* изменить приложение `:kv_server` для использования порта из окружения, вместо использования жестко заданного 4040
 
-* change and configure the `:kv_server` application to use the routing functionality instead of dispatching directly to the local `KV.Registry`. For `:kv_server` tests, you can make the routing table point to the current node itself
+* изменить и настроить приложение `:kv_server` для использования маршрутизации вместо прямых вызовов локального `KV.Registry`. Для тестирования `:kv_server` вы можете создать таблицу маршрутизации, которая указывает на текущий узел
 
 ## Summing up
 
