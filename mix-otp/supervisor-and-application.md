@@ -1,14 +1,14 @@
 ---
-title: Supervisor and Application
+title: Супервизор и Приложение
 ---
 
 # {{ page.title }}
 
-So far our application has a registry that may monitor dozens, if not hundreds, of buckets. While we think our implementation so far is quite good, no software is bug-free, and failures are definitely going to happen.
+В нашем приложении теперь есть реестр, который может работать с дюжинами, если не с сотнями корзин. Мы можем думать, что наша реализация достаточно хороша, но ПО никогда не бывает без багов, и падения будут случаться.
 
-When things fail, your first reaction may be: "let's rescue those errors". But in Elixir we avoid the defensive programming habit of rescuing exceptions. Instead, we say "let it crash". If there is a bug that leads our registry to crash, we have nothing to worry about because we are going to set up a supervisor that will start a fresh copy of the registry.
+Когда это происходит, ваша первая реакция может быть: "добавлю rescue для обработки ошибок". Но в Эликсире мы избегаем "защитного" программирования с отловом ошибок. напротив, мы говорим "пускай падает". Если есть баг, который приводит к падению реестра, у нас нет повода волноваться, потому что мы сделаем супервизор, который запустит новую копию реестра.
 
-In this chapter, we are going to learn about supervisors and also about applications. We are going to create not one, but two supervisors, and use them to supervise our processes.
+В этой плаве мы изучим супервизоры и, также, приложения. Мы создадим не один, а два супревизора, и и используем их для наблюдения за нашими процессами.
 
 ## Our first supervisor
 
