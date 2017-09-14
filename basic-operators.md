@@ -21,8 +21,6 @@ iex> "foo" <> "bar"
 "foobar"
 ```
 
-Elixir also provides three boolean operators: `or`, `and` and `not`. These operators are strict in the sense that they expect a boolean (`true` or `false`) as their first argument:
-
 Elixir также предоставляет три логических оператора: `or`, `and` и `not`. Эти операторы строгие в том смысле, что они ожидают булево значение (`true` or `false`) в качестве первого аргумента:
 
 ```iex
@@ -39,7 +37,7 @@ iex> 1 and true
 ** (BadBooleanError) expected a boolean on left-side of "and", got: 1
 ```
 
-`or` и `and` - операторы сокращенного вычисления. Они выполняют правую часть только если левой не достаточно, чтобы определить результат:
+`or` и `and` - операторы сокращенного вычисления. Они выполняют правую часть, если левой недостаточно, чтобы определить результат:
 
 ```iex
 iex> false and raise("This error will never be raised")
@@ -109,8 +107,6 @@ true
 
 Вам не нужно запоминать этот порядок, достаточно знать, что он существует.
 
-For reference information about operators (and ordering), check the [reference page on operators](/docs/master/elixir/operators.html).
-
 Для получения справочной информации по операторам (и порядку сортировки), перейдите на [страницу справки по операторам](/docs/master/elixir/operators.html).
 
-В следующей главе, мы собираемся обсудить некоторые базовые функции, приведение типов данных и немного об управлении потоком исполнения.
+В следующей главе, мы собираемся обсудить некоторые базовые функции, приведение типов данных и немного затроним тему управления потоком исполнения.
