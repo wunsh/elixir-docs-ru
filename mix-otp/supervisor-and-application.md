@@ -10,9 +10,9 @@ title: Супервизор и Приложение
 
 В этой плаве мы изучим супервизоры и, также, приложения. Мы создадим не один, а два супревизора, и и используем их для наблюдения за нашими процессами.
 
-## Our first supervisor
+## Наш первый супервизор
 
-Creating a supervisor is not much different from creating a GenServer. We are going to define a module named `KV.Supervisor`, which will use the [Supervisor](https://hexdocs.pm/elixir/Supervisor.html) behaviour, inside the `lib/kv/supervisor.ex` file:
+Создание супервизора не слишком отличается от создания GenServer. Мы определим модуль с именем `KV.Supervisor`, который будет использовать поведение [Supervisor](https://hexdocs.pm/elixir/Supervisor.html), внутри файла `lib/kv/supervisor.ex`:
 
 ```elixir
 defmodule KV.Supervisor do
@@ -32,13 +32,13 @@ defmodule KV.Supervisor do
 end
 ```
 
-Our supervisor has a single child so far: `KV.Registry`. After we define a list of children, we call `Supervisor.init/2`, passing the children and the supervision strategy.
+Пока наш супервизор имеет единственного потомка: `KV.Registry`. Когда мы определим несколько потомков, мы будем вызывать `Supervisor.init/2`, передавая потомков и стратегию надзора за ними.
 
-The supervision strategy dictates what happens when one of the children crashes. `:one_for_one` means that if a child dies, it will be the only one restarted. Since we have only one child now, that's all we need. The `Supervisor` behaviour supports many different strategies and we will discuss them in this chapter.
+Стратегия надзора задаёт поведение в случае падения одного из потомков. `:one_for_one` значит, что при падении потомка, только он один будет перезапущен. Пока у нас только один потомок, это то, что нужно. Поведение `Supervisor` поддерживает много разных стратегий, и мы поговорим о них в этой главе.
 
-Once the supervisor starts, it will traverse the list of children and it will invoke the `child_spec/1` function on each module. We heard about the `child_spec/1` function in the Agent chapter, when we called `start_supervised(KV.Bucket)` without defining the module.
+После старта супервизор пройдёт по списку потомков и выполнит фукнцию `child_spec/1` для каждого модуля. Мы слышали о функции `child_spec/1` в главе "Агенты", когда вызывали `start_supervised(KV.Bucket)` без указания модуля.
 
-The `child_spec/1` function returns the child specification which describes how to start the process, if the process is a worker or a supervisor, if the process is temporary, transient or permanent and so on. The `child_spec/1` function is automatically defined when we `use Agent`, `use GenServer`, `use Supervisor`, etc. Let's give it a try in the terminal with `iex -S mix`:
+Функция `child_spec/1` возвращает спецификацию потомка, которая объясняет, как запустить процесс, является ли он воркером или супервизором, является ли он временным или постоянным и т.д. Функция `child_spec/1` автоматически определяется, когда мы задаём `use Agent`, `use GenServer`, `use Supervisor` и т.д. Давайте попробуем это на практике, запустив `iex -S mix`:
 
 ```iex
 iex(1)> KV.Registry.child_spec([])
@@ -51,11 +51,11 @@ iex(1)> KV.Registry.child_spec([])
 }
 ```
 
-We will learn those details as we move forward on this guide. If you would rather peek ahead, check the [Supervisor](https://hexdocs.pm/elixir/Supervisor.html) docs.
+Мы изучим другие детали по ходу этого руководства. Если вы хотите понять больше, загляните в раздел документации [Supervisor](https://hexdocs.pm/elixir/Supervisor.html).
 
-After the supervisor retrieves all child specifications, it proceeds to start its children one by one, in the order they were defined, using the information in the `:start` key in the child specification. For our current specification, it will call `KV.Registry.start_link([])`.
+Когда супрвизор получит все спецификации потомков, он запустит их один за другим, в порядке, в котором они определены, используя информацию по ключу `:start` в их спецификациях. В текущей спецификации он вызовет `KV.Registry.start_link([])`.
 
-So far `start_link/1` has always received an empty list of options. It is time we change that.
+Пока `start_link/1` всегда получает пустой список опций. Самое время изменить это.
 
 ## Naming processes
 
