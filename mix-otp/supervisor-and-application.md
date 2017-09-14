@@ -4,11 +4,11 @@ title: Супервизор и Приложение
 
 # {{ page.title }}
 
-В нашем приложении теперь есть реестр, который может работать с дюжинами, если не с сотнями корзин. Мы можем подумать, что наша реализация достаточно хороша, но ПО никогда не бывает без багов, и падения будут случаться.
+В нашем приложении теперь есть реестр, который может работать с дюжинами, если не с сотнями корзин. Мы можем думать, что наша реализация достаточно хороша, но ПО никогда не бывает без багов, и падения будут случаться.
 
-Когда это происходит, ваша первая реакция может быть: "добавлю rescue для обработки ошибок". Но в Эликсире мы избегаем "защитного" программирования с отловом ошибок. Напротив, мы говорим "пускай падает". Если есть баг, который приводит к падению реестра, у нас нет повода волноваться, потому что мы сделаем супервизор, который запустит новую копию реестра.
+Когда это происходит, ваша первая реакция может быть: "добавлю rescue для обработки ошибок". Но в Эликсире мы избегаем "защитного" программирования с отловом ошибок. напротив, мы говорим "пускай падает". Если есть баг, который приводит к падению реестра, у нас нет повода волноваться, потому что мы сделаем супервизор, который запустит новую копию реестра.
 
-В этой главе мы изучим супервизоры и, также, приложения. Мы создадим не один, а два супревизора, и используем их для наблюдения за нашими процессами.
+В этой плаве мы изучим супервизоры и, также, приложения. Мы создадим не один, а два супревизора, и и используем их для наблюдения за нашими процессами.
 
 ## Наш первый супервизор
 
@@ -57,13 +57,13 @@ iex(1)> KV.Registry.child_spec([])
 
 Пока `start_link/1` всегда получает пустой список опций. Самое время изменить это.
 
-## Naming processes
+## Именование процессов
 
-While our application will have many buckets, it will only have a single registry. So instead of always passing the registry PID around, we can give the registry a name, and always reference it by its name.
+Наше приложение будет иметь много корзин, но только один реестр. Поэтому вместо передачи всюду PID реестра, мы можем дать ему имя и ссылаться на него по его имени.
 
-Also, remember buckets were started dynamically based on user input, and that meant we should not use atom names for managing our buckets. But the registry is in the opposite situation, we want to start a single registry, preferably under a supervisor, when our application boots.
+Также, как вы помните, корзины создаются динамически основываясь на пользовательском вводе, поэтому не следует использовать атомы для управления корзинами. Но реестр будет один, запущенный супервизором после старта нашего приложения.
 
-So let's do that. Let's slightly change our children definition to be a list of tuples instead of a list of atoms:
+Давайте реализуем это. Немного изменим наше определение потомков из списка атомов в список кортежей:
 
 ```elixir
   def init(:ok) do
@@ -75,7 +75,7 @@ So let's do that. Let's slightly change our children definition to be a list of 
   end
 ```
 
-The difference now is that, instead of calling `KV.Registry.start_link([])`, the Supervisor will call `KV.Registry.start_link([name: KV.Registry])`. If you revisit `KV.Registry.start_link/1` implementation, you will remember it simply passes the options to GenServer
+Разница в том, что вместо вызова `KV.Registry.start_link([])` супервизор будет вызывать `KV.Registry.start_link([name: KV.Registry])`. Если вы вернётесь к реализации `KV.Registry.start_link/1`, вы вспомните, что при этом будут переданы опции в GenServer
 
 ```elixir
   def start_link(opts) do
@@ -83,9 +83,9 @@ The difference now is that, instead of calling `KV.Registry.start_link([])`, the
   end
 ```
 
-which in turn will register the process with the given name.
+который зарегистрирует процесс с переданным именем.
 
-Let's give this all a try inside `iex -S mix`:
+Давайте попробуем всё это в `iex -S mix`:
 
 ```iex
 iex> KV.Supervisor.start_link([])
@@ -99,6 +99,8 @@ iex> KV.Registry.lookup(KV.Registry, "shopping")
 When we started the supervisor, the registry was automatically started with the given name, allowing us to create buckets without the need to manually start it.
 
 In practice, we rarely start the application supervisor manually. Instead, it is started as part of the application callback.
+
+На практике редко запускают супервизор приложения вручную. Напротив, он стартует как часть обратного вызова в приложении.
 
 ## Understanding applications
 
