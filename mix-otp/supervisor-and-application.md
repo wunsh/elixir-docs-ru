@@ -102,11 +102,11 @@ In practice, we rarely start the application supervisor manually. Instead, it is
 
 На практике редко запускают супервизор приложения вручную. Напротив, он стартует как часть обратного вызова в приложении.
 
-## Understanding applications
+## Понимание приложений
 
-We have been working inside an application this entire time. Every time we changed a file and ran `mix compile`, we could see a `Generated kv app` message in the compilation output.
+Мы всё время работали внутри приложения. Каждый раз, когда мы изменяли файл и запускали `mix compile`, мы могли увидеть сообщение `Generated kv app` в выводе компиляции.
 
-We can find the generated `.app` file at `_build/dev/lib/kv/ebin/kv.app`. Let's have a look at its contents:
+Мы можем найти сгенерированный файл `.app` в `_build/dev/lib/kv/ebin/kv.app`. Давайте посмотрим на его содержимое:
 
 ```erlang
 {application,kv,
@@ -118,11 +118,11 @@ We can find the generated `.app` file at `_build/dev/lib/kv/ebin/kv.app`. Let's 
                         'Elixir.KV.Registry','Elixir.KV.Supervisor']}]}.
 ```
 
-This file contains Erlang terms (written using Erlang syntax). Even though we are not familiar with Erlang, it is easy to guess this file holds our application definition. It contains our application `version`, all the modules defined by it, as well as a list of applications we depend on, like Erlang's `kernel`, `elixir` itself, and `logger` which is specified in the `:extra_applications` list in `mix.exs`.
+Этот файл содержит термы Эрланга (написан с использованием синтаксиса Эрланга). Даже если мы не знакомы с Эрлангом, достаточно просто предположить, что это определение приложения. Оно содержит версию нашего приложения (`version`), все определённые в нём модули, а также список приложений-зависимостей, например, `kernel` Эрланга, сам `elixir` и `logger`, который определён в списке `:extra_applications` внутри `mix.exs`.
 
-It would be pretty boring to update this file manually every time we add a new module to our application. That's why Mix generates and maintains it for us.
+Былобы очень неудобно обновлять этот файл вручную каждый раз, когда мы добавляем новый модуль в наше приложение. Поэтому Mix генерирует и поддерживает его актуальным за нас.
 
-We can also configure the generated `.app` file by customizing the values returned by the `application/0` inside our `mix.exs` project file. We are going to do our first customization soon.
+Мы также можем настроить генерируемый файл `.app`, изменив значения, возвращаемые `application/0` внутри нашего файла проекта `mix.exs`. Мы скоро сделаем наши первые изменения.
 
 ### Starting applications
 
