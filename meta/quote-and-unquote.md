@@ -2,73 +2,75 @@
 title: Quote и unquote
 ---
 
+# {{page.title}}
+
 Это руководство познакомит вас с техниками метапрограммирования в Эликсире. Возможность представлять программу на Эликсире своими собственными структурами данных лежит в основе метапрограммирования. Эта глава начинается с изучения этих структур и взаимодействующих между собой конструкций `quote` и `unquote`. Благодаря этому, в следующей главе мы cможем познакомиться с макросами и наконец создать свой собственный предметно-ориентированный язык. 
 
 ## Quoting
 
-The building block of an Elixir program is a tuple with three elements. For example, the function call `sum(1, 2, 3)` is represented internally as:
+Строительными блоками любой программы на Эликсире являются кортежи с тремя элементами. Например, вызов функции `sum(1, 2, 3)` представлен внутренне как:
 
-```
+```elixir
 {:sum, [], [1, 2, 3]}
 ```
 
-You can get the representation of any expression by using the `quote` macro:
+Вы можете получить представление любого выражения, используя макрос `quote`:
 
-```
+```elixir
 iex> quote do: sum(1, 2, 3)
 {:sum, [], [1, 2, 3]}
 ```
 
-The first element is the function name, the second is a keyword list containing metadata and the third is the arguments list.
+Первый элемент - это имя функции, второй - список ключевых слов, содержащий матаданные, а третий - список аргументов.
 
-Operators are also represented as such tuples:
+Также, в виде таких кортежей, представлены операторы:
 
-```
+```elixir
 iex> quote do: 1 + 2
 {:+, [context: Elixir, import: Kernel], [1, 2]}
 ```
 
-Even a map is represented as a call to `%{}`:
+Даже словарь представляется как вызов `%{}`:
 
-```
+```elixir
 iex> quote do: %{1 => 2}
 {:%{}, [], [{1, 2}]}
 ```
 
-Variables are also represented using such triplets, except the last element is an atom, instead of a list:
+Переменные тоже представлены с использованием таких триплетов, за исключением лишь последнего элемента, который является атомом, а не списком:
 
-```
+```elixir
 iex> quote do: x
 {:x, [], Elixir}
 ```
 
-When quoting more complex expressions, we can see that the code is represented in such tuples, which are often nested inside each other in a structure resembling a tree. Many languages would call such representations an Abstract Syntax Tree (AST). Elixir calls them quoted expressions:
+При маскировании более сложных выражений мы можем заметить, что код представлен в таких кортежах, которые часто вложены друг в друга, создавая тем самым структуру, напоминающую дерево. Многие языки назвали бы такое представление Абстрактным Синтаксическим Деревом (АСТ). Эликсир же называет их маскирующими выражениями (quoted expressions):
 
-```
+```elixir
 iex> quote do: sum(1, 2 + 3, 4)
 {:sum, [], [1, {:+, [context: Elixir, import: Kernel], [2, 3]}, 4]}
 ```
 
-Sometimes when working with quoted expressions, it may be useful to get the textual code representation back. This can be done with `Macro.to_string/1`:
+Иногда при работе с маскирующими выражениями может оказаться полезным вернуть код текстом. Что ж, это можно сделать с помощью `Macro.to_string/1`:
 
-```
+```elixir
 iex> Macro.to_string(quote do: sum(1, 2 + 3, 4))
 "sum(1, 2 + 3, 4)"
 ```
 
-In general, the tuples above are structured according to the following format:
+В целом, кортежи более структурированы в соответствии со следующим форматом:
 
-```
+```elixir
 {atom | tuple, list, list | atom}
 ```
 
-* The first element is an atom or another tuple in the same representation;
-* The second element is a keyword list containing metadata, like numbers and contexts;
-* The third element is either a list of arguments for the function call or an atom. When this element is an atom, it means the tuple represents a variable.
+* Первый элемент - это атом или другой кортеж в том же представлении;
+* Второй элемент - это список ключевых слов, содержащий метаданные, вроде чисел и контекстов;
+* Третий элемент - это либо список аргументов для вызова функции, либо атом. Когда этот элемент является атомом, это значит, что кортеж представляет из себя переменную.
 
-Besides the tuple defined above, there are five Elixir literals that, when quoted, return themselves (and not a tuple). They are:
+Помимо кортежа, определенного выше, существует также пять литералов Эликсира, которые при маскировке возвращаюся сами (вместо кортежа). Вот они:
 
-```
+```elixir
 :sum         #=> Atoms
 1.0          #=> Numbers
 [1, 2]       #=> Lists
@@ -76,75 +78,75 @@ Besides the tuple defined above, there are five Elixir literals that, when quote
 {key, value} #=> Tuples with two elements
 ```
 
-Most Elixir code has a straight-forward translation to its underlying quoted expression. We recommend you try out different code samples and see what the results are. For example, what does `String.upcase("foo")` expand to? We have also learned that `if(true, do: :this, else: :that)` is the same as `if true do :this else :that end`. How does this affirmation hold with quoted expressions?
+В основном, код на Эликсире переводится прямо в маскирующие выражения. Мы рекомендуем вам попробовать запустить различные примеры кода и посмотреть на получаемые результаты. Например, что означает `String.upcase("foo")`? Мы также узнали, что `if(true, do: :this, else: :that)` - это тоже самое, что и `if true do :this else :that end`. Как это утверждение применяется в маскирующих выражениях?
 
 ## Unquoting
 
-Quote is about retrieving the inner representation of some particular chunk of code. However, sometimes it may be necessary to inject some other particular chunk of code inside the representation we want to retrieve.
+Quote - это получение внутреннего представления какого-то конкретого фрагмента кода. Однако, иногда нам может потребоваться ввести какой-нибудь другой фрагмент кода внутрь представления, которое мы хотим получить.
 
-For example, imagine you have a variable `number` which contains the number you want to inject inside a quoted expression.
+Для примера, представьте, что у вас есть некая переменная `number`, содержащая номер, который вы хотите ввести в маскирующее выражение.
 
-```
+```elixir
 iex> number = 13
 iex> Macro.to_string(quote do: 11 + number)
 "11 + number"
 ```
 
-That’s not what we wanted, since the value of the `number` variable has not been injected and `number` has been quoted in the expression. In order to inject the value of the `number` variable, `unquote` has to be used inside the quoted representation:
+Это не то, что мы хотели увидеть, так как значение переменной `number` не было введено, `number` был лишь замаскирован в выражении. Чтобы на самом деле ввести значение переменной `number`, в маскирующем представлении должен использоваться `unquote`:
 
-```
+```elixir
 iex> number = 13
 iex> Macro.to_string(quote do: 11 + unquote(number))
 "11 + 13"
 ```
 
-`unquote` can even be used to inject function names:
+`unquote` может даже использоваться для ввода имён функций:
 
-```
+```elixir
 iex> fun = :hello
 iex> Macro.to_string(quote do: unquote(fun)(:world))
 "hello(:world)"
 ```
 
-In some cases, it may be necessary to inject many values inside a list. For example, imagine you have a list containing `[1, 2, 6]` and we want to inject `[3, 4, 5]` into it. Using `unquote` won’t yield the desired result:
+В некоторых случаях нам может потребоваться ввести много значений внутрь списка. Например, представьте, что у вас есть список, содержащий `[1, 2, 6]` и мы хотим ввести в него `[3, 4, 5]`. Использование `unquote` не даст желаемого результата:
 
-```
+```elixir
 iex> inner = [3, 4, 5]
 iex> Macro.to_string(quote do: [1, 2, unquote(inner), 6])
 "[1, 2, [3, 4, 5], 6]"
 ```
 
-That’s when `unquote_splicing` becomes handy:
+Именно в такие моменты `unquote_splicing` приходит к нам на помощь:
 
-```
+```elixir
 iex> inner = [3, 4, 5]
 iex> Macro.to_string(quote do: [1, 2, unquote_splicing(inner), 6])
 "[1, 2, 3, 4, 5, 6]"
 ```
 
-Unquoting is very useful when working with macros. When writing macros, developers are able to receive code chunks and inject them inside other code chunks, which can be used to transform code or write code that generates code during compilation.
+Unquoting очень полезен при работе с макросами. Дело здесь в том, что при написании макросов разработчики могут получать необходимые куски кода и внедрять их в другие фрагменты программы, которые, в свою очередь, могут быть использованы для преобразования исходного кода или записи нового, генерирующего новый код во время компиляции.
 
 ## Escaping
 
-As we saw at the beginning of this chapter, only some values are valid quoted expressions in Elixir. For example, a map is not a valid quoted expression. Neither is a tuple with four elements. However, such values can be expressed as a quoted expression:
+Как мы могли заметить в начале этой главы, только некоторые значения могут быть допустимыми маскирующими выражениями в Эликсире. Например, словарь не является допустимым маскирующим выражением. Также, нет кортежа с четырьмя элементами. Однако такие значения могут быть выражены как маскирующие выражения:
 
-```
+```elixir
 iex> quote do: %{1 => 2}
 {:%{}, [], [{1, 2}]}
 ```
 
-In some cases, you may need to inject such values into quoted expressions. To do that, we need to first escape those values into quoted expressions with the help of `Macro.escape/1`:
+В некоторых случаях вам может потребоваться ввести такие значения в маскирующие выражения. Чтобы сделать это, нам необходимо сперва избежать этих значений в маскирующих выражениях с помощью `Macro.escape/1`:
 
-```
+```elixir
 iex> map = %{hello: :world}
 iex> Macro.escape(map)
 {:%{}, [], [hello: :world]}
 ```
 
-Macros receive quoted expressions and must return quoted expressions. However, sometimes during the execution of a macro, you may need to work with values and making a distinction between values and quoted expressions will be required.
+Макросы получают маскирующие выражения и должны их же и возвращать. Однако иногда во время выполнения макроса вам может понадобиться поработать со значениями и здесь нам уже нужно будет провести различие между значениями и маскирующими выражениями.
 
-In other words, it is important to make a distinction between a regular Elixir value (like a list, a map, a process, a reference, etc) and a quoted expression. Some values, such as integers, atoms, and strings, have a quoted expression equal to the value itself. Other values, like maps, need to be explicitly converted. Finally, values like functions and references cannot be converted to a quoted expression at all.
+Другими словами, важно провести различие между регулярными значениями Эликсира (вроде списков, словарей, процессов, ссылок и т.д) и маскирующим выражением. Некоторые значения, такие как: числа, атомы и строки, имеют маскирующее выражение равное самому значению. Другое значение, вроде словаря, должно быть явно преобразовано. И наконец, значения, подобные функциям и ссылкам, ввобще не могут быть преобразованы в маскирующее выражение.
 
-You can read more about `quote` and `unquote` in the [`Kernel.SpecialForms` module](https://hexdocs.pm/elixir/). Documentation for `Macro.escape/1` and other functions related to quoted expressions can be found in the [`Macro` module](https://hexdocs.pm/elixir/).
+Вы можете больше узнать о `quote` и `unquote` в [модуле `Kernel.SpecialForms`](https://hexdocs.pm/elixir/). Документацию для `Macro.escape/1` и других функций, связанных с маскирующими выражениями, можно найти в [`Макрос` модуле](https://hexdocs.pm/elixir/).
 
-In this introduction, we have laid the groundwork to finally write our first macro, so let’s move to the next chapter.
+В этом введении мы заложили основу для написания нашего первого макроса, поэтому перейдём же к следующей главе.
