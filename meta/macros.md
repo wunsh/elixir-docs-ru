@@ -6,7 +6,7 @@ title: Макросы
 
 ## Введение
 
-Несмотря на то, что Эликсир пытается обеспечить безопасную среду для макросов, основная ответственность за написание чистого кода с помощью макросов ложится на разработчиков. Писать макросы сложнее, чем обычные функции на Эликсире, и соответсвенно их не стоит использовать, когда в них нет нужды. Так что пишите и применяйте макросы со всей ответственностью.
+Несмотря на то, что Эликсир пытается обеспечить безопасную среду для макросов, основная ответственность за написание чистого кода с помощью макросов ложится на разработчиков. Писать макросы сложнее, чем обычные функции на Эликсире, и соответственно их не стоит использовать, когда в них нет нужды. Так что пишите и применяйте макросы со всей ответственностью.
 
 Эликсир и так предоставляет механизмы для написания обычного кода простым и понятным способом, используя встроенные структуры данных и функции. Следовательно, макросы должны использоваться исключительно в крайнем случае. Помните, что **явное лучше, чем неявное. Чистый код лучше, чем сокращённый**
 
@@ -32,7 +32,7 @@ defmodule Unless do
 end
 ```
 
-Функция получает аргументы и передаёт их в `if`. Однако, как мы узнали в [предыдущей главе](meta / quote-and-unquote.md), макрос будет получать маскирующие выражения, вводить их в quote и, в конце, возвращать другое маскирующее выражение. 
+Функция получает аргументы и передаёт их в `if`. Однако, как мы узнали в [предыдущей главе](meta/quote-and-unquote.md), макрос будет получать маскирующие выражения, вводить их в quote и, в конце, возвращать другое маскирующее выражение. 
 
 Давайте начнём с `iex`, используя модуль выше:
 
@@ -51,7 +51,7 @@ iex> Unless.fun_unless true, do: IO.puts "this should never be printed"
 nil
 ```
 
-Обратите внимание на то, что в нашей реализации макроса предложение не было возвращено, несмотря на то, что оно вывелось при реализации нашей функции. Это обусловленно тем, что аргументы вызова функции вычисляются непосредственно перед вызовом самой функции. Однако макросы не обращают внимание на свои отдельно взятые аргументы. Вместо этого, они получают аргументы в виде маскирующих выражений, которые затем преобразуются в другие маскирующие выражения. Таким образом, нам придётся переписать наш оператор `unless` в макросе на скрытый `if`.
+Обратите внимание на то, что в нашей реализации макроса предложение не было возвращено, несмотря на то, что оно вывелось при реализации нашей функции. Это обусловлено тем, что аргументы вызова функции вычисляются непосредственно перед вызовом самой функции. Однако макросы не обращают внимание на свои отдельно взятые аргументы. Вместо этого, они получают аргументы в виде маскирующих выражений, которые затем преобразуются в другие маскирующие выражения. Таким образом, нам придётся переписать наш оператор `unless` в макросе на скрытый `if`.
 
 Другими словами, при вызове:
 
@@ -104,9 +104,9 @@ end
 
 Мы может определить любые необходимые нам функции и макросы, в том числе и те, которые переопределяют встроенные определения, предоставляемые самим Эликсиром. Единственным исключением являются специальные формы Эликсира, которые не реализованы в нём и поэтому не могут быть переопределёнными априори [полный список специальных форм доступен в `Kernel.SpecialForms`](https://hexdocs.pm/elixir/).
 
-## Macros hygiene
+## Гигиена макросов
 
-Elixir macros have late resolution. This guarantees that a variable defined inside a quote won’t conflict with a variable defined in the context where that macro is expanded. For example:
+Макросы в Эликсире выполняются в последнюю очередь. Это гарантирует переменным, определённым внутри quote то, что они не будут конфликтовать с переменными, определёнными в контексте, где этот макрос расширяется. Например: 
 
 ```elixir
 defmodule Hygiene do
@@ -128,7 +128,7 @@ HygieneTest.go
 # => 13
 ```
 
-In the example above, even though the macro injects `a = 1`, it does not affect the variable `a` defined by the `go` function. If a macro wants to explicitly affect the context, it can use `var!`:
+В приведенном выше примере, несмотря на то, что макрос вводит переменной значение `a = 1`, он никаким образом не влияет на переменную `a`, определённую функцией `go`. Если макрос хочет явно повлиять на контекст, он может воспользоваться `var!`:
 
 ```elixir
 defmodule Hygiene do
@@ -150,13 +150,13 @@ HygieneTest.go
 # => 1
 ```
 
-Variable hygiene only works because Elixir annotates variables with their context. For example, a variable `x` defined on line 3 of a module would be represented as:
+Переменная гигиена работает только лишь потому, что Эликсир комментирует переменные с их контекстом. Например, переменная `x`, определённая на 3 строке модуля, будет представлена как:
 
 ```elixir
 {:x, [line: 3], nil}
 ```
 
-However, a quoted variable is represented as:
+Несмотря на это, маскирующая переменная представлена как:
 
 ```elixir
 defmodule Sample do
@@ -168,11 +168,11 @@ end
 Sample.quoted #=> {:x, [line: 3], Sample}
 ```
 
-Notice that the third element in the quoted variable is the atom `Sample`, instead of `nil`, which marks the variable as coming from the `Sample` module. Therefore, Elixir considers these two variables as coming from different contexts and handles them accordingly.
+Обратите внимание, что третьим элементом в маскирующей переменной является атом `Sample`, вместо `nil`, который отмечает переменную как поступающую из модуля `Sample`. Именно поэтому Эликсир рассматривает эти две переменные как исходящие из разных контекстов и следовательно обрабатывает их соответственно.
 
-Elixir provides similar mechanisms for imports and aliases too. This guarantees that a macro will behave as specified by its source module rather than conflicting with the target module where the macro is expanded. Hygiene can be bypassed under specific situations by using macros like `var!/2` and `alias!/2`, although one must be careful when using those as they directly change the user environment.
+Эликсир предоставляет аналогичные механизмы для импортов и псевдонимов. Это гарантирует, что макрос будет вести себя так, как указано в его исходном модуле, не противореча заданному модулю, в котором макрос расширяется. При этом, гигиена может быть обойдена в определённых ситуациях, если использовать макросы, такие как `var!/2` и `alias!/2`, несмотря на то, что при их использовании необходимо соблюдать осторожность при явном изменении пользовательской среды.
 
-Sometimes variable names might be dynamically created. In such cases, `Macro.var/2` can be used to define new variables:
+Иногда имена переменных могут быть созданы динамически. В таких случаях `Macro.var/2` может использоваться для определения новых переменных:
 
 ```elixir
 defmodule Sample do
@@ -195,13 +195,13 @@ end
 > Sample.run #=> [3, 5, 6]
 ```
 
-Take note of the second argument to `Macro.var/2`. This is the context being used and will determine hygiene as described in the next section.
+Обратите внимание на второй аргумент `Macro.var/2`. Эта ситуация использует и определяет гигиену, что описывается в следующем разделе.
 
-## The environment
+## Окружающая среда
 
-When calling `Macro.expand_once/2` earlier in this chapter, we used the special form `__ENV__`.
+При вызове `Macro.expand_once/2` ранее в этой главе, мы использовали специальную форму `__ENV__`.
 
-`__ENV__` returns an instance of the `Macro.Env` struct which contains useful information about the compilation environment, including the current module, file, and line, all variables defined in the current scope, as well as imports, requires and so on:
+`__ENV__` возвращает экземпляр структуры `Macro.Env`, который содержит полезную информацию о среде компиляции, включая текущий модуль, файл и строку, все переменные, определённые в текущей области, а также импорты, требования и т.д:
 
 ```iex
 iex> __ENV__.module
@@ -216,13 +216,13 @@ iex> __ENV__.requires
 [IEx.Helpers, Integer, Kernel, Kernel.Typespec]
 ```
 
-Many of the functions in the `Macro` module expect an environment. You can read more about these functions in [the docs for the `Macro` module](https://hexdocs.pm/elixir/) and learn more about the compilation environment in the [docs for `Macro.Env`](https://hexdocs.pm/elixir/).
+Многие функции в модуле `Macro` расчитывают на среду. Подробнее об этих функциях вы можете узнать в [документации модуля `Макрос`](https://hexdocs.pm/elixir/), а также узнать больше о среде компиляции в [документации для `Macro.Env`](https://hexdocs.pm/elixir/).
 
-## Private macros
+## Частные макросы
 
-Elixir also supports private macros via `defmacrop`. As private functions, these macros are only available inside the module that defines them, and only at compilation time.
+Эликсир также поддерживает частные макросы через `defmacrop`. В качестве частных функций эти макросы доступны только в модуле, который их определяет, и только во время компиляции.
 
-It is important that a macro is defined before its usage. Failing to define a macro before its invocation will raise an error at runtime, since the macro won’t be expanded and will be translated to a function call:
+Важно, чтобы такой макрос был определён до его непосредственного использования. Невозможность определить макрос до его вызова вызовет ошибку во время выполнения, поскольку макрос не будет расширяться и будет переведен в вызов функции:
 
 ```iex
 iex> defmodule Sample do
@@ -232,19 +232,19 @@ iex> defmodule Sample do
 ** (CompileError) iex:2: function two/0 undefined
 ```
 
-## Write macros responsibly
+## Пишите макросы ответственно
 
-Macros are a powerful construct and Elixir provides many mechanisms to ensure they are used responsibly.
+Макросы являются мощной конструкцией, и Эликсир предоставляет множество механизмов для их ответственного использования.
 
-* Macros are hygienic: by default, variables defined inside a macro are not going to affect the user code. Furthermore, function calls and aliases available in the macro context are not going to leak into the user context.
+* Макросы гигиеничны: по умолчанию, переменные, определённые внутри макроса, не будут влиять на код пользователя. Кроме того, вызовы функций и псевдонимы, доступные в контексте макросов, не будут протекать в контексте пользователя.
 
-* Macros are lexical: it is impossible to inject code or macros globally. In order to use a macro, you need to explicitly `require` or `import` the module that defines the macro.
+* Макросы лексические: невозможно вводить код или макросы глобально. Чтобы использовать макрос, вам необходимо явно `потребовать` или `импортировать` модуль, определяющий макрос.
 
-* Macros are explicit: it is impossible to run a macro without explicitly invoking it. For example, some languages allow developers to completely rewrite functions behind the scenes, often via parse transforms or via some reflection mechanisms. In Elixir, a macro must be explicitly invoked in the caller during compilation time.
+* Макросы явны: невозможно запустить макрос без его явного вызова. Например, некоторые языки позволяют разработчикам полностью переписывать функции скрыто, часто с помощью синтаксических преобразований или с помощью некоторых механизмов рефлексии. В Эликсире макрос должен быть явно вызван в вызывающем макросе во время компиляции.
 
-* Macros’ language is clear: many languages provide syntax shortcuts for `quote` and `unquote`. In Elixir, we preferred to have them explicitly spelled out, in order to clearly delimit the boundaries of a macro definition and its quoted expressions.
+* Язык макросов ясен: многие языки предоставляют синтаксический сахар для `quote` и `unquote`. В Эликсире же мы предпочли, чтобы они были изложены явным образом, дабы чётко разграничить определение макроса и его маскирующие выражения.
 
-Even with such guarantees, the developer plays a big role when writing macros responsibly. If you are confident you need to resort to macros, remember that macros are not your API. Keep your macro definitions short, including their quoted contents. For example, instead of writing a macro like this:
+Даже при таких гарантиях, разработчик играет весомую роль при написании макросов ответственно. Если вы уверены, что вам нужно прибегнуть к макросам, всегда помните, что они не являются вашим API. Держите свои определения макросов короткими, включая их маскирующее содержание. Например, вместо написания макроса, сделайте что-нибудь похожее:
 
 ```elixir
 defmodule MyModule do
@@ -260,7 +260,7 @@ defmodule MyModule do
 end
 ```
 
-write:
+пишите:
 
 ```elixir
 defmodule MyModule do
@@ -282,6 +282,6 @@ defmodule MyModule do
 end
 ```
 
-This makes your code clearer and easier to test and maintain, as you can invoke and test `do_this_that_and_that/3` directly. It also helps you design an actual API for developers that do not want to rely on macros.
+Это делает ваш код более понятным и простым в тестировании и обслуживании, так как вы можете напрямую вызывать и выполнять проверку `do_this_that_and_that/3`. Это также помогает вам разрабатывать API для разработчиков, которые не хотят полагаться на макросы.
 
-With those lessons, we finish our introduction to macros. The next chapter is a brief discussion on DSLs that shows how we can mix macros and module attributes to annotate and extend modules and functions.
+Завершая этот урок, мы заканчиваем наше знакомство с макросами. Следующая глава представляет собой краткое обсуждение DSL, в котором показано, как мы можем смешивать макросы и атрибуты модуля воедино для аннотации и расширения модулей и функций.
