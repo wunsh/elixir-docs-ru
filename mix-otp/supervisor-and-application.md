@@ -124,31 +124,31 @@ In practice, we rarely start the application supervisor manually. Instead, it is
 
 Мы также можем настроить генерируемый файл `.app`, изменив значения, возвращаемые `application/0` внутри нашего файла проекта `mix.exs`. Мы скоро сделаем наши первые изменения.
 
-### Starting applications
+### Запуск приложений
 
-When we define a `.app` file, which is the application specification, we are able to start and stop the application as a whole. We haven't worried about this so far for two reasons:
+Когда мы определяем файл `.app`, который является спецификацией приложения, мы можем запускать и останавливать приложение целиком. До сих пор мы не думали об этом по двум причинам:
 
-1. Mix automatically starts our current application for us
+1. Mix автоматически запускал приложение за нас
 
-2. Even if Mix didn't start our application for us, our application does not yet do anything when it starts
+2. Даже если Mix не запускал наше приложение за нас, оно ничего не делало при запуске
 
-In any case, let's see how Mix starts the application for us. Let's start a project console with `iex -S mix` and try:
+В любом случае, давайте посмотрим, как Mix запускает приложение за нас. Откройте консоль проекта с помощью `iex -S mix` и попробуйте:
 
 ```iex
 iex> Application.start(:kv)
 {:error, {:already_started, :kv}}
 ```
 
-Oops, it's already started. Mix normally starts the whole hierarchy of applications defined in our project's `mix.exs` file and it does the same for all dependencies if they depend on other applications.
+Упс, оно уже запущено. Mix по умолчанию запускает всю иерархию приложений, объявленную в файле проекта `mix.exs` и то же происходит со всеми зависимостями, если они зависят от других приложений.
 
-We can pass an option to Mix to ask it to not start our application. Let's give it a try by running `iex -S mix run --no-start`:
+Мы можем с помощью опций запустить Mix с указанием не запускать приложение. Попробуйте ввести в консоль `iex -S mix run --no-start`:
 
 ```iex
 iex> Application.start(:kv)
 :ok
 ```
 
-We can stop our `:kv` application as well as the `:logger` application, which is started by default with Elixir:
+Мы можем остановить наше приложение `:kv` и, точно так же, приложение `:logger`, которое запустилось по умолчанию вместе с Эликсиром:
 
 ```iex
 iex> Application.stop(:kv)
@@ -157,23 +157,23 @@ iex> Application.stop(:logger)
 :ok
 ```
 
-And let's try to start our application again:
+И давайте попробуем запустить наше приложение снова:
 
 ```iex
 iex> Application.start(:kv)
 {:error, {:not_started, :logger}}
 ```
 
-Now we get an error because an application that `:kv` depends on (`:logger` in this case) isn't started. We need to either start each application manually in the correct order or call `Application.ensure_all_started` as follows:
+Сейчас мы получаем ошибку, потому что какая-то из зависимостей `:kv` (в данном случае `:logger`) не запущена. Нам нужно также запустить каждое приложение внучную в правильном порядке или вызвать `Application.ensure_all_started` как показано ниже:
 
 ```iex
 iex> Application.ensure_all_started(:kv)
 {:ok, [:logger, :kv]}
 ```
 
-Nothing really exciting happens but it shows how we can control our application.
+Ничего удивительного не произошло, но мы увидели, как можем контроллировать наше приложение.
 
-> When you run `iex -S mix`, it is equivalent to running `iex -S mix run`. So whenever you need to pass more options to Mix when starting IEx, it's a matter of typing `iex -S mix run` and then passing any options the `run` command accepts. You can find more information about `run` by running `mix help run` in your shell.
+> Когда вы запускаете `iex -S mix`, это эквивалентно запуску `iex -S mix run`. Когда вам нужно передать больше опций в Mix при запуске IEx, важно написать именно `iex -S mix run` и затем передать любые опции, которые принимает команда `run`. Вы можете получить больше информации о `run` с помощью `mix help run` в вашей консоли.
 
 ## The application callback
 
