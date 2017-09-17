@@ -61,12 +61,15 @@ Unless.macro_unless true, do: IO.puts "this should never be printed"
 
 Наш макрос `macro_unless` получил следующее:
 
+{% raw %}
 ```erlang
 macro_unless(true, [do: {{:., [], [{:__aliases__, [alias: false], [:IO]}, :puts]}, [], ["this should never be printed"]}])
 ```
+{% endraw %}
 
 И затем он вернул маскирующее выражение следующим образом:
 
+{% raw %}
 ```erlang
 {:if, [],
  [{:!, [], [true]},
@@ -75,6 +78,7 @@ macro_unless(true, [do: {{:., [], [{:__aliases__, [alias: false], [:IO]}, :puts]
        [], [:IO]},
       :puts]}, [], ["this should never be printed"]}]]}
 ```
+{% endraw %}
 
 На самом деле, мы можем проверить это, используя `Macro.expand_once/2`:
 
