@@ -32,25 +32,25 @@ end
 MyValidator.validate(user)
 ```
 
-Of all the approaches above, the first is definitely the most flexible. If our domain rules can be encoded with data structures, they are by far the easiest to compose and implement, as Elixir’s standard library is filled with functions for manipulating different data types.
+Из всех вышеперечисленных подходов, первый, безусловно, является наиболее гибким. Если нормы нашего предмета могут быть закодированы структурами данных, значит, их легче всего создавать и реализовывать, поскольку стандартная библиотека Эликсира просто напичкана функциями для управления различными типами данных.
 
-The second approach uses function calls which better suits more complex APIs (for example, if you need to pass many options) and reads nicely in Elixir thanks to the pipe operator.
+Второй подход использует вызовы функций, которые лучше подходят для более сложных API, например, если вам необходимо передать множество опций. К тому же, он хорошо читается в Эликсире, благодаря pipe оператору.
 
-The third approach uses macros, and is by far the most complex. It will take more lines of code to implement, it is hard and expensive to test (compared to testing simple functions), and it limits how the user may use the library since all validations need to be defined inside a module.
+Третий подход использует макросы и, безусловно, является сложным. Для его реализации нам потребуется больше строк кода, что делает его более трудным для восприятия и дорогостоящим в тестировании, если сравнивать с тестированием простых функций. А ещё, он ограничивает пользователя при работе с библиотекой, поскольку все проверки обязаны определяться внутри модуля.
 
-To drive the point home, imagine you want to validate a certain attribute only if a given condition is met. We could easily achieve it with the first solution, by manipulating the data structure accordingly, or with the second solution by using conditionals (if/else) before invoking the function. However, it is impossible to do so with the macros approach unless its DSL is augmented.
+Чтобы лучше понять это, представьте, что вы хотите проверить определённый атрибут только лишь в том случае, если выполнено заданное условие. Мы могли бы легко сделать это с помощью первого решения, манипулируя соответственным образом структурой данных или же вообще, благодаря второму решению, используя условные операторы (if/else) перед вызовом функции. Однако, всё это невозможно сделать, используя подход с макросами, если его DSL не будет дополнен.
 
-In other words:
+Другими словами:
 
 ```
 data > functions > macros
 ```
 
-That said, there are still cases where using macros and modules to build domain-specific languages is useful. Since we have explored data structures and function definitions in the Getting Started guide, this chapter will explore how to use macros and module attributes to tackle more complex DSLs.
+Тем не менее, все ешё есть случаи, когда использование макросов и модулей для создания предметно-ориентированных языков оказывается чем-то полезным. Поскольку мы изучили структуры данных и определения функций в руководстве Getting Started, в этой главе будет рассмотрено, как использовать макросы и атрибуты модуля для решения проблем более сложных DSL.
 
-# Building our own test case
+# Создание нашего собственного тестового примера
 
-The goal in this chapter is to build a module named `TestCase` that allows us to write the following:
+Целью этой главы является создание модуля с именем `TestCase`, что позволяет нам написать следующее:
 
 ```elixir
 defmodule MyTest do
@@ -68,11 +68,11 @@ end
 MyTest.run
 ```
 
-In the example above, by using `TestCase`, we can write tests using the `test` macro, which defines a function named `run` to automatically run all tests for us. Our prototype will rely on the match operator (`=`) as a mechanism to do assertions.
+В приведённом выше примере, используя `TestCase`, мы можем писать тесты с помощью макроса `test`, который определяет функцию с именем `run` для автоматического запуска всех наших тестов. Таким образом, наш прототип будет полагаться на оператор соответствия (`=`) как механизм для выполнения заданных утверждений.
 
-# The `test` macro
+# Макрос `test`
 
-Let’s start by creating a module that defines and imports the `test` macro when used:
+Начнём с создания модуля, который определяет и импортирует макрос `test` при его использовании:
 
 ```elixir
 defmodule TestCase do
@@ -106,7 +106,7 @@ defmodule TestCase do
 end
 ```
 
-Assuming we defined `TestCase` in a file named `tests.exs`, we can open it up by running `iex tests.exs` and define our first tests:
+Предполагая, что мы определили `TestCase` в файле с именем `tests.exs`, мы можем открыть его, запустив `iex tests.exs` и, таким образом, определим наши первые тесты:
 
 ```iex
 iex> defmodule MyTest do
@@ -118,22 +118,22 @@ iex> defmodule MyTest do
 ...> end
 ```
 
-For now, we don’t have a mechanism to run tests, but we know that a function named “test hello” was defined behind the scenes. When we invoke it, it should fail:
+На данный момент у нас нет механизма для запуска тестов и мы с вами знаем, что функция “test hello” была определена тайно. Поэтому, когда мы вызываем на ней наш тест, он должен не пройти:
 
 ```iex
 iex> MyTest."test hello"()
 ** (MatchError) no match of right hand side value: "world"
 ```
 
-# Storing information with attributes
+# Хранение информации с атрибутами
 
-In order to finish our `TestCase` implementation, we need to be able to access all defined test cases. One way of doing this is by retrieving the tests at runtime via `__MODULE__.__info__(:functions)`, which returns a list of all functions in a given module. However, considering that we may want to store more information about each test besides the test name, a more flexible approach is required.
+Чтобы завершить реализацию нашего `TestCase`, мы должны иметь доступ ко всем нашим тестам. Один из способов сделать это - получать тесты во время их выполнения с помощью `__MODULE__.__info__(:functions)`, который возвращает список всех функций в текущем модуле. Однако, учитывая, что мы можем хранить гораздо больше информации о каждом тесте, за исключением его имени, нам необходим более гибкий подход.
 
-When discussing module attributes in earlier chapters, we mentioned how they can be used as temporary storage. That’s exactly the property we will apply in this section.
+При обсуждении атрибутов модуля в предыдущих главах, мы упоминали, как их можно использовать в качестве временного хранилища. Именно это их свойство мы применим в этом разделе.
 
-In the `__using__/1` implementation, we will initialize a module attribute named `@tests` to an empty list, then store the name of each defined test in this attribute so the tests can be invoked from the `run` function.
+В реализации `__using__/1` мы инициализируем атрибут модуля с именем `@tests` в пустой список, а затем сохраняем имя каждого определённого теста на этом атрибуте, чтобы они могли быть вызваны из функции `run`.
 
-Here is the updated code for the `TestCase` module:
+Вот обновленный код модуля `Test Case`:
 
 ```elixir
 defmodule TestCase do
@@ -185,7 +185,7 @@ defmodule TestCase do
 end
 ```
 
-By starting a new IEx session, we can now define our tests and run them:
+Начав новую сессию в IEx, мы теперь можем определить и запустить наши тесты:
 
 ```iex
 iex> defmodule MyTest do
@@ -200,6 +200,6 @@ Running test hello
 ** (MatchError) no match of right hand side value: "world"
 ```
 
-Although we have overlooked some details, this is the main idea behind creating domain-specific modules in Elixir. Macros enable us to return quoted expressions that are executed in the caller, which we can then use to transform code and store relevant information in the target module via module attributes. Finally, callbacks such as `@before_compile` allow us to inject code into the module when its definition is complete.
+Несмотря на то, что мы не затронули некоторые детали, это основная идея создания предметно-ориентированных модулей в Эликсире. Макросы позволяют нам возвращать маскирующие выражения, выполняющиеся в вызывающем их выражении, которые мы затем можем использовать для преобразования кода и хранения соответствующей информации в целевом модуле с помощью его атрибутов. И наконец, обратные вызовы, такие как `@before_compile`, позволяют нам вводить код в модуль по завершению его определения.
 
-Besides `@before_compile`, there are other useful module attributes like `@on_definition` and `@after_compile`, which you can read more about in [the docs for the `Module` module](https://hexdocs.pm/elixir/). You can also find useful information about macros and the compilation environment in the documentation for the [`Macro` module](https://hexdocs.pm/elixir/) and [`Macro.Env`](https://hexdocs.pm/elixir/).
+Помимо `@before_compile`, существуют в модулях и другие полезные атрибуты, например, такие как `@on_definition` и `@after_compile`, о которых вы можете почитать в [документации для модуля `Module`](https://hexdocs.pm/elixir/). А также, вы можете найти полезную информацию о макросах и среде компиляции в документации для [модуля `Macro`](https://hexdocs.pm/elixir/) и [`Macro.Env`](https://hexdocs.pm/elixir/).
