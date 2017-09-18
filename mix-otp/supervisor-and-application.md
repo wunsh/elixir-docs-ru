@@ -223,13 +223,12 @@ iex> KV.Registry.lookup(KV.Registry, "shopping")
 
 Не забудьте вернуть код в нормальное состояние до продолжения этого руководства!
 
-## Projects or applications?
+## Проекты или приложения?
 
-Mix makes a distinction between projects and applications. Based on the contents of our `mix.exs` file, we would say we have a Mix project that defines the `:kv` application. As we will see in later chapters, there are projects that don't define any application.
+Для Mix есть разница между проектами и приложениями. Основываясь на содержимом нашего файла `mix.exs`, мы могли бы сказать, что у нас Mix проект, который определяет приложение `:kv`. Как мы увидим в дальнейших главах, существуют проекты, которые не определяют ни одного приложения.
 
-When we say "project" you should think about Mix. Mix is the tool that manages your project. It knows how to compile your project, test your project and more. It also knows how to compile and start the application relevant to your project.
+Когда мы говорим "проект", вы должны думать о Mix. Mix - это инструмент управления вашим проектом. Он знает, как компилировать ваш проект, как его тестировать и прочее. он также знает, как компилировать и запускать приложение, относящееся к вашему проекту.
 
-When we talk about applications, we talk about <abbr title="Open Telecom Platform">OTP</abbr>. Applications are the entities that are started and stopped as a whole by the runtime. You can learn more about applications and how they relate to booting and shutting down of your system as a whole in the [docs for the Application module](https://hexdocs.pm/elixir/Application.html).
+Когда мы говорим о приложениях, мы говорим об <abbr title="Открытая Телекоммуникационная платформа">ОТП</abbr>. Приложения - это сущности, которые запускаются и останавливаются целиком во время выполнения. Вы можете узнать больше о приложениях и том, как они относятся к запуску и завершению работы вашей системы в [документации к модулю Application](https://hexdocs.pm/elixir/Application.html).
 
-Next let's learn about one special type of supervisor that is designed to start and shut down children dynamically, called simple one for one.
-
+Далее давайте познакомимся с одним особым типом супервизора, который разработан для запуска и отключения потомков динамически, вызывая их один за другим.
