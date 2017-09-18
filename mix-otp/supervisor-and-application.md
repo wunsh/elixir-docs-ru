@@ -175,13 +175,13 @@ iex> Application.ensure_all_started(:kv)
 
 > Когда вы запускаете `iex -S mix`, это эквивалентно запуску `iex -S mix run`. Когда вам нужно передать больше опций в Mix при запуске IEx, важно написать именно `iex -S mix run` и затем передать любые опции, которые принимает команда `run`. Вы можете получить больше информации о `run` с помощью `mix help run` в вашей консоли.
 
-## The application callback
+## Обратный вызов приложения
 
-Since we spent all this time talking about how applications are started and stopped, there must be a way to do something useful when the application starts. And indeed, there is!
+Мы всё время говорим о том, как приложения запускаются и останавливаются, а занчит должен быть способ сделать что-нибудь полезное, когда приложение стартует. И, разумеется, он есть!
 
-We can specify an application callback function. This is a function that will be invoked when the application starts. The function must return a result of `{:ok, pid}`, where `pid` is the process identifier of a supervisor process.
+Мы можем определить функцию обратного вызова приложения. Это функция, которая будет выполнена, когда приложение запустится. Функция должна возвращать результатом `{:ok, pid}`, где `pid` - идентификатор процесса в процессе-супервизоре.
 
-We can configure the application callback in two steps. First, open up the `mix.exs` file and change `def application` to the following:
+Мы можем создать обратный вызов в два шага. Первый: откройте файл `mix.exs` и измените `def application` как показано ниже:
 
 ```elixir
   def application do
@@ -192,9 +192,9 @@ We can configure the application callback in two steps. First, open up the `mix.
   end
 ```
 
-The `:mod` option specifies the "application callback module", followed by the arguments to be passed on application start. The application callback module can be any module that implements the [Application](https://hexdocs.pm/elixir/Application.html) behaviour.
+Опция `:mod` определяет "модуль обратного вызова приложения", и аргументы, передаваемые туда при запуске приложения. Модулем обратного вызова приложения может быть любой модуль, который реализует поведение [Application](https://hexdocs.pm/elixir/Application.html).
 
-Now that we have specified `KV` as the module callback, we need to change the `KV` module, defined in `lib/kv.ex`:
+Т.к. теперь мы задали `KV` в качестве модуля обратного вызова, нам нужно изменить модуль `KV`, определённый в `lib/kv.ex`:
 
 ```elixir
 defmodule KV do
@@ -206,9 +206,9 @@ defmodule KV do
 end
 ```
 
-When we `use Application`, we need to define a couple functions, similar to when we used `Supervisor` or `GenServer`. This time we only need to define a `start/2` function. If we wanted to specify custom behaviour on application stop, we could define a `stop/1` function.
+Когда мы добавляем `use Application`, нужно определить пару функций, по аналогии с использованием `Supervisor` или `GenServer`. Сейчас нам достаточно определить только функцию `start/2`. Если бы мы хотели задать своё поведение для остановки приложения, мы могли бы определить функцию `stop/1`.
 
-Let's start our project console once again with `iex -S mix`. We will see a process named `KV.Registry` is already running:
+Давайте запустим консоль нашего проекта снова с помощью `iex -S mix`. Мы увидим, что процесс с именем `KV.Registry` уже запущен:
 
 ```iex
 iex> KV.Registry.create(KV.Registry, "shopping")
@@ -217,11 +217,11 @@ iex> KV.Registry.lookup(KV.Registry, "shopping")
 {:ok, #PID<0.88.0>}
 ```
 
-How do we know this is working? After all, we are creating the bucket and then looking it up; of course it should work, right? Well, remember that `KV.Registry.create/2` uses `GenServer.cast/2`, and therefore will return `:ok` regardless of whether the message finds its target or not. At that point, we don't know whether the supervisor and the server are up, and if the bucket was created. However, `KV.Registry.lookup/2` uses `GenServer.call/3`, and will block and wait for a response from the server. We do get a positive response, so we know all is up and running.
+Как мы поняли, что это работает? Мы создали корзину и нашли её; это должно работать, так? Хорошо, вспомним, что `KV.Registry.create/2` использует `GenServer.cast/2`, и возвращает `:ok` независимо от того, нашло сообщение получателя или нет. В этот момент мы не знаем, запущены ли супервизор и сервер, и создана ли корзина. Однако, `KV.Registry.lookup/2` использует `GenServer.call/3`, и будет обязательно ждать ответа от сервера. Мы получаем положительный ответ, поэтому мы знаем, что всё запущено и работает.
 
-For an experiment, try reimplementing `KV.Registry.create/2` to use `GenServer.call/3` instead, and momentarily disable the application callback. Run the code above on the console again, and you will see the creation step fails straight away.
+Ради эксперимента попробуйте переделать `KV.Registry.create/2` на использованием `GenServer.call/3` и тут же отключите обратный вызов приложения. Запустите код выше в консоли снова и вы увидете, что шаг с созданием тут же будет падать.
 
-Don't forget to bring the code back to normal before resuming this tutorial!
+Не забудьте вернуть код в нормальное состояние до продолжения этого руководства!
 
 ## Projects or applications?
 
