@@ -1,10 +1,10 @@
 ---
-title: Task and gen_tcp
+title: Task и gen_tcp
 ---
 
 # {{ page.title }}
 
-In this chapter, we are going to learn how to use [Erlang's `:gen_tcp` module](http://www.erlang.org/doc/man/gen_tcp.html) to serve requests. This provides a great opportunity to explore Elixir's `Task` module. In future chapters, we will expand our server so it can actually serve the commands.
+В этой главе мы изучим, как использовать [Модуль Эрланга `:gen_tcp`](http://www.erlang.org/doc/man/gen_tcp.html) для обработки запросов. При этом мы получим возможность посмотреть также модуль Эликсира `Task`. В дальнейших главах мы расширим наш сервер так, чтобы он действительно мог обрабатывать команды.
 
 ## Echo server
 
