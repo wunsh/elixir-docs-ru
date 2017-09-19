@@ -6,17 +6,17 @@ title: Task и gen_tcp
 
 В этой главе мы изучим, как использовать [Модуль Эрланга `:gen_tcp`](http://www.erlang.org/doc/man/gen_tcp.html) для обработки запросов. При этом мы получим возможность посмотреть также модуль Эликсира `Task`. В дальнейших главах мы расширим наш сервер так, чтобы он действительно мог обрабатывать команды.
 
-## Echo server
+## Эхо-сервер
 
-We will start our TCP server by first implementing an echo server. It will send a response with the text it received in the request. We will slowly improve our server until it is supervised and ready to handle multiple connections.
+Мы начнём наш TCP сервер с реализации эхо-сервера. Он будет посылать в ответ тот текст, который он получил в запросе. Мы будем постепенно улучшать наш сервер, пока он не будет управляться супервизором и будет готов к работе с множеством подключений.
 
-A TCP server, in broad strokes, performs the following steps:
+TCP сервер, грубо говоря, делает следующие шаги:
 
-  1. Listens to a port until the port is available and it gets hold of the socket
-  2. Waits for a client connection on that port and accepts it
-  3. Reads the client request and writes a response back
+1. Слушает порт, пока порт доступен и удерживает сокет
+2. Ждёт подключение клиента на этом порту и принимает его
+3. Читает запросы клиента и отправляет ответы
 
-Let's implement those steps. Move to the `apps/kv_server` application, open up `lib/kv_server.ex`, and add the following functions:
+Давайте реализуем эти шаги. Перейдите к приложению `apps/kv_server`, откройте `lib/kv_server.ix` и добавьте следующие функции:
 
 ```elixir
 require Logger
@@ -59,33 +59,33 @@ defp write_line(line, socket) do
 end
 ```
 
-We are going to start our server by calling `KVServer.accept(4040)`, where 4040 is the port. The first step in `accept/1` is to listen to the port until the socket becomes available and then call `loop_acceptor/1`. `loop_acceptor/1` is a loop accepting client connections. For each accepted connection, we call `serve/1`.
+Мы запустим наш сервер, вызвав `KVServer.accept(4040)`, где 4040 - это порт. Первый шаг в  `accept/1` - слушать порт пока сокет не станет доступен и затем вызвать `loop_acceptor/1`. `loop_acceptor/1` - цикл, принимающий подключения клиентов. Для каждого принятого подключения мы вызываем `serve/1`.
 
-`serve/1` is another loop that reads a line from the socket and writes those lines back to the socket. Note that the `serve/1` function uses [the pipe operator `|>`](https://hexdocs.pm/elixir/Kernel.html#%7C%3E/2) to express this flow of operations. The pipe operator evaluates the left side and passes its result as the first argument to the function on the right side. The example above:
+`serve/1` - другой цикл, который читает строки из сокета и пишет эти строки обратно в сокет. Обратите внимание, что функция `serve/1` использует [оператор конвейера `|>`](https://hexdocs.pm/elixir/Kernel.html#%7C%3E/2) для выполнения этого потока операций. Оператор конвейера выполняет левую часть и передаёт её результат в качетве первого аргумента в функцию в правой части. Пример выше:
 
 ```elixir
 socket |> read_line() |> write_line(socket)
 ```
 
-is equivalent to:
+эквивалентен этому:
 
 ```elixir
 write_line(read_line(socket), socket)
 ```
 
-The `read_line/1` implementation receives data from the socket using `:gen_tcp.recv/2` and `write_line/2` writes to the socket using `:gen_tcp.send/2`.
+Метод `read_line/1` получает данные из сокета, используя `:gen_tcp.recv/2`, и `write_line/2` пишет в сокет, используя `:gen_tcp.send/2`.
 
-Note that `serve/1` is an infinite loop called sequentially inside `loop_acceptor/1`, so the tail call to `loop_acceptor/1` is never reached and could be avoided. However, as we shall see, we will need to execute `serve/1` in a separate process, so we will need that tail call soon.
+обратите внимание, что `serve/1` - это бесконечный цикл, вызываемый последовательно внутри `loop_acceptor/1`, поэтому конечный вызов `loop_acceptor/1` никогда не будет достигнут и его можно опустить. Однако, как мы увидим, нам нужно будет выполнять `serve/1` в отдельном процессе, поэтому нам скоро понадобится этот конечный вызов.
 
-This is pretty much all we need to implement our echo server. Let's give it a try!
+Это всё, чно нам нужно для реализации нашего эхо-сервера. Давайте попробуем его в деле!
 
-Start an IEx session inside the `kv_server` application with `iex -S mix`. Inside IEx, run:
+Запустите сессию IEx внутри приложения `kv_server`, используя `iex -S mix`. В IEx запустите:
 
 ```iex
 iex> KVServer.accept(4040)
 ```
 
-The server is now running, and you will even notice the console is blocked. Let's use [a `telnet` client](https://en.wikipedia.org/wiki/Telnet) to access our server. There are clients available on most operating systems, and their command lines are generally similar:
+Сервер теперь запущен, и вы можете увидеть, что консоль заблокирована. Давайте используем [клиент `telnet`](https://en.wikipedia.org/wiki/Telnet) для доступа к нашему серверу. Такие клиенты доступны для многих операционных систем, а их команды обычно похожи:
 
 ```bash
 $ telnet 127.0.0.1 4040
@@ -100,20 +100,20 @@ you are looking for?
 you are looking for?
 ```
 
-Type "hello", press enter, and you will get "hello" back. Excellent!
+Введите "hello", нажмите Enter, и вы получите "hello" в ответ. Прекрасно!
 
-My particular telnet client can be exited by typing `ctrl + ]`, typing `quit`, and pressing `<Enter>`, but your client may require different steps.
+Мой telnet клиент можно закрыть, нажав `ctrl + ]`, набрав следом `quit`, и нажав `<Enter>`, но ваш клиент может предусматривать другую последовательность действий.
 
-Once you exit the telnet client, you will likely see an error in the IEx session:
+Когда вы закроете клиент telnet, вы скорее всего увидите ошибку в сессии IEx:
 
     ** (MatchError) no match of right hand side value: {:error, :closed}
         (kv_server) lib/kv_server.ex:45: KVServer.read_line/1
         (kv_server) lib/kv_server.ex:37: KVServer.serve/1
         (kv_server) lib/kv_server.ex:30: KVServer.loop_acceptor/1
 
-That's because we were expecting data from `:gen_tcp.recv/2` but the client closed the connection. We need to handle such cases better in future revisions of our server.
+Это происходит, потому что мы ждём данные от `:gen_tcp.recv/2`, но клиент закрывает соединение. Нам нужно лучше обрабатывать подобные сценарии в будущих версиях нашего сервера.
 
-For now, there is a more important bug we need to fix: what happens if our TCP acceptor crashes? Since there is no supervision, the server dies and we won't be able to serve more requests, because it won't be restarted. That's why we must move our server to a supervision tree.
+Пока у нас есть более важные проблемы, которые нужно решить: что произойдёт, если наш приёмник TCP соединений упадёт? Т.к. у нас нет супервизора, сервер умрёт и мы не сможем больше обрабатывать запросы, потому что он не перезапустится. Поэтому нам необходимо поместить наш сервер в дерево супервизора.
 
 ## Tasks
 
