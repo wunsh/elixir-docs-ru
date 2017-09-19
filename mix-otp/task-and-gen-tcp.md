@@ -115,13 +115,13 @@ you are looking for?
 
 Пока у нас есть более важные проблемы, которые нужно решить: что произойдёт, если наш приёмник TCP соединений упадёт? Т.к. у нас нет супервизора, сервер умрёт и мы не сможем больше обрабатывать запросы, потому что он не перезапустится. Поэтому нам необходимо поместить наш сервер в дерево супервизора.
 
-## Tasks
+## Задачи
 
-We have learned about agents, generic servers, and supervisors. They are all meant to work with multiple messages or manage state. But what do we use when we only need to execute some task and that is it?
+Мы изучили агенты, генсерверы и супервизоры. Они все работают с множеством сообщений или управляют состоянием. Но что делать, если нам нужно всего лишь выполнить какую-то одну задачу?
 
-[The Task module](https://hexdocs.pm/elixir/Task.html) provides this functionality exactly. For example, it has a `start_link/3` function that receives a module, function, and arguments, allowing us to run a given function as part of a supervision tree.
+[Модуль Task](https://hexdocs.pm/elixir/Task.html) предоставляет именно такую функциональность. Например, там есть фукнция `start_link/3`, которая принимает модуль, функцию и аргументы, позволяя нам запустить переданную фукнцию как часть дерева супервизора.
 
-Let's give it a try. Open up `lib/kv_server/application.ex`, and let's change the supervisor in the `start/2` function to the following:
+Давайте попробуем на практике. Откройте `lib/kv_server/application.ex` и измените супервизор в функции `start/2` как показано ниже:
 
 ```elixir
   def start(_type, _args) do
@@ -134,7 +134,7 @@ Let's give it a try. Open up `lib/kv_server/application.ex`, and let's change th
   end
 ```
 
-With this change, we are saying that we want to run `KVServer.accept(4040)` as a task. We are hardcoding the port for now but this could be changed in a few ways, for example, by reading the port out of the system environment when starting the application:
+Этим изменением мы говорим, что хотим запустить `KVServer.accept(4040)` как задачу. Мы задали порт прямо в коде, но он может быть изменён несколькими способами, например, его можно взять из системного окружения при запуске приложения:
 
 ```elixir
 port = String.to_integer(System.get_env("PORT") || raise "missing $PORT environment variable")
@@ -142,7 +142,7 @@ port = String.to_integer(System.get_env("PORT") || raise "missing $PORT environm
 {Task, fn -> KVServer.accept(port) end}
 ```
 
-Now that the server is part of the supervision tree, it should start automatically when we run the application. Type `mix run --no-halt` in the terminal, and once again use the `telnet` client to make sure that everything still works:
+Теперь сервер является частью деева супервизора и должен запуститься автоматически при запуске приложения. Наберите `mix run --no-halt` в консоли и снова используйте клиент `telnet`, чтобы убедиться, что всё работает:
 
 ```bash
 $ telnet 127.0.0.1 4040
@@ -155,9 +155,9 @@ say me
 say me
 ```
 
-Yes, it works! However, does it *scale*?
+Да, всё отлично! Однако, может ли это решение *масштабироваться*?
 
-Try to connect two telnet clients at the same time. When you do so, you will notice that the second client doesn't echo:
+Попробуйте подключить два клиента telnet одновременно. Когда вы сделаете это, вы увидите, что второй клиент не отвечает:
 
 ```bash
 $ telnet 127.0.0.1 4040
@@ -169,7 +169,7 @@ hello?
 HELLOOOOOO?
 ```
 
-It doesn't seem to work at all. That's because we are serving requests in the same process that are accepting connections. When one client is connected, we can't accept another client.
+Не похоже, что он вообще работает. это происходит потому, что мы обрабатываем запросы в том же процессе, в котором принимаем подключения. Когда один клиент подключен, мы не можем подключить другой клиент.
 
 ## Task supervisor
 
