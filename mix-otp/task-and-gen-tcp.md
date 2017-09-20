@@ -81,7 +81,7 @@ write_line(read_line(socket), socket)
 
 Запустите сессию IEx внутри приложения `kv_server`, используя `iex -S mix`. В IEx запустите:
 
-```iex
+```elixir
 iex> KVServer.accept(4040)
 ```
 

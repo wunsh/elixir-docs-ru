@@ -42,7 +42,7 @@ $ iex macros.exs
 
 И поиграем с теми определениями:
 
-```iex
+```elixir
 iex> require Unless
 iex> Unless.macro_unless true, do: IO.puts "this should never be printed"
 nil
@@ -82,7 +82,7 @@ macro_unless(true, [do: {{:., [], [{:__aliases__, [alias: false], [:IO]}, :puts]
 
 На самом деле, мы можем проверить это, используя `Macro.expand_once/2`:
 
-```iex
+```elixir
 iex> expr = quote do: Unless.macro_unless(true, do: IO.puts "this should never be printed")
 iex> res  = Macro.expand_once(expr, __ENV__)
 iex> IO.puts Macro.to_string(res)
@@ -207,7 +207,7 @@ end
 
 `__ENV__` возвращает экземпляр структуры `Macro.Env`, который содержит полезную информацию о среде компиляции, включая текущий модуль, файл и строку, все переменные, определённые в текущей области, а также импорты, требования и т.д:
 
-```iex
+```elixir
 iex> __ENV__.module
 nil
 iex> __ENV__.file
@@ -228,7 +228,7 @@ iex> __ENV__.requires
 
 Важно, чтобы такой макрос был определён до его непосредственного использования. Невозможность определить макрос до его вызова вызовет ошибку во время выполнения, поскольку макрос не будет расширяться и будет переведен в вызов функции:
 
-```iex
+```elixir
 iex> defmodule Sample do
 ...>  def four, do: two + two
 ...>  defmacrop two, do: 2

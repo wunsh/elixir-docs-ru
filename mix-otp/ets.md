@@ -16,7 +16,7 @@ ETS allows us to store any Elixir term in an in-memory table. Working with ETS t
 
 ETS позволяет нам хранить любой терм Эликсира в таблице в памяти. Работа с таблицами ETS возможна через [модуль Эрланга `:ets`](http://www.erlang.org/doc/man/ets.html):
 
-```iex
+```elixir
 iex> table = :ets.new(:buckets_registry, [:set, :protected])
 8207
 iex> :ets.insert(table, {"foo", self()})
@@ -29,7 +29,7 @@ iex> :ets.lookup(table, "foo")
 
 Таблицы ETS могут быть также именованными, позволяя получать доступ к ним, передавая имя:
 
-```iex
+```elixir
 iex> :ets.new(:buckets_registry, [:named_table])
 :buckets_registry
 iex> :ets.insert(:buckets_registry, {"foo", self()})

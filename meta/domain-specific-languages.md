@@ -108,7 +108,7 @@ end
 
 Предполагая, что мы определили `TestCase` в файле с именем `tests.exs`, мы можем открыть его, запустив `iex tests.exs` и, таким образом, определим наши первые тесты:
 
-```iex
+```elixir
 iex> defmodule MyTest do
 ...>   use TestCase
 ...>
@@ -120,7 +120,7 @@ iex> defmodule MyTest do
 
 На данный момент у нас нет механизма для запуска тестов и мы с вами знаем, что функция “test hello” была определена тайно. Поэтому, когда мы вызываем на ней наш тест, он должен не пройти:
 
-```iex
+```elixir
 iex> MyTest."test hello"()
 ** (MatchError) no match of right hand side value: "world"
 ```
@@ -187,7 +187,7 @@ end
 
 Начав новую сессию в IEx, мы теперь можем определить и запустить наши тесты:
 
-```iex
+```elixir
 iex> defmodule MyTest do
 ...>   use TestCase
 ...>

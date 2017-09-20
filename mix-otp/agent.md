@@ -31,7 +31,7 @@ $ iex -S mix
 ```
 И немного поиграем с агентами:
 
-```iex
+```elixir
 iex> {:ok, agent} = Agent.start_link fn -> [] end
 {:ok, #PID<0.57.0>}
 iex> Agent.update(agent, fn list -> ["eggs" | list] end)

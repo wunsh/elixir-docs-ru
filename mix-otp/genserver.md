@@ -20,7 +20,7 @@ OK
 
 Поскольку агенты - процессы, каждая корзина имеет идентификатор процесса (PID), но не имеет названия. Мы узнали о регистрации имени [в главе Процессы](/getting-started/processes.html) и вы могли бы решить эту проблему с помощью такой регистрации. Например, мы могли бы создать корзину так:
 
-```iex
+```elixir
 iex> Agent.start_link(fn -> %{} end, name: :shopping)
 {:ok, #PID<0.43.0>}
 iex> KV.Bucket.put(:shopping, "milk", 1)
@@ -178,7 +178,7 @@ end
 
 Давайте поиграем с мониторами, запустив новую консоль с параметрами `iex ‐S mix`:
 
-```iex
+```elixir
 iex> {:ok, pid} = KV.Bucket.start_link
 {:ok, #PID<0.66.0>}
 iex> Process.monitor(pid)
