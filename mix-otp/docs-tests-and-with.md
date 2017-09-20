@@ -1,5 +1,7 @@
 ---
 title: Доктесты, паттерны и `with`
+next_page: mix-otp/distributed-tasks-and-configuration
+prev_page: mix-otp/task-and-gen-tcp
 ---
 
 В этой главе мы реализуем код, который парсит команды, описанные в первой главе:

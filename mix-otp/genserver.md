@@ -1,5 +1,7 @@
 ---
 title: GenServer
+next_page: mix-otp/supervisor-and-application
+prev_page: mix-otp/agent
 ---
 
 В [предыдущей главе](/getting-started/mix-otp/agent.html) мы использовали агенты (agents), чтобы представить наши корзины (buckets). В первой главе мы указали имя каждой корзины, поэтому мы можем сделать следующее:

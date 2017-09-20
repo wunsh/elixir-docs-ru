@@ -1,5 +1,7 @@
 ---
 title: alias, require и import
+next_page: module-attributes
+prev_page: io-and-the-file-system
 ---
 
 Для обеспечения повторного использования ПО, Эликсир предоставляет три директивы (`alias`, `require` и `import`), а также макрос `use`, описанные ниже:

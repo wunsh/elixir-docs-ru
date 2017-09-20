@@ -1,5 +1,7 @@
 ---
 title: Рекурсия
+next_page: enumerables-and-streams
+prev_page: modules-and-functions
 ---
 
 ## Циклы через рекурсию

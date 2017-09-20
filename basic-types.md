@@ -1,5 +1,7 @@
 ---
 title: Базовые типы
+next_page: basic-operators
+prev_page: index
 ---
 
 В этой главе мы узнаем больше о базовых типах Elixir: целых числах (integers), числах с плавающей запятой (floats), логических или булевых значениях (booleans), атомах (atoms), строках (strings), списках (lists) и кортежах (tuples). Вот некоторые базовые типы:

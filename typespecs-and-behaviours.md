@@ -1,5 +1,7 @@
 ---
 title: Спецификации типов и поведения
+next_page: erlang-libraries
+prev_page: try-catch-and-rescue
 ---
 
 ## Типы и спецификации

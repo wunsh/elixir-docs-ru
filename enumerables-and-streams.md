@@ -1,5 +1,7 @@
 ---
 title: Enumerables и Streams
+next_page: processes
+prev_page: recursion
 ---
 
 ## Перечисления (enumerables)

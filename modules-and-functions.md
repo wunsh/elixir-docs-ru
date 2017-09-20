@@ -1,5 +1,7 @@
 ---
 title: Модули и функции
+next_page: recursion
+prev_page: keywords-and-maps
 ---
 
 В Elixir мы объединяем некоторые функции в модули. Мы уже использовали много разных модулей в предыдущих главах, например [модуль `String`](https://hexdocs.pm/elixir/String.html):

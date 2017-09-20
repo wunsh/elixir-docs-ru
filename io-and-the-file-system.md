@@ -1,5 +1,7 @@
 ---
 title: Ввод/вывод и файловая система
+next_page: alias-require-and-import
+prev_page: processes
 ---
 
 Эта глава - быстрое введение в механизмы ввода/вывода и задачи, связанные с файловой системой, а также модулями [`IO`](https://hexdocs.pm/elixir/IO.html), [`File`](https://hexdocs.pm/elixir/File.html) и [`Path`](https://hexdocs.pm/elixir/Path.html).

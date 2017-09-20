@@ -1,5 +1,7 @@
 ---
 title: Операторы ветвления
+next_page: binaries-strings-and-char-lists
+prev_page: pattern-matching
 ---
 
 В этой главе мы познакомимся с управляющими конструкциями `case`, `cond` и `if`.

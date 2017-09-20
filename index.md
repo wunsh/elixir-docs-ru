@@ -1,5 +1,6 @@
 ---
 title: Документация Elixir
+next_page: basic-types
 ---
 
 Добро пожаловать!

@@ -1,5 +1,7 @@
 ---
 title: Атрибуты модулей
+next_page: structs
+prev_page: alias-require-and-import
 ---
 
 Атрибуты модулей в Эликсире решают три задачи:

@@ -1,5 +1,7 @@
 ---
 title: Куда двигаться дальше
+next_page: mix-otp/introduction-to-mix
+prev_page: erlang-libraries
 ---
 
 Хотите изучить Эликсир глубже? Продолжайте читать!

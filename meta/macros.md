@@ -1,5 +1,7 @@
 ---
 title: Макросы
+next_page: meta/domain-specific-languages
+prev_page: meta/quote-and-unquote
 ---
 
 ## Введение
