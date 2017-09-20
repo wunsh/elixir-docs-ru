@@ -1,7 +1,6 @@
 ---
 title: Enumerables и Streams
 ---
-# Перечисления и потоки
 
 ## Перечисления (enumerables)
 
