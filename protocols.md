@@ -136,9 +136,9 @@ end
 
 При таком подходе, Эликсир будет реализовывать протокол `Size` для `OtherUser`, основываясь на реализации для `Any`.
 
-### Fallback to `Any`
+### Откат к `Any`
 
-Another alternative to `@derive` is to explicitly tell the protocol to fallback to `Any` when an implementation cannot be found. This can be achieved by setting `@fallback_to_any` to `true` in the protocol definition:
+Другая альтернатива `@derive` - избыточно объявление использования `Any`, когда не найдена другая реализация. Это можно сделать, установив значение `@fallback_to_any` в `true` в определении протокола:
 
 ```elixir
 defprotocol Size do
@@ -149,19 +149,21 @@ end
 
 As we said in the previous section, the implementation of `Size` for `Any` is not one that can apply to any data type. That's one of the reasons why `@fallback_to_any` is an opt-in behaviour. For the majority of protocols, raising an error when a protocol is not implemented is the proper behaviour. That said, assuming we have implemented `Any` as in the previous section:
 
+Как мы сказали в предыдущей секции, реализация `Size` для `Any` не может быть применена ко всем типам данных. Это причина, по которой `@fallback_to-any` - опциональное поведение. Для большинства протоколов возникновение ошибки когда протокол не реализован - наиболее подходящее.
+
 ```elixir
 defimpl Size, for: Any do
   def size(_), do: 0
 end
 ```
 
-Now all data types (including structs) that have not implemented the `Size` protocol will be considered to have a size of `0`.
+Теперь все типы данных (включая структуры), которые не реализуют протокол `Size`, будут возвращать `0` при запросе размера.
 
-Which technique is best between deriving and falling back to any depends on the use case but, given Elixir developers prefer explicit over implicit, you may see many libraries pushing towards the `@derive` approach.
+Какой из подходов лучше, получение протокола через `@derive` или откат к `Any`, зависит от вашей задачи, но учитывая, что в разработке на Эликсире избыточное считается лучше, чем недостаточное, во многих библиотеках вы можете увидеть выбор в пользу использования подхода с `@derive`
 
-## Built-in protocols
+## Встроенные протоколы
 
-Elixir ships with some built-in protocols. In previous chapters, we have discussed the `Enum` module which provides many functions that work with any data structure that implements the `Enumerable` protocol:
+В Эликсир изначально встроены некотороые протоколы. В предыдущих главах мы обсуждали модуль `Enum`, который предоставляет многие функции, которые работают в любой структуре данных, которая реализует протокол `Enumerable`:
 
 ```iex
 iex> Enum.map [1, 2, 3], fn(x) -> x * 2 end
@@ -169,21 +171,22 @@ iex> Enum.map [1, 2, 3], fn(x) -> x * 2 end
 iex> Enum.reduce 1..3, 0, fn(x, acc) -> x + acc end
 6
 ```
-Another useful example is the `String.Chars` protocol, which specifies how to convert a data structure with characters to a string. It's exposed via the `to_string` function:
+
+Другой полезные пример - протокол `String.Chars`, который определяет, как конвертировать структуры с символами в строки. Это осуществляется функцией `to_string`:
 
 ```iex
 iex> to_string :hello
 "hello"
 ```
 
-Notice that string interpolation in Elixir calls the `to_string` function:
+ Обратите внимание, что интерполяция строк в Эликсире вызывает функцию `to_string`:
 
 ```iex
 iex> "age: #{25}"
 "age: 25"
 ```
 
-The snippet above only works because numbers implement the `String.Chars` protocol. Passing a tuple, for example, will lead to an error:
+Пример выше работает только потому, что числа реализуют протокол `String.Chars`. Передача кортежа, например, приведёт к ошибке:
 
 ```iex
 iex> tuple = {1, 2, 3}
@@ -192,14 +195,14 @@ iex> "tuple: #{tuple}"
 ** (Protocol.UndefinedError) protocol String.Chars not implemented for {1, 2, 3}
 ```
 
-When there is a need to "print" a more complex data structure, one can use the `inspect` function, based on the `Inspect` protocol:
+Когда есть необходимость "напечатать" более сложную структуру данных, можно использовать функцию `inspect`, основанную на протоколе `Inspect`:
 
 ```iex
 iex> "tuple: #{inspect tuple}"
 "tuple: {1, 2, 3}"
 ```
 
-The `Inspect` protocol is the protocol used to transform any data structure into a readable textual representation. This is what tools like IEx use to print results:
+Протокол `Inspect` - это протокол для трансформации любой структуры данных в читабельное текстовое предствление. Именно его инструменты вроде IEx используют для вывода результатов:
 
 ```iex
 iex> {1, 2, 3}
@@ -208,18 +211,18 @@ iex> %User{}
 %User{name: "john", age: 27}
 ```
 
-Keep in mind that, by convention, whenever the inspected value starts with `#`, it is representing a data structure in non-valid Elixir syntax. This means the inspect protocol is not reversible as information may be lost along the way:
+Помните, что есть договорённость о выводе значений, начиная с `#`, если текстовое представление не соответствует синтаксису Эликсира. Это значит, что выведенная информация не обратима в часть кода и может быть потеряна:
 
 ```iex
 iex> inspect &(&1+2)
 "#Function<6.71889879/1 in :erl_eval.expr/5>"
 ```
 
-There are other protocols in Elixir but this covers the most common ones.
+В Эликсире есть и другие протоколы, но мы рассмотрели самые частоиспользуемые.
 
-## Protocol consolidation
+## Консолидация протоколов
 
-When working with Elixir projects, using the Mix build tool, you may see the output as follows:
+При работе с проектами на Эликсире, использующими средство сборки Mix, вы можете увидеть подобный вывод:
 
 ```
 Consolidated String.Chars
@@ -230,8 +233,8 @@ Consolidated Enumerable
 Consolidated Inspect
 ```
 
-Those are all protocols that ship with Elixir and they are being consolidated. Because a protocol can dispatch to any data type, the protocol must check on every call if an implementation for the given type exists. This may be expensive.
+Это протоколы, которые входят в состав Эликсира и консолидируются в данном проекте. Т.к. протокол может быть применён к любому типу данных, он должен делать проверки при каждом вызове, существует ли реализация для нужного типа. Это может быть дорого.
 
-However, after our project is compiled using a tool like Mix, we know all modules that have been defined, including protocols and their implementations. This way, the protocol can be consolidated into a very simple and fast dispatch module.
+Однако, после компиляции нашего проекта с использованием инструмента вроде Mix, мы знаем все модули, которые определены, включая протоколы и их реализации. Это значит, что протокол может быть консолидирован в очень простой и быстрый модуль исполнения.
 
-From Elixir v1.2, protocol consolidation happens automatically for all projects. We will build our own project in the ***Mix and OTP guide***.
+Начиная с Эликсира версии 1.2, консолидация протоколов происходит автоматически для всех проектов. Мы будем осуществлять сбору нашего проекта в ***Руководстве по Mix и OTP***.
