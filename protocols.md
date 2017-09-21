@@ -72,11 +72,13 @@ iex> Size.size([1, 2, 3])
 * `Tuple`
 
 
-## Protocols and structs
+## Протоколы и структуры
 
 The power of Elixir's extensibility comes when protocols and structs are used together.
 
-In the [previous chapter](/getting-started/structs.html), we have learned that although structs are maps, they do not share protocol implementations with maps. For example, [`MapSet`](https://hexdocs.pm/elixir/MapSet.html)s (sets based on maps) are implemented as structs. Let's try to use the `Size` protocol with a `MapSet`:
+Мощность расширямости Эликсира особенно хорошо проявляет себя при использовании протоколов и структур вместе.
+
+В [предыдущей главе](/getting-started/structs.html), мы узнали, что хотя структуры являются словарями, они не разделяют реализацию протоколов словарей. Например, [`MapSet`](https://hexdocs.pm/elixir/MapSet.html) (наборы на основе словарей) реализованы как структуры. Давайте попробуем использовать протокол `Size` для `MapSet`:
 
 ```iex
 iex> Size.size(%{})
@@ -87,7 +89,7 @@ iex> Size.size(set)
 ** (Protocol.UndefinedError) protocol Size not implemented for #MapSet<[]>
 ```
 
-Instead of sharing protocol implementation with maps, structs require their own protocol implementation. Since a `MapSet` has its size precomputed and accessible through `MapSet.size/1`, we can define a `Size` implementation for it:
+Вместо разделения реализации протокола со словарями, для структур необходима их собственная реализация протоколов. Т.к. размер `MapSet` подсчитан заранее и доступен через `MapSet.size/1`, мы можем добавить его в `Size`:
 
 ```elixir
 defimpl Size, for: MapSet do
@@ -95,7 +97,7 @@ defimpl Size, for: MapSet do
 end
 ```
 
-If desired, you could come up with your own semantics for the size of your struct. Not only that, you could use structs to build more robust data types, like queues, and implement all relevant protocols, such as `Enumerable` and possibly `Size`, for this data type.
+Если хотите, вы можете добавить свою семантику для размера своих собственных структур. Кроме того, вы можете использовать структуры для создания более сложных типов данных, например, очередей, и реализовать для них все подходящие протоколы, такие как `Enumerable` и, возможно, `Size`.
 
 ```elixir
 defmodule User do
