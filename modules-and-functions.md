@@ -1,18 +1,19 @@
 ---
 title: Модули и функции
+next_page: recursion
+prev_page: keywords-and-maps
 ---
-# Модули и функции
 
 В Elixir мы объединяем некоторые функции в модули. Мы уже использовали много разных модулей в предыдущих главах, например [модуль `String`](https://hexdocs.pm/elixir/String.html):
 
-```iex
+```elixir
 iex> String.length("hello")
 5
 ```
 
 Чтобы создать свой модуль в Elixir, мы используем макрос `defmodule`. Мы используем макрос `def` для объявления функций в этом модуле:
 
-```iex
+```elixir
 iex> defmodule Math do
 ...>   def sum(a, b) do
 ...>     a + b
@@ -45,7 +46,7 @@ $ elixirc math.ex
 
 Это создаст файл `Elixir.Math.beam`, содержащий байткод описанного модуля. Если мы снова запустим `iex` снова, модуль будет доступен (`iex` должен быть запущен в той же директории, где лежит файл с байткодом):
 
-```iex
+```elixir
 iex> Math.sum(1, 2)
 3
 ```
@@ -141,7 +142,7 @@ end
 $ iex math.exs
 ```
 
-```iex
+```elixir
 iex> Math.zero?(0)
 true
 iex> fun = &Math.zero?/1
@@ -156,7 +157,7 @@ true
 
 Локальные или импортированные функции, такие как `is_function/1`, могут быть использованы без модуля:
 
-```iex
+```elixir
 iex> &is_function/1
 &:erlang.is_function/1
 iex> (&is_function/1).(fun)
@@ -165,7 +166,7 @@ true
 
 Обратите внимание, что синтаксис захвата может быть также использован в качестве сокращения для создания функций:
 
-```iex
+```elixir
 iex> fun = &(&1 + 1)
 #Function<6.71889879/1 in :erl_eval.expr/5>
 iex> fun.(1)
@@ -176,7 +177,7 @@ iex> fun.(1)
 
 Если вы хотите захватить функцию из модуля, вы можете использовать `&Module.function()`:
 
-```iex
+```elixir
 iex> fun = &List.flatten(&1, &2)
 &List.flatten/2
 iex> fun.([1, [[2], 3]], [4, 5])
@@ -210,7 +211,7 @@ defmodule DefaultTest do
 end
 ```
 
-```iex
+```elixir
 iex> DefaultTest.dowork
 "hello"
 iex> DefaultTest.dowork 123
@@ -265,13 +266,13 @@ end
 $ iex concat.exs
 ```
 
-```iex
+```elixir
 iex> Concat.join "Hello", "world"
 ***First join
 "Helloworld"
 ```
 
-```iex
+```elixir
 iex> Concat.join "Hello", "world", "_"
 ***Second join
 "Hello_world"

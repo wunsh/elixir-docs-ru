@@ -1,8 +1,8 @@
 ---
 title: alias, require и import
+next_page: module-attributes
+prev_page: io-and-the-file-system
 ---
-
-# {{ page.title }}
 
 Для обеспечения повторного использования ПО, Эликсир предоставляет три директивы (`alias`, `require` и `import`), а также макрос `use`, описанные ниже:
 
@@ -74,7 +74,7 @@ end
 
 Публичные функции в модулях доступны глобально, но для использования макросов, вам нужно отказаться от использования модуля, в котором они определены.
 
-```iex
+```elixir
 iex> Integer.is_odd(3)
 ** (UndefinedFunctionError) function Integer.is_odd/1 is undefined or private. However there is a macro with the same name and arity. Be sure to require Integer if you intend to invoke this macro
 iex> require Integer
@@ -91,7 +91,7 @@ true
 
 Мы используем `import`, когда хотим получить лёгкий доступ к функциям или макросам из другого модуля, без использования полного имени. Например, если мы хотим использовать фукнцию `duplicate/2` из модуля `List` несколько раз, мы можем импортировать его:
 
-```iex
+```elixir
 iex> import List, only: [duplicate: 2]
 List
 iex> duplicate :ok, 3
@@ -166,7 +166,7 @@ end
 
 Псевдоним в Эликсире - идентификатор, начинающийся с большой буквы (например, `String`, `Keyword` и т.д.), который конвертируется в атом во время компиляции. Например, псевдоним `String` переводится по умолчанию в атом `:"Elixir.String"`:
 
-```iex
+```elixir
 iex> is_atom(String)
 true
 iex> to_string(String)
@@ -179,7 +179,7 @@ true
 
 Псевдонимы разворачиваются в атомы, потому что модули виртуальной машины Эрланга (и, соответственно, Эликсира) всегда представлены как атомы. Например, вот механизм вызова модулей Эрланга:
 
-```iex
+```elixir
 iex> :lists.flatten([1, [2], 3])
 [1, 2, 3]
 ```

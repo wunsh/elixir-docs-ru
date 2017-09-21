@@ -1,5 +1,7 @@
 ---
 title: Структуры
+next_page: protocols
+prev_page: module-attributes
 ---
 
 ## Определение структур

@@ -1,10 +1,12 @@
 ---
 title: Протоколы
+next_page: comprehensions
+prev_page: structs
 ---
 
 # {{ page.title }}
 
-Протоколы - это механизм для реализации полиморфизма в эликсире. Обращение к протоколу доступно для любого типа данных, если этот тип реализует протокол. давайте взглянем на пример.
+Протоколы - это механизм для реализации полиморфизма в Эликсире. Обращение к протоколу доступно для любого типа данных, если этот тип реализует протокол. давайте взглянем на пример.
 
 В Эликсире есть два способа проверить, сколько экземпляров находится в структуре данных: `length` и `size`. `length` значит, что информацию нужно вычислить. Например, `length(list)` должен пройтись по всему списку, чтобы вычислить его длину. С другой стороны, `tuple_size(tuple)` и `byte_size(binary)` просто берёт уже известный размер информации в кортеже или бинарных данных.
 
@@ -231,4 +233,3 @@ Those are all protocols that ship with Elixir and they are being consolidated. B
 However, after our project is compiled using a tool like Mix, we know all modules that have been defined, including protocols and their implementations. This way, the protocol can be consolidated into a very simple and fast dispatch module.
 
 From Elixir v1.2, protocol consolidation happens automatically for all projects. We will build our own project in the ***Mix and OTP guide***.
-

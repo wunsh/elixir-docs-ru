@@ -1,8 +1,8 @@
 ---
 title: Распределенные задачи и конфигурация
+next_page: meta/quote-and-unquote
+prev_page: mix-otp/docs-tests-and-with
 ---
-
-# {{ page.title }}
 
 В последней главе мы вернёмся к приложению `:kv` и добавим слой маршрутизации, который позволит нам распределять задачи между узлами, основываясь на имени корзины.
 
@@ -40,7 +40,7 @@ $ iex --sname foo
 
 Объявим модуль `Hello` в этом терминале:
 
-```iex
+```elixir
 iex> defmodule Hello do
 ...>   def world, do: IO.puts "hello world"
 ...> end
@@ -54,7 +54,7 @@ $ iex --sname bar
 
 Обратите внимание, что внутри этой новой сессии у нас нет доступа к `Hello.world/0`:
 
-```iex
+```elixir
 iex> Hello.world
 ** (UndefinedFunctionError) undefined function: Hello.world/0
     Hello.world()
@@ -62,7 +62,7 @@ iex> Hello.world
 
 Однако, мы можем порождать новые процессы на `foo@computer-name`, находясь на `bar@computer-name`! Попробуйте (только укажите вместо `@computer-name` то имя, которое видите у себя):
 
-```iex
+```elixir
 iex> Node.spawn_link :"foo@computer-name", fn -> Hello.world end
 #PID<9014.59.0>
 hello world
@@ -72,7 +72,7 @@ hello world
 
 Мы также можем посылать и принимать сообщения на pid, возвращённый `Node.spawn_link/2`, как обычно. Попробуем простой ping-pong пример:
 
-```iex
+```elixir
 iex> pid = Node.spawn_link :"foo@computer-name", fn ->
 ...>   receive do
 ...>     {:ping, client} -> send client, :pong
@@ -129,7 +129,7 @@ $ iex --sname bar -S mix
 
 Изнутри `bar@computer-name` мы теперь можем порождать задачи прямо на другом узле через супервизор:
 
-```iex
+```elixir
 iex> task = Task.Supervisor.async {KV.RouterTasks, :"foo@computer-name"}, fn ->
 ...>   {:ok, node()}
 ...> end
@@ -140,7 +140,7 @@ iex> Task.await(task)
 
 Наша первая распределённая задача получает имя узла, на котором запускать задачу. Обратите внимание, что мы передали анонимную функцию в `Task.Supervisor.async/2`, но для распределённых случаев предпочтительно передавать модуль, функцию и аргументы явно:
 
-```iex
+```elixir
 iex> task = Task.Supervisor.async {KV.RouterTasks, :"foo@computer-name"}, Kernel, :node, []
 %Task{owner: #PID<0.122.0>, pid: #PID<12467.89.0>, ref: #Reference<0.0.0.404>}
 iex> Task.await(task)

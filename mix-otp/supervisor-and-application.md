@@ -1,8 +1,8 @@
 ---
 title: Супервизор и Приложение
+next_page: mix-otp/dynamic-supervisor
+prev_page: mix-otp/genserver
 ---
-
-# {{ page.title }}
 
 В нашем приложении теперь есть реестр, который может работать с дюжинами, если не с сотнями корзин. Мы можем думать, что наша реализация достаточно хороша, но ПО никогда не бывает без багов, и падения будут случаться.
 
@@ -40,7 +40,7 @@ end
 
 Функция `child_spec/1` возвращает спецификацию потомка, которая объясняет, как запустить процесс, является ли он воркером или супервизором, является ли он временным или постоянным и т.д. Функция `child_spec/1` автоматически определяется, когда мы задаём `use Agent`, `use GenServer`, `use Supervisor` и т.д. Давайте попробуем это на практике, запустив `iex -S mix`:
 
-```iex
+```elixir
 iex(1)> KV.Registry.child_spec([])
 %{
   id: KV.Registry,
@@ -87,7 +87,7 @@ iex(1)> KV.Registry.child_spec([])
 
 Давайте попробуем всё это в `iex -S mix`:
 
-```iex
+```elixir
 iex> KV.Supervisor.start_link([])
 {:ok, #PID<0.66.0>}
 iex> KV.Registry.create(KV.Registry, "shopping")
@@ -134,7 +134,7 @@ In practice, we rarely start the application supervisor manually. Instead, it is
 
 В любом случае, давайте посмотрим, как Mix запускает приложение за нас. Откройте консоль проекта с помощью `iex -S mix` и попробуйте:
 
-```iex
+```elixir
 iex> Application.start(:kv)
 {:error, {:already_started, :kv}}
 ```
@@ -143,14 +143,14 @@ iex> Application.start(:kv)
 
 Мы можем с помощью опций запустить Mix с указанием не запускать приложение. Попробуйте ввести в консоль `iex -S mix run --no-start`:
 
-```iex
+```elixir
 iex> Application.start(:kv)
 :ok
 ```
 
 Мы можем остановить наше приложение `:kv` и, точно так же, приложение `:logger`, которое запустилось по умолчанию вместе с Эликсиром:
 
-```iex
+```elixir
 iex> Application.stop(:kv)
 :ok
 iex> Application.stop(:logger)
@@ -159,14 +159,14 @@ iex> Application.stop(:logger)
 
 И давайте попробуем запустить наше приложение снова:
 
-```iex
+```elixir
 iex> Application.start(:kv)
 {:error, {:not_started, :logger}}
 ```
 
 Сейчас мы получаем ошибку, потому что какая-то из зависимостей `:kv` (в данном случае `:logger`) не запущена. Нам нужно также запустить каждое приложение внучную в правильном порядке или вызвать `Application.ensure_all_started` как показано ниже:
 
-```iex
+```elixir
 iex> Application.ensure_all_started(:kv)
 {:ok, [:logger, :kv]}
 ```
@@ -210,7 +210,7 @@ end
 
 Давайте запустим консоль нашего проекта снова с помощью `iex -S mix`. Мы увидим, что процесс с именем `KV.Registry` уже запущен:
 
-```iex
+```elixir
 iex> KV.Registry.create(KV.Registry, "shopping")
 :ok
 iex> KV.Registry.lookup(KV.Registry, "shopping")

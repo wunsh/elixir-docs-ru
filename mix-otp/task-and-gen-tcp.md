@@ -1,8 +1,8 @@
 ---
 title: Task и gen_tcp
+next_page: mix-otp/docs-tests-and-with
+prev_page: mix-otp/dependencies-and-umbrella-apps
 ---
-
-# {{ page.title }}
 
 В этой главе мы изучим, как использовать [Модуль Эрланга `:gen_tcp`](http://www.erlang.org/doc/man/gen_tcp.html) для обработки запросов. При этом мы получим возможность посмотреть также модуль Эликсира `Task`. В дальнейших главах мы расширим наш сервер так, чтобы он действительно мог обрабатывать команды.
 
@@ -81,7 +81,7 @@ write_line(read_line(socket), socket)
 
 Запустите сессию IEx внутри приложения `kv_server`, используя `iex -S mix`. В IEx запустите:
 
-```iex
+```elixir
 iex> KVServer.accept(4040)
 ```
 

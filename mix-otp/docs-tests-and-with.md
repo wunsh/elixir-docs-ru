@@ -1,8 +1,8 @@
 ---
 title: Доктесты, паттерны и `with`
+next_page: mix-otp/distributed-tasks-and-configuration
+prev_page: mix-otp/task-and-gen-tcp
 ---
-
-# {{ page.title }}
 
 В этой главе мы реализуем код, который парсит команды, описанные в первой главе:
 
@@ -141,7 +141,7 @@ end
 
 Наконец, вы можете увидеть, что каждый доктест воспринимается как отдельный тест, наш тестовый набор теперь сообщает о том, что всего их 7. Это происходит, потому что ExUnit воспринимает следующее как два разных теста:
 
-```iex
+```elixir
 iex> KVServer.Command.parse "UNKNOWN shopping eggs\r\n"
 {:error, :unknown_command}
 
@@ -151,7 +151,7 @@ iex> KVServer.Command.parse "GET shopping\r\n"
 
 Без добавления пустых строк ExUnit скомпилирует их в один тест:
 
-```iex
+```elixir
 iex> KVServer.Command.parse "UNKNOWN shopping eggs\r\n"
 {:error, :unknown_command}
 iex> KVServer.Command.parse "GET shopping\r\n"

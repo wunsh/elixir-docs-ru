@@ -1,7 +1,8 @@
 ---
 title: Рекурсия
+next_page: enumerables-and-streams
+prev_page: modules-and-functions
 ---
-# Рекурсия
 
 ## Циклы через рекурсию
 
@@ -96,7 +97,7 @@ end
 iex math.exs
 ```
 
-```iex
+```elixir
 iex> Math.double_each([1, 2, 3]) #=> [2, 4, 6]
 ```
 
@@ -106,7 +107,7 @@ iex> Math.double_each([1, 2, 3]) #=> [2, 4, 6]
 
 [Модуль `Enum`](https://hexdocs.pm/elixir/Enum.html), который мы рассмотрим в следующей главе, уже предоставляет много удобных инструментов для работы со списками. Например, пример выше мог бы быть написан так:
 
-```iex
+```elixir
 iex> Enum.reduce([1, 2, 3], 0, fn(x, acc) -> x + acc end)
 6
 iex> Enum.map([1, 2, 3], fn(x) -> x * 2 end)
@@ -115,7 +116,7 @@ iex> Enum.map([1, 2, 3], fn(x) -> x * 2 end)
 
 Или, используя синтаксис захвата (capture syntax, более корректный перевод?):
 
-```iex
+```elixir
 iex> Enum.reduce([1, 2, 3], 0, &+/2)
 6
 iex> Enum.map([1, 2, 3], &(&1 * 2))
