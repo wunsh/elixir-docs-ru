@@ -6,11 +6,11 @@ prev_page: typespecs-and-behaviours
 
 Эликсир отлично поддерживает работу с библиотеками Эрланга. Фактически, Эликсир отбивает желание писать обёртки для библиотек Эрланга, сделав удобным прямое взаимодействие с Эрланг кодом. В данном разделе мы покажем наиболее полезную функциональность из Эрланга, которой нет в Эликсире.
 
-Когда вы узнаете Эликсир достаточно глубоко, вероятно вы захотите ознакомиться с [STDLIB Reference Manual](http://erlang.org/doc/apps/stdlib/index.html) более подробно.
+Когда вы познакомитесь с Эликсиром достаточно хорошо, вероятно, вы захотите ознакомиться с [STDLIB Reference Manual](http://erlang.org/doc/apps/stdlib/index.html) более подробно.
 
 ## Модуль Binary
 
-Встроенный в Эликсир модуль String работает с бинарными данными, кодирующими UTF-8. [Модуль Binary](http://erlang.org/doc/man/binary.html) полезен, когда вам нужно работать с бинарными данными, которые не обязательно представляют Юникод.
+Встроенный в Эликсир модуль String работает с бинарными данными, кодирующими UTF-8. [Модуль Binary](http://erlang.org/doc/man/binary.html) полезен, когда вам нужно работать с бинарными данными, которые необязательно представляют Юникод.
 
 ```elixir
 iex> String.to_charlist "Ø"
@@ -43,11 +43,6 @@ iex> to_string :io_lib.format("Pi is approximately given by:~10.3f~n", [:math.pi
 iex> Base.encode16(:crypto.hash(:sha256, "Elixir"))
 "3315715A7A3AD57428298676C5AE465DADA38D951BDFAC9348A8A31E9C7401CB"
 ```
-
-The `:crypto` module is not part of the Erlang standard library, but is
-included with the Erlang distribution. This means you must list `:crypto`
-in your project's applications list whenever you use it. To do this,
-edit your `mix.exs` file to include:
 
 Модуль `:crypto` не является частью стандартной библиотеки Эрланга, но содержится в стандартной поставке. Это значит, что вам нужно указать `:crypto` в вашем приложении, когда вы хотите его использовать. Чтобы это сделать, отредактируйте файл `mix.exs`, чтобы он включал следующее:
 
