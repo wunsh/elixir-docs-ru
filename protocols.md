@@ -1,16 +1,16 @@
 ---
-title: Protocols
+title: Протоколы
 ---
 
 # {{ page.title }}
 
-Protocols are a mechanism to achieve polymorphism in Elixir. Dispatching on a protocol is available to any data type as long as it implements the protocol. Let's see an example.
+Протоколы - это механизм для реализации полиморфизма в эликсире. Обращение к протоколу доступно для любого типа данных, если этот тип реализует протокол. давайте взглянем на пример.
 
-In Elixir, we have two idioms for checking how many items there are in a data structure: `length` and `size`. `length` means the information must be computed. For example, `length(list)` needs to traverse the whole list to calculate its length. On the other hand, `tuple_size(tuple)` and `byte_size(binary)` do not depend on the tuple and binary size as the size information is pre-computed in the data structure.
+В Эликсире есть два способа проверить, сколько экземпляров находится в структуре данных: `length` и `size`. `length` значит, что информацию нужно вычислить. Например, `length(list)` должен пройтись по всему списку, чтобы вычислить его длину. С другой стороны, `tuple_size(tuple)` и `byte_size(binary)` просто берёт уже известный размер информации в кортеже или бинарных данных.
 
-Even if we have type-specific functions for getting the size built into Elixir (such as `tuple_size/1`), we could implement a generic `Size` protocol that all data structures for which size is pre-computed would implement.
+Даже если у нас есть встроенные в Эликсир функции для определённых типов, который получают размер (такие как `tuple_size/1`), мы могли бы реализовать общий протокол `Size`, для всех структур данных, у которых размер подсчитан заранее.
 
-The protocol definition would look like this:
+Определение протокола бы выглядело подобным образом:
 
 ```elixir
 defprotocol Size do
@@ -19,7 +19,7 @@ defprotocol Size do
 end
 ```
 
-The `Size` protocol expects a function called `size` that receives one argument (the data structure we want to know the size of) to be implemented. We can now implement this protocol for the data structures that would have a compliant implementation:
+Протокол `Size` ожидает, что есть функция `size`, которая принимает один аргумент (структуру данных, размер которой мы хотим узнать). Теперь мы можем реализовать этот протокол для структур данных:
 
 ```elixir
 defimpl Size, for: BitString do
@@ -35,9 +35,9 @@ defimpl Size, for: Tuple do
 end
 ```
 
-We didn't implement the `Size` protocol for lists as there is no "size" information pre-computed for lists, and the length of a list has to be computed (with `length/1`).
+Мы не применили протокол `Size` для списков, т.к. для них нет предварительно подсчитанной информации о длине, её нужно вычислять (с помощью `length/1`).
 
-Now with the protocol defined and implementations in hand, we can start using it:
+Теперь, имея определение и реализацию протокола, мы можем начать использовать его:
 
 ```iex
 iex> Size.size("foo")
@@ -48,14 +48,14 @@ iex> Size.size(%{label: "some label"})
 1
 ```
 
-Passing a data type that doesn't implement the protocol raises an error:
+Попытка узнать размер типа данных, которые не принимают этот протокол, вызовет ошибку:
 
 ```iex
 iex> Size.size([1, 2, 3])
 ** (Protocol.UndefinedError) protocol Size not implemented for [1, 2, 3]
 ```
 
-It's possible to implement protocols for all Elixir data types:
+Протоколы можно применять для всех типов данных Эликсира:
 
 * `Atom`
 * `BitString`
