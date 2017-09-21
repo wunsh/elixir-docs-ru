@@ -1,8 +1,8 @@
 ---
 title: Зависимости и зонтичные проекты
+next_page: mix-otp/task-and-gen-tcp
+prev_page: mix-otp/ets
 ---
-
-# {{ page.title }}
 
 В этой главе мы обсудим, как управлять зависимостями с помощью Mix.
 

@@ -1,5 +1,7 @@
 ---
 title: Агент
+next_page: mix-otp/genserver
+prev_page: mix-otp/introduction-to-mix
 ---
 
 В этой главе мы будем создавать модуль с именем `KV.Bucket`. Этот модуль будет отвечать за хранение основных значений таким образом, что позволит им быть прочитанными и измененными другими процессами.
@@ -31,7 +33,7 @@ $ iex -S mix
 ```
 И немного поиграем с агентами:
 
-```iex
+```elixir
 iex> {:ok, agent} = Agent.start_link fn -> [] end
 {:ok, #PID<0.57.0>}
 iex> Agent.update(agent, fn list -> ["eggs" | list] end)

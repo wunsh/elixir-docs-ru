@@ -1,8 +1,8 @@
 ---
 title: Атрибуты модулей
+next_page: structs
+prev_page: alias-require-and-import
 ---
-
-# {{ page.title }}
 
 Атрибуты модулей в Эликсире решают три задачи:
 
@@ -61,7 +61,7 @@ $ elixirc math.ex
 $ iex
 ```
 
-```iex
+```elixir
 iex> h Math # Access the docs for the module Math
 ...
 iex> h Math.sum # Access the docs for the sum function

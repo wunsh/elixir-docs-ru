@@ -1,5 +1,6 @@
 ---
 title: Документация Elixir
+next_page: basic-types
 ---
 
 Добро пожаловать!
@@ -26,7 +27,7 @@ title: Документация Elixir
 Начнём с выполнения команды `iex` (или `iex.bat` для Виндоус), которая отвечает за запуск интерактивной оболочки Эликсира. В этом режиме мы можем напечатать любое выражение на Эликсире и получить результат его выполнения. Опробуем несколько базовых команд для разогрева.
 
 Откройте `iex` и введите следующие выражения:
-```iex
+```elixir
 Erlang/OTP 19 [erts-8.1] [source] [64-bit] [smp:4:4] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
 
 Interactive Elixir (1.4.0) - press Ctrl+C to exit (type h() ENTER for help)

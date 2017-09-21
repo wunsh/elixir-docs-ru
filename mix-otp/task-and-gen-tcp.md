@@ -1,8 +1,8 @@
 ---
 title: Task и gen_tcp
+next_page: mix-otp/docs-tests-and-with
+prev_page: mix-otp/dependencies-and-umbrella-apps
 ---
-
-# {{ page.title }}
 
 В этой главе мы изучим, как использовать [Модуль Эрланга `:gen_tcp`](http://www.erlang.org/doc/man/gen_tcp.html) для обработки запросов. При этом мы получим возможность посмотреть также модуль Эликсира `Task`. В дальнейших главах мы расширим наш сервер так, чтобы он действительно мог обрабатывать команды.
 
@@ -81,7 +81,7 @@ write_line(read_line(socket), socket)
 
 Запустите сессию IEx внутри приложения `kv_server`, используя `iex -S mix`. В IEx запустите:
 
-```iex
+```elixir
 iex> KVServer.accept(4040)
 ```
 
@@ -171,9 +171,9 @@ HELLOOOOOO?
 
 Не похоже, что он вообще работает. это происходит потому, что мы обрабатываем запросы в том же процессе, в котором принимаем подключения. Когда один клиент подключен, мы не можем подключить другой клиент.
 
-## Task supervisor
+## Супервизор задач
 
-In order to make our server handle simultaneous connections, we need to have one process working as an acceptor that spawns other processes to serve requests. One solution would be to change:
+Чтобы наш сервер мог обрабатывать множество подключений, нам нужно сделать так, чтобы один процесс принимал подключения и порождал другие процессы, которые обрабатывают запросы. Одно из решений - изменить код:
 
 ```elixir
 defp loop_acceptor(socket) do
@@ -183,7 +183,7 @@ defp loop_acceptor(socket) do
 end
 ```
 
-to use `Task.start_link/1`, which is similar to `Task.start_link/3`, but it receives an anonymous function instead of module, function and arguments:
+используя `Task.start_link/1`, которая похожа на `Task.start_link/3`, но принимает анонимную функцию вместо модуля, функции и аргументов:
 
 ```elixir
 defp loop_acceptor(socket) do
@@ -193,15 +193,15 @@ defp loop_acceptor(socket) do
 end
 ```
 
-We are starting a linked Task directly from the acceptor process. But we've already made this mistake once. Do you remember?
+Мы запускаем связанную задачу прямо из процесса-приёмника. Но мы уже делали такую ошибку раньше. Вы помните?
 
-This is similar to the mistake we made when we called `KV.Bucket.start_link/1` straight from the registry. That meant a failure in any bucket would bring the whole registry down.
+Это такая же ошибка, как в случае с вызовом `KV.Bucket.start_link/1` прямо из реестра. Там падение любой корзины приводило к падению всего реестра.
 
-The code above would have the same flaw: if we link the `serve(client)` task to the acceptor, a crash when serving a request would bring the acceptor, and consequently all other connections, down.
+Код выше имеет такую же проблему: если мы связываем задачу `serve(client)` с приёмником, падение обработки запроса приведёт к падению приёмника и всех других подключений.
 
-We fixed the issue for the registry by using a simple one for one supervisor. We are going to use the same tactic here, except that this pattern is so common with tasks that `Task` already comes with a solution: a simple one for one supervisor that starts temporary tasks as part of our supervision tree.
+Для реестра мы решили эту проблему, используя супервизор. Мы придержимся этой же тактики здесь, т.к. этот шаблон настолько распространён для задач, что модуль `Task` уже содержит решение: простой супервизор "one for one", который запускает временные задачи как часть нашего дерева супервизора.
 
-Let's change `start/2` once again, to add a supervisor to our tree:
+Давайте изменим `start/2` ещё раз, добавив супервизор в наше дерево:
 
 ```elixir
   def start(_type, _args) do
@@ -215,9 +215,9 @@ Let's change `start/2` once again, to add a supervisor to our tree:
   end
 ```
 
-We'll now start a [`Task.Supervisor`](https://hexdocs.pm/elixir/Task.Supervisor.html) process with name `KVServer.TaskSupervisor`. Remember, since the acceptor task depends on this supervisor, the supervisor must be started first.
+Сейчас мы запустим процесс [`Task.Supervisor`](https://hexdocs.pm/elixir/Task.Supervisor.html) с именем `KVServer.TaskSupervisor`. Помните, т.к. задача приёмника зависит от нашего супервизора, супервизор должен быть запущен первым.
 
-Now we need to change `loop_acceptor/1` to use `Task.Supervisor` to serve each request:
+Теперь нам нужно изменить `loop_acceptor/1` с использованием `Task.Supervisor` для обработки каждого запроса:
 
 ```elixir
 defp loop_acceptor(socket) do
@@ -228,11 +228,11 @@ defp loop_acceptor(socket) do
 end
 ```
 
-You might notice that we added a line, `:ok = :gen_tcp.controlling_process(client, pid)`. This makes the child process the "controlling process" of the `client` socket. If we didn't do this, the acceptor would bring down all the clients if it crashed because sockets would be tied to the process that accepted them (which is the default behaviour).
+Вы можете заметить, что мы добавили строку `:ok = :gen_tcp.controlling_process(client, pid)`. Это сделает процесс-потомок "контроллирующим процессом" для сокета `client`. Если бы мы не сделали это, приёмник при падении отключил бы всех клиентов, потому что сокеты были бы связаны с процессом, который принимает их (это стандартное поведение).
 
-Start a new server with `PORT=4040 mix run --no-halt` and we can now open up many concurrent telnet clients. You will also notice that quitting a client does not bring the acceptor down. Excellent!
+Запустите новый сервер с помощью `PORT=4040 mix run --no-halt`, а следом откройте несколько telnet клиентов параллельно. Вы сможете убедиться, что отключение клиента не приводит к отключению приёмника. Прекрасно!
 
-Here is the full echo server implementation:
+Вот полная реализация эхо-сервера:
 
 ```elixir
 defmodule KVServer do
@@ -274,13 +274,13 @@ defmodule KVServer do
 end
 ```
 
-Since we have changed the supervisor specification, we need to ask: is our supervision strategy still correct?
+Мы изменили спецификацию супервизора, теперь нужно спросить: является ли наша стратегия супервизора всё ещё правильной?
 
-In this case, the answer is yes: if the acceptor crashes, there is no need to crash the existing connections. On the other hand, if the task supervisor crashes, there is no need to crash the acceptor too.
+В данном случае ответ "да": если приёмник падает, нет необходимости разрушать все существующие подключения. С другой стороны, если задача супервизора падает, также нет нужды отключать приёмник.
 
-However, there is still one concern left, which are the restart strategies. Tasks, by default, have the `:restart` value set to `:temporary`, which means they are not restarted. This is an excellent default for the connections started via the `Task.Supervisor`, as it makes no sense to restart a failed connection, but it is a bad choice for the acceptor. If the acceptor crashes, we want to bring the acceptor up and running again.
+Однако, осталась ещё одна проблема: стратегия перезапуска. Задачи, по умолчанию, имеют в поле `:restart` значение `:temporary`, то есть они не будут перезапущены. Это отличный вариант для соединений, запущенных через `Task.Supervisor`, т.к. нет смысла перезапускать упавшее подключение, но это плохой выбор для приёмника. Если он упадёт, мы хотим снова его запустить.
 
-We could fix this by defining our own module that calls `use Task, restart: :permanent` and invokes a `start_link` function responsible for restarting the task, quite similar to `Agent` and `GenServer`. However, let's take a different approach here. When integrating with someone else's library, we won't be able to change how their agents, tasks, and servers are defined. Instead, we need to be able to customize their child specification dynamically. This can be done by using `Supervisor.child_spec/2`, a function that we happen to know from previous chapters. Let's rewrite `start/2` in `KVServer.Application` once more:
+Мы можем исправить это, определив в нашем модуле вызов `use Task, restart: :permanent` и назначить функцию `start_link` ответственной за перезапуск, по аналогии с `Agent` и `GenServer`. Однако, давайте поступим другим образом в данном случае. При интеграции с чужой библиотекой, мы не сможем изменить там определение агентов, задач и серверов. В этом случае нам нужно иметь возможность изменить спецификацию их потомков динамически. Это можно сделать с помощью `Supervisor.child_spec/2`, функции, с которой мы познакомились в предыдущих главах. Давайте перепишем `start/2` в `KVServer.Application` ещё раз:
 
 ```elixir
   def start(_type, _args) do
@@ -294,7 +294,6 @@ We could fix this by defining our own module that calls `use Task, restart: :per
   end
 ```
 
-`Supervisor.child_spec/2` is capable of building a child specification from a given module and/or tuple, and it also accepts values that override the underlying child specification. Now we have an always running acceptor that starts temporary task processes under an always running task supervisor.
+`Supervisor.child_spec/2` может собирать спецификации потомков из переданного модуля и/или кортежа, и также принимает значения, которые переопределяют существующую спецификацию потомков. Теперь у нас есть всегда запущенный приёмник, который запускает временные процессы задач через всегда запущенный супервизор задач.
 
-In the next chapter, we will start parsing the client requests and sending responses, finishing our server.
-
+В следующей главе мы сделаем парсер для запросов клиентов и отправку ответов на них, и доделаем наш сервер до конца.
