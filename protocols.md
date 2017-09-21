@@ -109,13 +109,13 @@ defimpl Size, for: User do
 end
 ```
 
-## Implementing `Any`
+## Реализация `Any`
 
-Manually implementing protocols for all types can quickly become repetitive and tedious. In such cases, Elixir provides two options: we can explicitly derive the protocol implementation for our types or automatically implement the protocol for all types. In both cases, we need to implement the protocol for `Any`.
+Ручная реализация протоколов для всех типов может быстро стать повторяющейся и утомительной. В таких случаях в Эликсире есть два варианта: избыточно получить реализацию протокола для все типов или автоматически применить протокол для всех типов. В обоих случаях нам нужно реализовать протокол через `Any`.
 
-### Deriving
+### Получение протокола
 
-Elixir allows us to derive a protocol implementation based on the `Any` implementation. Let's first implement `Any` as follows:
+Эликсир позволяет нам получить реализацию протокола, основанного на `Any`. давайте сначала реализуем `Any` как показано ниже:
 
 ```elixir
 defimpl Size, for: Any do
@@ -123,9 +123,9 @@ defimpl Size, for: Any do
 end
 ```
 
-The implementation above is arguably not a reasonable one. For example, it makes no sense to say that the size of a `PID` or an `Integer` is `0`.
+Вариант выше не самый лучший. Например, нет никакого смысла возвращать `0` как размер `PID` или `Integer`.
 
-However, should we be fine with the implementation for `Any`, in order to use such implementation we would need to tell our struct to explicitly derive the `Size` protocol:
+Однако, она имеет право на жизнь, т.к. при такой реализации `Any` нам нужно избыточно указывать в структурах применение протокола `Size`:
 
 ```elixir
 defmodule OtherUser do
@@ -134,7 +134,7 @@ defmodule OtherUser do
 end
 ```
 
-When deriving, Elixir will implement the `Size` protocol for `OtherUser` based on the implementation provided for `Any`.
+При таком подходе, Эликсир будет реализовывать протокол `Size` для `OtherUser`, основываясь на реализации для `Any`.
 
 ### Fallback to `Any`
 
