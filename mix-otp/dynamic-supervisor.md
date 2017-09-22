@@ -49,9 +49,9 @@ end
 
 Мы решим эту проблему, определив новый супервизор, который будет порождать все корзины и отслеживать их состояние. Есть стратегия супервизора, которая называется `:simple_one_for_one`, и она прекрасно подходит для таких ситуаций: она позволяет нам задать шаблон воркера и отслеживать множество потомков, основанных на этом шаблоне. С этой стратегией ни один воркер не запускается во время инициализации супервизора. Вместо этого, они запускаются вручную с помощью `Supervisor.start_child/2`.
 
-## The bucket supervisor
+## Супервизор корзин
 
-Let's define our `KV.BucketSupervisor` in `lib/kv/bucket_supervisor.ex` as follows:
+Давайте определим наш `KV.BucketSupervisor` в `lib/kv/bucket_supervisor.ex` как показано ниже:
 
 ```elixir
 defmodule KV.BucketSupervisor do
@@ -74,13 +74,13 @@ defmodule KV.BucketSupervisor do
 end
 ```
 
-There are two changes in this supervisor compared to the first one.
+Здесь есть два отличия от супервизора, который мы сделали сначала.
 
-First of all, we have decided to give the supervisor a local name of `KV.BucketSupervisor`. While we could have passed the `opts` received on `start_link/1` to the supervisor, we chose to hard code the name for simplicity. Note this approach has downsides. For example, you wouldn't be able to start multiple instances of the `KV.BucketSupervisor` during tests, as they would conflict on the name. In this case, we will just allow all registries to use the same bucket supervisor at once, that won't be a problem since children of a simple one for one supervisor don't interfere with one another.
+Во-первых, мы решили дать супервизору локальное имя `KV.BucketSupervisor`. Мы могли посылать `opts`, полученный в `start_link/1`, в супервизор, но для простоты мы задали имя прямо в коде. Помните, что такой подход имеет свои минусы. Например, мы не сможем запустить несколько экземпляров `KV.BucketSupervisor` во время тестов, они будут конфликтовать по имени. В этом случае, нам стоит позволить всем реестрам использовать один супервизор корзин, и это не будет проблемой, если потомки супервизора `:simple_one_for_one` не взаимодействуют друг с другом.
 
-We have also defined a `start_bucket/0` function that will start a bucket as a child of our supervisor named `KV.BucketSupervisor`. `start_bucket/0` is the function we are going to invoke instead of calling `KV.Bucket.start_link/1` directly in the registry.
+Мы также определили функцию `start_bucket/0`, которая запускает корзины, как потомков нашего супервизора `KV.BucketSupervisor`. `start_bucket/0` - это функция, которую мы будем вызывать вместо прямого вызова `KV.Bucket.start_link/1` в реестре.
 
-Run `iex -S mix` so we can give our new supervisor a try:
+Запустите `iex -S mix`, чтобы попробовать наш новый супервизор:
 
 ```iex
 iex> {:ok, _} = KV.BucketSupervisor.start_link([])
@@ -93,7 +93,7 @@ iex> KV.Bucket.get(bucket, "eggs")
 3
 ```
 
-We are almost ready to use the simple one for one supervisor in our application. The first step is to change the registry to invoke `start_bucket`:
+Мы почти готовы к использованию этого супервизора в нашем приложении. Первый шаг - изменить реестр, используя вызов `start_bucket`:
 
 ```elixir
   def handle_cast({:create, name}, {names, refs}) do
@@ -111,6 +111,8 @@ We are almost ready to use the simple one for one supervisor in our application.
 
 The second step is to make sure `KV.BucketSupervisor` is started when our application boots. We can do this by opening `lib/kv/supervisor.ex` and changing `init/1` to the following:
 
+Второй шаг - убедиться, что `KV.BucketSupervisor` запускается при загрузке приложения. Мы можем сделать это, открыв `lib/kv/supervisor.ex` и изменив `init/1` следующим образом:
+
 ```elixir
   def init(:ok) do
     children = [
@@ -122,18 +124,18 @@ The second step is to make sure `KV.BucketSupervisor` is started when our applic
   end
 ```
 
-That's enough for our tests to pass but there is a resource leakage in our application. When a bucket terminates, the supervisor will start a new bucket in its place. After all, that's the role of the supervisor!
+Этого достаточно, чтобы наши тесты проходили, но в нашем приложении есть утечка ресурсов. Когда корзина экстренно завершает работу, супервизор запускает новую на её месте. В конце концов, в этом и заключается роль супервизора!
 
-However, when the supervisor restarts the new bucket, the registry does not know about it. So we will have an empty bucket in the supervisor that nobody can access! To solve this, we want to say that buckets are actually temporary. If they crash, regardless of the reason, they should not be restarted.
+Однако, когда супервизор перезапускает корзину, реестр не знает об этом. Поэтому у нас будет пустая корзина в супервизоре, к которой никто не может получить доступ! Чтобы решить это, мы хотим указать, что корзины на самом деле временные. Если они падают, независимо от причины, они не должны быть перезапущены.
 
-We can do this by passing the `restart: :temporary` option to `use Agent` in `KV.Bucket`:
+Мы можем сделать это, передав опцию `restart: :temporary` в строке `use Agent`, которая находится в `KV.Bucket`:
 
 ```elixir
 defmodule KV.Bucket do
   use Agent, restart: :temporary
 ```
 
-Let's also add a test to `test/kv/bucket_test.exs` that guarantees the bucket is temporary:
+Давайте также добавим тест в `test/kv/bucket_test.exs`, который будет гарантировать, что корзина является временной.
 
 ```elixir
   test "are temporary workers" do
@@ -141,7 +143,7 @@ Let's also add a test to `test/kv/bucket_test.exs` that guarantees the bucket is
   end
 ```
 
-Our test uses the `Supervisor.child_spec/2` function to retrieve the child specification out of a module and then assert its restart value is `:temporary`. At this point, you may be wondering why use a supervisor if it never restarts its children. It happens that supervisors provide more than restarts, they are also responsible to guarantee proper startup and shutdown, especially in case of crashes in a supervision tree.
+Наш тест использует функцию `Supervisor.child_spec/2`, чтобы получить спецификацию потомка из модуля, затем устанавливает значение перезапуска в `:temporary`. Сейчас вы можете задаться вопросом, зачем вообще использовать супервизор, если он никогда не перезапускает своих потомков. Это нужно, потому что супервизоры осуществляют не только перезапуск, они также гарантируют корректный запуск и отключение, особенно в случае падений в дереве супервизора.
 
 ## Supervision trees
 
