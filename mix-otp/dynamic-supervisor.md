@@ -6,18 +6,20 @@ prev_page: mix-otp/supervisor-and-application
 
 # {{ page.title }}
 
-We have now successfully defined our supervisor which is automatically started (and stopped) as part of our application lifecycle.
+Мы успешно определили наш супервизор, который автоматически запускается (и останавливается) как часть жизненного цикла нашего приложения.
 
 Remember however that our `KV.Registry` is both linking (via `start_link`) and monitoring (via `monitor`) bucket processes in the `handle_cast/2` callback:
+
+Вспомните, однако, что наш `KV.Registry` одновременно и связывает (через `start_link`) и мониторит (через `monitor`) процессы корзин в обратном вызове `handle_cast/2`:
 
 ```elixir
 {:ok, pid} = KV.Bucket.start_link([])
 ref = Process.monitor(pid)
 ```
 
-Links are bidirectional, which implies that a crash in a bucket will crash the registry. Although we now have the supervisor, which guarantees the registry will be back up and running, crashing the registry still means we lose all data associating bucket names to their respective processes.
+Ссылки двунаправлены, а значит падение корзины приведёт к падению всего реестра. Хотя у нас есть супервизор, который гарантирует, что реестр восстановит свою работу, падение реестра всё ещё приведёт к потере всех данных о связи имён корзин с их процессами.
 
-In other words, we want the registry to keep on running even if a bucket crashes. Let's write a new registry test:
+Другими словами, мы хотим, чтобы реестр продолжал работать, даже если корзина падает. Давайте напишем новый тест для реестра:
 
 ```elixir
 test "removes bucket on crash", %{registry: registry} do
@@ -30,9 +32,9 @@ test "removes bucket on crash", %{registry: registry} do
 end
 ```
 
-The test is similar to "removes bucket on exit" except that we are being a bit more harsh by sending `:shutdown` as the exit reason instead of `:normal`. If a process terminates with a reason different than `:normal`, all linked processes receive an EXIT signal, causing the linked process to also terminate unless they are trapping exits.
+Тест похож на "удаление корзин при выходе", кроме того, что мы передаём немного более жесткий вариант для выхода: `:shutdown` вместо `:normal`. Если процесс прекращает жизнь с причиной, отличной от `:normal`, все связанные процессы получают сигнал EXIT, что приводит к прекращению их всех, кроме случая, если они избегают выхода.
 
-Since the bucket terminated, the registry went away with it, and our test fails when trying to `GenServer.call/3` it:
+С завершением работы корзины, реестр тоже отключается, и наш тест падает при попытке вызвать `GenServer.call/3`:
 
 ```
   1) test removes bucket on crash (KV.RegistryTest)
@@ -45,7 +47,7 @@ Since the bucket terminated, the registry went away with it, and our test fails 
        test/kv/registry_test.exs:33: (test)
 ```
 
-We are going to solve this issue by defining a new supervisor that will spawn and supervise all buckets. There is one supervisor strategy, called `:simple_one_for_one`, that is the perfect fit for such situations: it allows us to specify a worker template and supervise many children based on this template. With this strategy, no workers are started during the supervisor initialization. Instead, a worker is started manually via the `Supervisor.start_child/2` function.
+Мы решим эту проблему, определив новый супервизор, который будет порождать все корзины и отслеживать их состояние. Есть стратегия супервизора, которая называется `:simple_one_for_one`, и она прекрасно подходит для таких ситуаций: она позволяет нам задать шаблон воркера и отслеживать множество потомков, основанных на этом шаблоне. С этой стратегией ни один воркер не запускается во время инициализации супервизора. Вместо этого, они запускаются вручную с помощью `Supervisor.start_child/2`.
 
 ## The bucket supervisor
 
