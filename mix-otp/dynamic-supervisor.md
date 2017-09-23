@@ -193,27 +193,27 @@ end
 
 ## Observer
 
-Now that we have defined our supervision tree, it is a great opportunity to introduce the Observer tool that ships with Erlang. Start your application with `iex -S mix` and key this in:
+Мы определили наше дерево супервизоров, и теперь есть прекрасая возможность познакомиться с инструментом Observer, который поставляется с Эрлангом. Запустите ваше приложение с помощью `iex -S mix` и введите следующее:
 
 ```iex
 iex> :observer.start
 ```
 
-A GUI should pop-up containing all sorts of information about our system, from general statistics to load charts as well as a list of all running processes and applications.
+Должен появиться графический интерфейс с множеством информации о вашей системе, начиная от обще статистики и заканчивая графиками загрузки, а также списком всех процессов и приложений.
 
-In the Applications tab, you will see all applications currently running in your system along side their supervision tree. You can select the `kv` application to explore it further:
+Во вкладке Applications вы увидите все приложения, запущенные параллельно в вашей системе, а также их дерево супервизоров. Вы можете выбрать приложение `kv`, чтобы исследовать его дальше:
 
 <img src="/images/contents/kv-observer.png" width="640" alt="Observer GUI screenshot" />
 
-Not only that, as you create new buckets on the terminal, you should see new processes spawned in the supervision tree shown in Observer:
+Кроме того, если вы создаёте новые корзины в терминале, вы увидете новые порождённые процессы дерева супервизоров в окне Observer:
 
 ```iex
 iex> KV.Registry.create KV.Registry, "shopping"
 :ok
 ```
 
-We will leave it up to you to further explore what Observer provides. Note you can double click any process in the supervision tree to retrieve more information about it, as well as right-click a process to send "a kill signal", a perfect way to emulate failures and see if your supervisor reacts as expected.
+Мы оставим вам дальнейшее исследование возможностей Observer. Обратите внимание, что двойной клик по процессу в дереве супервизоров покажет больше информации о нём, а также правый клик по процессу посылает сигнал "kill", прекрасная возможность сэмулировать падения и посмотреть, как супервизор на них отреагирует.
 
-At the end of the day, tools like Observer is one of the reasons you want to always start processes inside supervision trees, even if they are temporary, to ensure they are always reachable and introspectable.
+Также, инструменты вроде Observer - одна из причин, по которой вы захотите всегда использовать процессы внутри дерева супервизоров, даже если они временные, чтобы убедиться в их доступности.
 
-Now that our buckets are properly linked and supervised, let's see how we can speed things up.
+Теперь, когда наши корзины правильно связаны и отслеживаются супервизором, самое время узнать, как мы можем ускорить работу всего приложения.
