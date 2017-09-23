@@ -174,9 +174,9 @@ defmodule KV.Bucket do
 
 И у нас осталось ещё две темы для обсуждения перед тем, как мы перейдём к следующей главе.
 
-## Shared state in tests
+## Общее состояние в тестах
 
-So far we have been starting one registry per test to ensure they are isolated:
+Недавно мы начали использовать один реестр для одного теста, чтобы быть уверенными в их изолированности:
 
 ```elixir
 setup do
@@ -185,11 +185,11 @@ setup do
 end
 ```
 
-Since we have now changed our registry to use `KV.BucketSupervisor`, which is registered globally, our tests are now relying on this shared supervisor even though each test has its own registry. The question is: should we?
+Т.к. теперь мы изменили наш реестр для использования `KV.BucketSupervisor`, который доступен глобально, наши тесты полагаются на этот общий супервизор, хотя каждый тест имеет свой реестр. Вопрос в том, правильно ли это?
 
-It depends. It is ok to rely on shared state as long as we depend only on a non-shared partition of this state. Although multiple registries may start buckets on the shared bucket supervisor, those buckets and registries are isolated from each other. We would only run into concurrency issues if we used a function like `Supervisor.count_children(KV.Bucket.Supervisor)` which would count all buckets from all registries, potentially giving different results when tests run concurrently.
+Ответ неоднозначен. Нормально полагаться на общее состояние, пока мы зависим только от непересекающихся частей этого состояния. Хотя несколько реестров могут запускать корзины в общем супервизоре корзин, эти корзины и реестры изолированы друг от друга. Мы можем столкнуться только с проблемами параллельного запуска, если будем использовать функции вроде `Supervisor.count_children(KV.Bucket.Supervisor)`, которые будут считать все корзины во всех реестрах, потенциально давая нам разные результаты при параллельном запуске тестов.
 
-Since we have relied only on a non-shared partition of the bucket supervisor so far, we don't need to worry about concurrency issues in our test suite. In case it ever becomes a problem, we can start a supervisor per test and pass it as an argument to the registry `start_link` function.
+Т.к. мы пока зависим только от непересекающихся частей супервизора корзин, нам нет смысла беспокоиться о проблемах с параллельным запуском набора тестов. Если это когда-нибудь станет проблемой, мы можем запускать супервизор для каждого теста и передавать его аргументом в функцию реестра `start_link`.
 
 ## Observer
 
