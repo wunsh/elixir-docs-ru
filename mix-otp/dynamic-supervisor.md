@@ -145,19 +145,19 @@ defmodule KV.Bucket do
 
 Наш тест использует функцию `Supervisor.child_spec/2`, чтобы получить спецификацию потомка из модуля, затем устанавливает значение перезапуска в `:temporary`. Сейчас вы можете задаться вопросом, зачем вообще использовать супервизор, если он никогда не перезапускает своих потомков. Это нужно, потому что супервизоры осуществляют не только перезапуск, они также гарантируют корректный запуск и отключение, особенно в случае падений в дереве супервизора.
 
-## Supervision trees
+## Деревья супервизора
 
-When we added `KV.BucketSupervisor` as a child of `KV.Supervisor`, we began to have supervisors that supervise other supervisors, forming so-called "supervision trees".
+Когда мы добавили `KV.BucketSupervisor` в качестве потомка `KV.Supervisor`, мы получили ситуацию, когда супервизоры отслеживают состояние других супервизоров, формируя так называемые "деревья супервизоров".
 
-Every time you add a new child to a supervisor, it is important to evaluate if the supervisor strategy is correct as well as the order of child processes. In this case, we are using `:one_for_one` and the `KV.Registry` is started before `KV.BucketSupervisor`.
+Каждый раз, когда вы добавляете нового потомка супервизору, важно убедиться, что выбрана правильная стратегия супервизора, а также порядок процессов-потомков. В данном случае мы используем `:one_for_one` и `KV.Registry` запускается до `KV.BucketSupervisor`.
 
-One flaw that shows up right away is the ordering issue. Since `KV.Registry` invokes `KV.BucketSupervisor`, then the `KV.BucketSupervisor` must be started before `KV.Registry`. Otherwise, it may happen that the registry attempts to reach the bucket supervisor before it has started.
+Первый недостаток - проблема правильного порядка. Если `KV.Registry` вызывает `KV.BucketSupervisor`, тогда `KV.BucketSupervisor` должен запускаться раньше `KV.Registry`. В противном случае может произойти так, что реестр попытается обратиться к супервизору корзин до того, как он будет запущен.
 
-The second flaw is related to the supervision strategy. If `KV.Registry` dies, all information linking `KV.Bucket` names to bucket processes is lost. Therefore the `KV.BucketSupervisor` and all children must terminate too - otherwise we will have orphan processes.
+Второй недостаток связан со стратегией супервизора. Если `KV.Registry` умирает, вся информация, связывающая имена `KV.Bucket` с процессами корзин, будет потеряна. Кроме того, `KV.BucketSupervisor` и все его потомки должны будут также завершить работу - иначе у нас останутся "осиротевшие" процессы.
 
-In light of this observation, we should consider moving to another supervision strategy. The two other candidates are `:one_for_all` and `:rest_for_one`. A supervisor using the `:rest_for_one` will kill and restart child processes which were started *after* the crashed child. In this case, we would want `KV.BucketSupervisor` to terminate if `KV.Bucket` terminates. This would require the bucket supervisor to be placed after the registry. Which violates the ordering constraints we have established two paragraphs above.
+В свете этих подробностей, нам стоит рассмотреть альтернативные стратегии супервизора. Два других варианта - `:one_for_all` и `:rest_for_one`. Супервизор, использующий `:rest_for_one`, будет перезапускать процессы-потомки, которые были запущены *после* упавшего потомка. В таком случае мы бы хотели, чтобы `KV.BucketSupervisor` завершился, если `KV.Bucket` завершается. Также при этом нужно поместить супервизор корзин после реестра. А это приведёт к проблеме порядка, которую мы обнаружили двумя абзацами ранее.
 
-So our last option is to go all in and pick the `:one_for_all` strategy: the supervisor will kill and restart all of its children processes whenever any one of them dies. This is a completely reasonable approach for our application, since the registry can't work without the bucket supervisor, and the bucket supervisor should terminate without the registry. Let's reimplement `init/1` in `KV.Supervisor` to encode those properties:
+Таким образом у нас остался всего один вариант, на который все надежды - стратегия `:one_for_all`: супервизор будет перезапускать всех потомков, при падении любого из них. Это имеет смысл в нашем приложении, т.к. реестр не может работать без супервизора корзин, и супервизор корзин не должен работать без реестра. Давайте переделаем `init/1` в `KV.Supervisor`, включив данные свойства:
 
 ```elixir
   def init(:ok) do
@@ -170,9 +170,9 @@ So our last option is to go all in and pick the `:one_for_all` strategy: the sup
   end
 ```
 
-To help developers remember how to work with Supervisors and its convenience functions, [Benjamin Tan Wei Hao](http://benjamintan.io/) has created a [Supervisor cheat sheet](https://raw.githubusercontent.com/benjamintanweihao/elixir-cheatsheets/master/Supervisor_CheatSheet.pdf).
+Чтобы помочь разработчикам запомнить, как работают супервизоры и их удобные функции, [Benjamin Tan Wei Hao](http://benjamintan.io/) создал [Supervisor cheat sheet](https://raw.githubusercontent.com/benjamintanweihao/elixir-cheatsheets/master/Supervisor_CheatSheet.pdf).
 
-There are two topics left before we move on to the next chapter.
+И у нас осталось ещё две темы для обсуждения перед тем, как мы перейдём к следующей главе.
 
 ## Shared state in tests
 
