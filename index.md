@@ -3,7 +3,7 @@ title: Документация Elixir
 next_page: basic-types
 ---
 
-Содержание:
+Содержание тестовое:
 * [Базовые типы](/docs/basic-types.html)
 * [Базовые операторы](/docs/basic-operators.html)
 * [Сопоставление с образцом](/docs/pattern-matching.html)
@@ -27,7 +27,7 @@ next_page: basic-types
 * [Куда двигаться дальше](/docs/where-to-go-next.html)
 * [Введение в Mix](/docs/introduction-to-mix.html)
 * [Агент](/docs/agent.html)
-* [GenServer](/docs/genserver.html)
+* [GenServer](/docs//genserver.html)
 * [Супервизор и Приложение](/docs/supervisor-and-application.html)
 * [Динамический супервизор](/docs/dynamic-supervisor.html)
 * [ETS](/docs/ets.html)
