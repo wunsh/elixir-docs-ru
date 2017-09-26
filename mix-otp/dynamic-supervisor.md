@@ -4,8 +4,6 @@ next_page: mix-otp/ets
 prev_page: mix-otp/supervisor-and-application
 ---
 
-# {{ page.title }}
-
 Мы успешно определили наш супервизор, который автоматически запускается (и останавливается) как часть жизненного цикла нашего приложения.
 
 Remember however that our `KV.Registry` is both linking (via `start_link`) and monitoring (via `monitor`) bucket processes in the `handle_cast/2` callback:

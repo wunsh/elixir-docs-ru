@@ -11,9 +11,11 @@ Please, choose any sections from the list of available ones, described in [this 
 
 We agreed to use the following rules:
 * Transcribe all proper names into Russian, excepting abbreviations and module/utility/library/etc names. For example, `Elixir -> Эликсир`, `Erlang -> Эрланг`, `Windows -> Виндоус`.
-* Set page title at the top of page like here:
+* Set page title at the top of page and names of previous and next chapters like here:
 ```
 ---
 title: Документация Эликсира
+next_page: next_file_name
+prev_page: prev_file_name
 ---
 ```
