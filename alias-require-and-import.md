@@ -1,5 +1,5 @@
 ---
-title: alias, require и import
+title: Директивы `alias`, `require` и `import`
 next_page: module-attributes
 prev_page: io-and-the-file-system
 ---
