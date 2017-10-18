@@ -36,7 +36,7 @@ iex> "HELLO" =~ ~r/hello/i
 true
 ```
 
-В [модуле Regex](https://hexdocs.pm/elixir/Regex.html) доступно больше информации о других модификаторах и операциях с регулярными выражениями.
+В [модуле `Regex`](https://hexdocs.pm/elixir/Regex.html) доступно больше информации о других модификаторах и операциях с регулярными выражениями.
 
 Пока что во всех примерах мы использовали `/` для разделения сигилов. Однако, сигилы поддерживают 8 разных типов разделителей:
 
@@ -96,6 +96,7 @@ iex> ~w(foo bar bat)a
 ```elixir
 iex> ~s(String with escape codes \x26 #{"inter" <> "polation"})
 "String with escape codes & interpolation"
+
 iex> ~S(String without escape codes \x26 without #{interpolation})
 "String without escape codes \\x26 without \#{interpolation}"
 ```
@@ -132,9 +133,9 @@ iex> ~s"""
 
 ```elixir
 @doc """
-Converts double-quotes to single-quotes.
+Конвертирует двойные кавчки в одинарные.
 
-## Examples
+## Примеры
 
     iex> convert("\\\"foo\\\"")
     "'foo'"
@@ -147,9 +148,9 @@ def convert(...)
 
 ```elixir
 @doc ~S"""
-Converts double-quotes to single-quotes.
+Конвертирует двойные кавчки в одинарные.
 
-## Examples
+## Примеры
 
     iex> convert("\"foo\"")
     "'foo'"

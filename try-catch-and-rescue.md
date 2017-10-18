@@ -185,6 +185,7 @@ iex> defmodule RunAfter do
 ...>     IO.puts "cleaning up!"
 ...>   end
 ...> end
+
 iex> RunAfter.without_even_trying
 cleaning up!
 ** (RuntimeError) oops

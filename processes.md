@@ -26,6 +26,7 @@ iex> spawn fn -> 1 + 2 end
 ```elixir
 iex> pid = spawn fn -> 1 + 2 end
 #PID<0.44.0>
+
 iex> Process.alive?(pid)
 false
 ```
@@ -37,6 +38,7 @@ false
 ```elixir
 iex> self()
 #PID<0.41.0>
+
 iex> Process.alive?(self())
 true
 ```
@@ -50,6 +52,7 @@ true
 ```elixir
 iex> send self(), {:hello, "world"}
 {:hello, "world"}
+
 iex> receive do
 ...>   {:hello, msg} -> msg
 ...>   {:world, msg} -> "won't match"
@@ -79,8 +82,10 @@ iex> receive do
 ```elixir
 iex> parent = self()
 #PID<0.41.0>
+
 iex> spawn fn -> send(parent, {:hello, self()}) end
 #PID<0.48.0>
+
 iex> receive do
 ...>   {:hello, pid} -> "Got hello from #{inspect pid}"
 ...> end
@@ -94,6 +99,7 @@ iex> receive do
 ```elixir
 iex> send self(), :hello
 :hello
+
 iex> flush()
 :hello
 :ok
@@ -228,6 +234,6 @@ iex> Agent.get(pid, fn map -> Map.get(map, :hello) end)
 :world
 ```
 
-Опция `:name` также может быть передана в `Agent.start_link/2` и оно будет автоматически зарегистрировано. Помимо агентов, Эликсир предоставляет API для создания генсерверов (generic servers, `GenServer`), задач и прочего, всё это основано на процессах. Всё, что связано с деревом супервизора, будет рассмотрено детально в ***Руководстве по Mix и OTP***, в котором будет рассказано о создании законченного Эликсир-приложения от начала до конца.
+Опция `:name` также может быть передана в `Agent.start_link/2` и оно будет автоматически зарегистрировано. Помимо агентов, Эликсир предоставляет API для создания генсерверов (generic servers, `GenServer`), задач и прочего, всё это основано на процессах. Всё, что связано с деревом супервизора, будет рассмотрено детально в ***Руководстве по Миксу и OTP***, в котором будет рассказано о создании законченного Эликсир-приложения от начала до конца.
 
 Теперь давайте продолжим и поговорим о вводе/выводе (I/O) в Эликсире.
