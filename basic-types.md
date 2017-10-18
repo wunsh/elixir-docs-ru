@@ -279,8 +279,10 @@ iex> [1, true, 2, false, 3, true] -- [true, false]
 
 ```elixir
 iex> list = [1, 2, 3]
+
 iex> hd(list)
 1
+
 iex> tl(list)
 [2, 3]
 ```
