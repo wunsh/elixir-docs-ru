@@ -1,8 +1,40 @@
 ### Руководство для начинающих
-* ...
+* [Введение](/docs)
+* [Базовые типы](/docs/basic-types.html)
+* [Базовые операторы](/docs/basic-operators.html)
+* [Сопоставление с образцом](/docs/pattern-matching.html)
+* [Конструкции ветвления](/docs/case-cond-and-if.html)
+* [Двоичные данные, строки и списки символов](/docs/binaries-strings-and-char-lists.html)
+* [Ключевые списки и словари](/docs/keywords-and-maps.html)
+* [Модули и функции](/docs/modules-and-functions.html)
+* [Рекурсия](/docs/recursion.html)
+* [Перечисления и потоки](/docs/enumerables-and-streams.html)
+* [Процессы](/docs/processes.html)
+* [Ввод/вывод и файловая система](/docs/io-and-the-file-system.html)
+* [Директивы `alias`, `require` и `import`](/docs/alias-require-and-import.html)
+* [Атрибуты модулей](/docs/module-attributes.html)
+* [Структуры](/docs/structs.html)
+* [Протоколы](/docs/protocols.html)
+* [Списковые выражения](/docs/comprehensions.html)
+* [Сигилы](/docs/sigils.html)
+* [Конструкция `try`, `catch` и `rescue`](/docs/try-catch-and-rescue.html)
+* [Спецификации типов и поведения](/docs/typespecs-and-behaviours.html)
+* [Библиотеки Эрланга](/docs/erlang-libraries.html)
+* [Куда двигаться дальше](/docs/where-to-go-next.html)
 
 ### Микс и `OTP`
-* ...
+* [Введение в Микс](/docs/mix-otp/introduction-to-mix.html)
+* [Агент](/docs/mix-otp/agent.html)
+* [GenServer](/docs/mix-otp/genserver.html)
+* [Супервизор и приложение](/docs/mix-otp/supervisor-and-application.html)
+* [Динамический супервизор](/docs/mix-otp/dynamic-supervisor.html)
+* [ETS](/docs/mix-otp/ets.html)
+* [Зависимости и зонтичные проекты](/docs/mix-otp/dependencies-and-umbrella-apps.html)
+* [Модули `Task` и `:gen_tcp`](/docs/mix-otp/task-and-gen-tcp.html)
+* [Доктесты, паттерны и оператор `with`](/docs/mix-otp/docs-tests-and-with.html)
+* [Распределенные задачи и конфигурация](/docs/mix-otp/distributed-tasks-and-configuration.html)
 
 ### Метапрограммирование
-* ...
+* [Конструкции `quote` и `unquote`](/docs/meta/quote-and-unquote.html)
+* [Макросы](/docs/meta/macros.html)
+* [Предметно-ориентированные языки](/docs/meta/domain-specific-languages.html)
