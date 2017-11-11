@@ -3,6 +3,42 @@ title: Документация Elixir
 next_page: basic-types
 ---
 
+Содержание тестовое:
+* [Базовые типы](/docs/basic-types.html)
+* [Базовые операторы](/docs/basic-operators.html)
+* [Сопоставление с образцом](/docs/pattern-matching.html)
+* [Операторы ветвления](/docs/case-cond-and-if.html)
+* [Двоичные данные, строки и списки символов](/docs/binaries-strings-and-char-lists.html)
+* [Списки с ключевыми словами и словари](/docs/keywords-and-maps.html)
+* [Модули и функции](/docs/modules-and-functions.html)
+* [Рекурсия](/docs/recursion.html)
+* [Перечисления и потоки](/docs/enumerables-and-streams.html)
+* [Процессы](/docs/processes.html)
+* [Ввод/вывод и файловая система](/docs/io-and-the-file-system.html)
+* [alias, require и import](/docs/alias-require-and-import.html)
+* [Атрибуты модулей](/docs/module-attributes.html)
+* [Структуры](/docs/structs.html)
+* [Протоколы](/docs/protocols.html)
+* [Списковые выражения](/docs/comprehensions.html)
+* [Сигилы](/docs/sigils.html)
+* [try, catch и rescue](/docs/try-catch-and-rescue.html)
+* [Спецификации типов и поведения](/docs/typespecs-and-behaviours.html)
+* [Библиотеки Эрланга](/docs/erlang-libraries.html)
+* [Куда двигаться дальше](/docs/where-to-go-next.html)
+* [Введение в Mix](/docs/introduction-to-mix.html)
+* [Агент](/docs/agent.html)
+* [GenServer](/docs//genserver.html)
+* [Супервизор и Приложение](/docs/supervisor-and-application.html)
+* [Динамический супервизор](/docs/dynamic-supervisor.html)
+* [ETS](/docs/ets.html)
+* [Зависимости и зонтичные проекты](/docs/dependencies-and-umbrella-apps.html)
+* [Task и gen_tcp](/docs/task-and-gen-tcp.html)
+* [Доктесты, паттерны и with](/docs/docs-tests-and-with.html)
+* [Распределенные задачи и конфигурация](/docs/distributed-tasks-and-configuration.html)
+* [Quote и unquote](/docs/quote-and-unquote.html)
+* [Макросы](/docs/macros.html)
+* [Предметно-ориентированные языки](/docs/domain-specific-languages.html)
+
 Добро пожаловать!
 
 В этом руководстве мы научим вас основам Эликсира, синтаксису языка, расскажем, как объявлять модули, как управлять основными структурами данных и ещё некоторым вещам. Эта глава посвящена проверке установки Эликсира и запуску его интерактивной оболочки, которая называется `IEx`.
